@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-02T12:43:40.528Z",
+  "kind": "synthetic_fixture_only_not_human_or_child_speech",
+  "input": "صديقي يضحك على قراءتي قدام الطلاب. وش أقول له؟",
+  "transcript": "صديقي يضحك على قراءةي أمام الطلاب، وش أقول له؟",
+  "keywordsRecognized": true,
+  "transcriptionMs": 2358,
+  "fixtureBytes": 95232,
+  "note": "OpenAI TTS creates only this test input. Product responses still use ElevenLabs. Not an accent or human-microphone evaluation."
+}

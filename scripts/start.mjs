@@ -1,0 +1,11 @@
+import { cpSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+const destination = resolve(".next/standalone");
+if (!existsSync(`${destination}/server.js`)) throw new Error("Run npm run build first.");
+cpSync("public", `${destination}/public`, { recursive: true });
+cpSync(".next/static", `${destination}/.next/static`, { recursive: true });
+if (existsSync(".env.local")) process.loadEnvFile(".env.local");
+process.env.HOSTNAME = "0.0.0.0";
+process.env.PORT ||= "3000";
+await import(pathToFileURL(`${destination}/server.js`).href);
