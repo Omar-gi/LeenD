@@ -78,7 +78,8 @@ test("bare 'is this right' requires clarification in an empty session", async ()
 });
 test("approved but repetitive advice is replaced with a grounded next-step fallback", async () => {
   const result = await generateAnswer("قلت له يوقف وما وقف. أرد عليه؟", [{ user: "صديقي يسخر", assistant: "اطلب منه يوقف" }], undefined, sequence(candidate, approved));
-  assert.equal(result.answer, policy.triedStop); assert.equal(result.sources.length, 2);
+  assert.equal(result.segments[0].text, policy.triedStop); assert.equal(result.sources.length, 2);
+  assert.ok(result.answer.includes(sources[1].sourceQuote));
 });
 test("an assistant suggestion is never treated as a completed user action", async () => {
   const invented = { ...candidate, segments: [{ ...candidate.segments[0], text: "إذا استمر رغم أنك طلبت منه يوقف، اطلب مساعدة معلم." }] };
@@ -92,4 +93,55 @@ test("hypothetical teasing follow-up asks whether advice was tried without assum
 test("a failed stop request is not replaced by the hypothetical-action clarification", async () => {
   const result = await generateAnswer("طيب إذا سواها بكرة؟", [{ user: "صديقي يستهزئ فيني وقلت له يوقف", assistant: "اطلب مساعدة معلم" }], undefined, sequence(candidate, approved));
   assert.equal(result.decision, "FULL");
+});
+test("supported replies include exactly one exact hadith even when generation omits it", () => {
+  for (const decision of ["FULL", "PARTIAL"] as const) {
+    const answer = materialize({ ...candidate, decision });
+    assert.equal(answer.segments.filter(s => s.kind === "quote").length, 1);
+    assert.equal(answer.segments[1].text, sources[0].sourceQuote);
+    assert.ok(answer.answer.includes(`${sources[0].quoteIntroduction}\n«${sources[0].sourceQuote}»`));
+  }
+});
+test("an explicitly chosen quote keeps its position and context without a duplicate", () => {
+  const answer = materialize({ ...candidate, segments: [
+    { kind: "quote", text: "ignored invented text", sourceIds: [sources[2].id], quoteId: sources[2].id },
+    { kind: "explanation", text: "تقدر تساعد صديقك يوقف الأذى بدون مواجهة جسدية.", sourceIds: [sources[2].id], quoteId: null }
+  ] });
+  assert.equal(answer.segments[0].text, sources[2].sourceQuote);
+  assert.equal(answer.segments.filter(s => s.kind === "quote").length, 1);
+  assert.ok(answer.answer.startsWith(sources[2].quoteIntroduction));
+  assert.ok(!answer.answer.includes("invented"));
+});
+test("the grounding audit sees the inserted hadith before the answer can be spoken", async () => {
+  let calls = 0;
+  const result = await generateAnswer("صديقي يسخر من قراءتي", [], undefined, async (_instructions, input) => {
+    if (++calls === 1) return candidate;
+    const proposed = JSON.parse(input).proposedAnswer;
+    assert.equal(proposed.segments[1].text, sources[0].sourceQuote);
+    assert.ok(proposed.answer.includes(sources[0].quoteIntroduction));
+    return { ...approved, supported: false };
+  });
+  assert.equal(result.answer, policy.limitation);
+  assert.ok(!result.segments.some(s => s.kind === "quote"));
+});
+test("clarifications and referrals do not receive an automatic quotation", () => {
+  for (const decision of ["CLARIFY", "REFER"] as const) {
+    const answer = materialize({ ...candidate, decision });
+    assert.equal(answer.segments.filter(s => s.kind === "quote").length, 0);
+  }
+});
+test("an unrelated worship request cannot borrow a friendship hadith as evidence", async () => {
+  for (const text of ["وش أقول في دعاء القنوت؟", "كيف أحسب زكاة مالي؟", "كيف أصلي صلاة الوتر؟"]) {
+    const result = await generateAnswer(text, [], undefined, sequence());
+    assert.equal(result.decision, "REFER"); assert.deepEqual(result.sources, []);
+  }
+});
+test("friendship questions mentioning worship still receive supported advice", async () => {
+  const result = await generateAnswer("صديقي يسخر من قراءتي بعد الصلاة", [], undefined, sequence(candidate, approved));
+  assert.equal(result.decision, "FULL"); assert.ok(result.segments.some(s => s.kind === "quote"));
+});
+test("accidental JSON braces are removed from prose before display and audit", () => {
+  const result = materialize({ ...candidate, segments: [{ ...candidate.segments[0], text: "تقدر تطلب منه يتكلم باحترام. {" }] });
+  assert.equal(result.segments[0].text, "تقدر تطلب منه يتكلم باحترام.");
+  assert.equal(result.segments[1].text, sources[0].sourceQuote);
 });

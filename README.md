@@ -32,6 +32,7 @@ npm start
 - Tap-to-start/stop microphone, automatic stop at 30 seconds, typed input, readable transcript and answer.
 - Correct an earlier transcript: the corrected question and all later turns are replaced only when the new response succeeds.
 - Full / Partial / Clarify / Refer decisions; session follow-ups; visible source excerpts and links.
+- Supported Full/Partial replies include one exact hadith excerpt in both the dialogue and spoken answer, with source-specific attribution and a simple explanation. Safety, clarification and limitation responses remain direct.
 - Stop/replay speech, disable spoken replies, provider-error recovery, and session clearing.
 - Complete three-card server corpus on each request, strict output structure, exact server-inserted quotations, independent grounding audit before TTS, and a fixed safety path for threats.
 - Bounded input/history, signed history receipts, same-origin checks, request timeouts, concurrency and request-budget controls.

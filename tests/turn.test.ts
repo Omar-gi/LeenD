@@ -19,6 +19,21 @@ test("voice failure preserves validated text and signed history receipt", async 
   try { const response = await POST(request()); const body = await response.json(); assert.equal(response.status, 200); assert.equal(response.headers.get("cache-control"), "no-store"); assert.equal(body.audioStatus, "unavailable"); assert.equal(body.grounded, true); assert.ok(validReceipt({ user: body.transcript, assistant: body.answer, receipt: body.receipt })); }
   finally { globalThis.fetch = original; }
 });
+test("spoken input contains the same exact hadith and attribution as the visible reply", async () => {
+  const original = globalThis.fetch; let spokenText = "";
+  globalThis.fetch = async (url, init) => {
+    if (!String(url).includes("elevenlabs")) return approved(init);
+    spokenText = JSON.parse(String(init?.body)).text;
+    return new Response(new Uint8Array([1, 2, 3]), { headers: { "Content-Type": "audio/mpeg" } });
+  };
+  try {
+    const response = await POST(request()); const body = await response.json();
+    assert.equal(response.status, 200); assert.equal(body.audioStatus, "ready");
+    assert.equal(spokenText, body.answer);
+    assert.ok(spokenText.includes(`${sources[0].quoteIntroduction}\n«${sources[0].sourceQuote}»`));
+    assert.equal(body.segments.find((s: { kind: string }) => s.kind === "quote").text, sources[0].sourceQuote);
+  } finally { globalThis.fetch = original; }
+});
 test("generation failure emits sanitized retryable error, never an invented answer", async () => {
   const original = globalThis.fetch; globalThis.fetch = async () => Response.json({ error: { message: "private provider body" } }, { status: 429 });
   try { const response = await POST(request()); assert.equal(response.status, 503); assert.deepEqual(await response.json(), { error: "provider_busy" }); }

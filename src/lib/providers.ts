@@ -18,10 +18,10 @@ async function providerFailure(service: "openai" | "elevenlabs", response: Respo
 export const candidateSchema = z.object({
   decision: z.enum(["CLARIFY", "FULL", "PARTIAL", "REFER"]),
   safety: z.enum(["none", "threat", "immediate", "uncertain"]),
-  segments: z.array(z.object({
-    kind: z.enum(["explanation", "quote"]), text: z.string(),
-    sourceIds: z.array(z.string()), quoteId: z.string().nullable()
-  }).strict()).max(5)
+  segments: z.array(z.discriminatedUnion("kind", [
+    z.object({ kind: z.literal("explanation"), text: z.string(), sourceIds: z.array(z.string()), quoteId: z.null() }).strict(),
+    z.object({ kind: z.literal("quote"), text: z.literal(""), sourceIds: z.array(z.string()), quoteId: z.string() }).strict()
+  ])).max(5)
 }).strict();
 
 export const checkSchema = z.object({
@@ -29,10 +29,16 @@ export const checkSchema = z.object({
   safety: z.enum(["none", "threat", "immediate", "uncertain"])
 }).strict();
 
-const segmentJson = { type: "object", additionalProperties: false,
-  properties: { kind: { type: "string", enum: ["explanation", "quote"] }, text: { type: "string" },
-    sourceIds: { type: "array", items: { type: "string" } }, quoteId: { type: ["string", "null"] } },
-  required: ["kind", "text", "sourceIds", "quoteId"] };
+const segmentJson = { anyOf: [
+  { type: "object", additionalProperties: false,
+    properties: { kind: { type: "string", enum: ["explanation"] }, text: { type: "string" },
+      sourceIds: { type: "array", items: { type: "string" } }, quoteId: { type: "null" } },
+    required: ["kind", "text", "sourceIds", "quoteId"] },
+  { type: "object", additionalProperties: false,
+    properties: { kind: { type: "string", enum: ["quote"] }, text: { type: "string", enum: [""] },
+      sourceIds: { type: "array", items: { type: "string" } }, quoteId: { type: "string" } },
+    required: ["kind", "text", "sourceIds", "quoteId"] }
+] };
 export const answerJson = { type: "object", additionalProperties: false,
   properties: { decision: { type: "string", enum: ["CLARIFY", "FULL", "PARTIAL", "REFER"] },
     safety: { type: "string", enum: ["none", "threat", "immediate", "uncertain"] },

@@ -38,6 +38,9 @@ export function scopeBoundary(text: string, hasHistory: boolean): Answer | null 
   const t = normalizeArabic(text);
   // Individual faith judgments are outside every card, including reassuring verdicts.
   if (/كافر|تكفير|ايمانه|ايمان (?:صديقي|خويي)/.test(t)) return limitation();
+  // A speech-related hadith is not evidence for teaching unrelated acts of worship.
+  // Keep friendship questions that merely mention these settings on the normal path.
+  if (/قنوت|زكاة|صلاة|وضوء|صيام|مناسك/.test(t) && !/صديق|صداق|خوي|اصحاب|يسخر|يستهز|استهزا|سخري|يضحك|يؤذي|يوذي|ظلم/.test(t)) return limitation();
   const bare = t.replace(/[.،!؟?]/g, "").trim();
   if (!hasHistory && (/^(?:(?:هو|هي) )?(?:سواها|سوتها|كررها)(?: مر[ةه] ثاني[ةه])?$/.test(bare) || /^(?:هل )?(?:كذا|هذا|هالشي)(?: صح| صحيح)?$/.test(bare))) {
     return { decision: "CLARIFY", safety: "none", answer: policy.clarify,
@@ -53,9 +56,10 @@ export function needsNextStep(text: string): boolean {
 
 export function nextStepFallback(): Answer {
   const ids = ["friendship_non_harm", "friendship_good_speech"];
-  return { decision: "FULL", safety: "none", answer: policy.triedStop,
-    segments: [{ kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null }],
-    sources: sources.filter(s => ids.includes(s.id)), grounded: true, limited: false };
+  return { ...materialize({ decision: "FULL", safety: "none", segments: [
+    { kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null },
+    { kind: "quote", text: "", sourceIds: ["friendship_good_speech"], quoteId: "friendship_good_speech" }
+  ] }), grounded: true };
 }
 
 export function materialize(candidate: Candidate): Answer {
@@ -72,13 +76,21 @@ export function materialize(candidate: Candidate): Answer {
       // Quoted words can ONLY originate in the server's source file.
       return { ...segment, text: source.sourceQuote };
     }
-    if (segment.quoteId !== null || !segment.text.trim() || segment.text.length > 650) throw new Error("invalid_explanation");
+    const text = segment.text.replace(/[{}]/g, "").trim();
+    if (segment.quoteId !== null || !text || text.length > 650) throw new Error("invalid_explanation");
     // Attribution and quotation belong exclusively in stored quote segments.
-    if (/قال (?:الله|النبي|رسول)|قال تعالى|[«»]|https?:\/\//.test(segment.text)) throw new Error("freeform_attribution");
-    return segment;
+    if (/قال (?:الله|النبي|رسول)|قال تعالى|[«»]|https?:\/\//.test(text)) throw new Error("freeform_attribution");
+    return { ...segment, text };
   });
   if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") && used.size === 0) throw new Error("missing_evidence");
-  const answer = segments.map(s => s.kind === "quote" ? `«${s.text}»` : s.text).join("\n\n");
+  // A supported answer includes its hadith in the dialogue, even if the model omits it.
+  // Choose from evidence already attached to the explanation, before the grounding audit.
+  if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") && !segments.some(s => s.kind === "quote")) {
+    const explanationIndex = segments.findIndex(s => s.sourceIds.length > 0);
+    const source = sources.find(s => s.id === segments[explanationIndex].sourceIds[0])!;
+    segments.splice(explanationIndex + 1, 0, { kind: "quote", text: source.sourceQuote, sourceIds: [source.id], quoteId: source.id });
+  }
+  const answer = segments.map(s => s.kind === "quote" ? `${sources.find(source => source.id === s.quoteId)!.quoteIntroduction}\n«${s.text}»` : s.text).join("\n\n");
   if (answer.length > 1500) throw new Error("answer_too_long");
   return { decision: candidate.decision, safety: "none", answer, segments,
     sources: sources.filter(s => used.has(s.id)), grounded: false, limited: false };

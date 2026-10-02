@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { structured, speak, transcribe, ProviderError } from "../src/lib/providers";
+import { structured, speak, transcribe, ProviderError, candidateSchema } from "../src/lib/providers";
 process.env.OPENAI_API_KEY = "test-key-not-real"; process.env.ELEVENLABS_API_KEY = "test-key-not-real";
 const fetchStub = (fn: (url: string, init: RequestInit) => Promise<Response>) => fn as typeof fetch;
 test("Responses uses store:false and strict schema; completed output is parsed", async () => {
@@ -29,4 +29,10 @@ test("speech sends exact text using the configured voice and Arabic", async () =
 });
 test("provider errors never expose raw error messages", async () => {
   await assert.rejects(speak("x", undefined, fetchStub(async () => Response.json({ secret: "DO_NOT_LOG" }, { status: 401 })), "voice1234"), error => error instanceof ProviderError && !error.message.includes("DO_NOT_LOG"));
+});
+test("structured segments cannot combine an explanation with a quote identifier or generate quote words", () => {
+  const candidate = { decision: "FULL", safety: "none", segments: [{ kind: "explanation", text: "شرح", sourceIds: ["source"], quoteId: "source" }] };
+  assert.equal(candidateSchema.safeParse(candidate).success, false);
+  assert.equal(candidateSchema.safeParse({ ...candidate, segments: [{ ...candidate.segments[0], kind: "quote", text: "invented words" }] }).success, false);
+  assert.equal(candidateSchema.safeParse({ ...candidate, segments: [{ ...candidate.segments[0], kind: "quote", text: "" }] }).success, true);
 });

@@ -2,7 +2,17 @@
 
 The implementation passes its engineering checks and the final bounded language evaluation. This is **an adult-operated fictional MVP**, not religious approval or evidence of child usability. Every source explanation and safety response is still marked draft.
 
-## Final checks
+## Latest update: hadith inside the dialogue
+
+At the owner's request, supported Full/Partial replies now include one exact stored hadith excerpt within the conversation and spoken answer. A source-specific introduction identifies the quotation; the wrongdoer-help excerpt retains its context. The server inserts a quotation when the model omits it, before the independent grounding audit. Safety, clarification and referral paths do not receive an automatic quote. The repeated-failed-advice fallback includes the good-speech excerpt too.
+
+- **52/52 engineering tests passed**, including exact quote insertion, audit visibility, speech/display agreement, strict segment structure, and unrelated-worship scope checks. The production build and its TypeScript check passed.
+- The final complete [13:34:32 UTC evaluation](results/2026-10-02T13-34-32-975Z.json) passed **39/39 automatic checks**. It adds `quoteIncluded` to require one quote in every Full/Partial output, alongside exact wording, decision and safety checks. Source hashes now also include provider/schema code. Human semantic/content review remains pending.
+- In the production browser, a fictional reading/mockery question returned the good-speech excerpt visibly between explanation and practical advice. Real Noorah audio generated and playback/stop worked. This is an engineering check, not a pronunciation sign-off or an outside-adult acceptance session.
+- Two intermediate reports are retained: [13:26:02](results/2026-10-02T13-26-02-475Z.json) and [13:29:39](results/2026-10-02T13-29-39-944Z.json). They exposed malformed quote segments, overly conservative mixed-scope fallback and an unrelated prayer answer using a speech hadith as apparent support. Strict quote/explanation schemas, a bounded worship-topic guard and clearer audit rules addressed these observed failures before the final run. Friendship questions that mention worship still use the normal response path. These controls do not guarantee detection of all out-of-scope paraphrases.
+- These three additional recorded text-evaluation runs cost an estimated **USD 0.1547216**, bringing all ten recorded runs to **USD 0.3965324**, using the uncached rates below. This excludes diagnostic spot checks, browser speech and other provider usage. No billing settings were changed.
+
+## Earlier baseline checks (before the inline-hadith update)
 
 | Check | Observed result |
 |---|---|

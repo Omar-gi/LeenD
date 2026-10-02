@@ -6,6 +6,7 @@ For each source card:
 
 - Confirm narrator, collection, number, source URL and exact excerpt. The Muslim 41 excerpt is from the Muslim attribution within its linked page; do not mislabel the page's other narrations as Muslim 41.
 - Confirm the excerpt boundaries preserve meaning and that `isExcerpt` is accurate.
+- Review `quoteIntroduction`, which is shown and spoken before the exact excerpt. Confirm that the stopping-wrongdoing introduction preserves the context of helping a wrongdoer stop wrongdoing.
 - Review the permitted explanation and every prohibited extension (fatwas, judging faith, invented reward counts, physical confrontation).
 - Review generated explanations against the evaluation cases; confirm source support, age-appropriate language and Saudi phrasing.
 - Record reviewer, date, notes and version/commit below. Change only the reviewed card to `approved`.

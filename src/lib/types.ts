@@ -1,7 +1,7 @@
 export type Decision = "CLARIFY" | "FULL" | "PARTIAL" | "REFER";
 export type Safety = "none" | "threat" | "immediate" | "uncertain";
 export type SourceCard = {
-  id: string; title: string; sourceQuote: string; sourceReference: string;
+  id: string; title: string; sourceQuote: string; quoteIntroduction: string; sourceReference: string;
   sourceUrl: string; isExcerpt: boolean; permittedExplanation: string;
   boundaries: string[]; reviewStatus: "draft" | "approved";
 };
