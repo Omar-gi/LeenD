@@ -1,0 +1,154 @@
+{
+  "scope": "Fictional deliberately incorrect candidates; real audit calls only, no TTS or application transcripts",
+  "requests": 12,
+  "fixtures": [
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "question": "كيف أطلب كتاب من صاحبي؟",
+      "field": "sourcesRelevant",
+      "candidate": {
+        "decision": "FULL",
+        "safety": "none",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "تقدر تقول له: ممكن أستعير كتابك؟",
+            "sourceIds": [
+              "friendship_good_speech"
+            ],
+            "quoteId": null
+          },
+          {
+            "kind": "quote",
+            "text": "",
+            "sourceIds": [
+              "friendship_good_speech"
+            ],
+            "quoteId": "friendship_good_speech"
+          }
+        ]
+      }
+    },
+    {
+      "name": "swapped_roles",
+      "question": "كيف أطلب كتاب من صاحبي؟",
+      "field": "contextRelevant",
+      "candidate": {
+        "decision": "FULL",
+        "safety": "none",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "تقدر تقول له: عندي كتاب زيادة، تبيه؟",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ]
+      }
+    }
+  ],
+  "rows": [
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "repeat": 1,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "USER asked how to request a book from a friend; the answer provides a polite phrase and a religious quote about speaking kindly.",
+        "sourceReason": "The 'friendship_good_speech' source is partly relevant, but the cited hadith is not necessary for a routine polite request; no other sources are cited.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": true,
+        "sourcesRelevant": false,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "repeat": 2,
+      "passed": true,
+      "auditRejected": false,
+      "firstAudit": {
+        "contextSummary": "The user wants to know how to ask a friend for a book. The answer gives a polite phrase to ask for the book and adds a religious quote about speaking kindly or remaining silent.",
+        "sourceReason": "The request for a polite phrase does not specifically warrant the religious quote, but the source card on good speech fits the polite phrase suggestion as a practical example; otherwise, no citations are required.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": true,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "repeat": 3,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "المستخدم يسأل كيف يطلب كتابًا من صديقه، والإجابة تقدم عبارة مناسبة مع اقتباس حديث عن اختيار الكلام الطيب.",
+        "sourceReason": "المستخدم يحتاج اقتراح عبارة مناسبة فقط، إذًا لا يستدعي ذكر حديث ديني، لكن تم استخدام مصدر اختيار الكلام الطيب لتبرير العبارة الهادئة.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": true,
+        "sourcesRelevant": false,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "swapped_roles",
+      "repeat": 1,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "User asks how to politely ask a friend for their book; proposed answer suggests asking 'عندي كتاب زيادة، تبيه؟' which offers the speaker giving a book, not requesting one.",
+        "sourceReason": "No citations needed since the question involves basic polite speech about borrowing books, and the proposed answer does not match the user's request.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": false,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "swapped_roles",
+      "repeat": 2,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "The user asks how to ask a friend to borrow a book, but the answer suggests offering the book instead of requesting it.",
+        "sourceReason": "No citations are warranted for a simple polite phrase request.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": false,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "swapped_roles",
+      "repeat": 3,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "The user asked how to request a book from a friend but the answer suggests offering to lend a book instead of asking to borrow one.",
+        "sourceReason": "No citations are warranted for the user's simple request about asking to borrow a book.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": false,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    }
+  ]
+}

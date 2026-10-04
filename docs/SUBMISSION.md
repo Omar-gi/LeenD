@@ -9,7 +9,7 @@ Target: **6 October, 21:00 Riyadh**; stated deadline 23:59. This is a preparatio
 - Noorah is selected and the three-turn live voice path passed. Confirm the same voice entitlement in the deployed configuration and complete teammate pronunciation review.
 - Have the teammate review and record source/safety approval, keeping draft labels until then.
 - Thmanyah files are included after the owner's explicit permission confirmation; preserve their notices and separate licence.
-- Run the expanded 31-case evaluation, repeat critical cases three times, review semantic rubrics and publish real results and latency. Do not use backend mock-test pass rates as model accuracy.
+- Run the expanded 43-case evaluation in bounded batches, repeat critical cases three times, review semantic rubrics and publish real results and latency. Do not use backend mock-test pass rates as model accuracy.
 - Ask an outside adult to complete the voice demo with fictional input without coaching: recording, response, sources, follow-up, correction, speech stop and end session. Record completion, errors, timings and device. This is adult usability evidence only.
 - Confirm repository visibility meets competition rules. Add a code licence if the team chooses one. Do not upload keys, private briefing documents or actual user conversations.
 

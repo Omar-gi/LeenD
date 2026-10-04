@@ -9,6 +9,8 @@ Ancient source excerpts are provided with references and linked to Dorar for ver
 | Avoiding harm | المسلم من سلم المسلمون من لسانه ويده | Muslim 41, Jabir; [Dorar](https://dorar.net/h/zTvTv9tv?osoul=1). Use the Muslim subsection, not another narration's page heading. |
 | Good speech | من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت | Bukhari 6475 / Muslim 47, Abu Huraira; [Dorar](https://dorar.net/h/rpp1S6uX?osoul=1). Excerpt, not full hadith. |
 | Stopping wrongdoing | تحجزه أو تمنعه من الظلم فإن ذلك نصره | Bukhari 6952, Anas; [Dorar](https://dorar.net/h/iROBMC67?osoul=1). Explain the question about helping a wrongdoer stop wrongdoing. |
+| Avoiding unsupported suspicion | إياكم والظن؛ فإن الظن أكذب الحديث | Bukhari 6064 / Muslim 2563, Abu Huraira; [Dorar](https://dorar.net/h/trSPsnoz?osoul=1). Exact excerpt checked against the Bukhari subsection on 4 October 2026, not the Abu Dawud page heading. Draft explanation; never use to dismiss actual harm. |
+| Forgiveness | وما زاد الله عبدا بعفو إلا عزا | Muslim 2588, Abu Huraira; [Dorar](https://dorar.net/h/TiFZzO09?osoul=1). Exact excerpt checked against the Muslim subsection on 4 October 2026. Draft explanation; no pressure to forgive or abandon boundaries. |
 
 Each JSON card includes boundaries, permitted explanation and review status. Exact quotation text is inserted by the server, never synthesized by the language model. Fixed safety responses are separate application guidance, not scripture or a personal fatwa.
 

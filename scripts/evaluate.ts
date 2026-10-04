@@ -2,7 +2,7 @@ import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { generateAnswer } from "../src/lib/answer";
 import { sources } from "../src/lib/corpus";
-import { quotationContext } from "../src/lib/dialogue";
+import { assistantQuestionCount, quotationContext } from "../src/lib/dialogue";
 import { ProviderError, structured, type Generate } from "../src/lib/providers";
 import type { ConversationTurn } from "../src/lib/types";
 import { cases } from "../evaluation/cases";
@@ -30,9 +30,11 @@ const meteredFetch: typeof fetch = async (url, init) => {
   return response;
 };
 let audits: unknown[] = [];
+let drafts: unknown[] = [];
 const meteredGenerate: Generate = async (instructions, input, schema, name, signal) => {
   const result = await structured(instructions, input, schema, name, signal, meteredFetch);
   if (name === "leen_grounding") audits.push(result);
+  if (name === "leen_answer") drafts.push({ currentQuestion: JSON.parse(input).currentQuestion, result });
   return result;
 };
 for (const c of cases) {
@@ -42,6 +44,7 @@ for (const c of cases) {
     if (blocked) { rows.push({ id: c.id, repeat, status: "not_run_provider_blocked" }); continue; }
     const history: ConversationTurn[] = []; const outputs = []; const turnTimingsMs: number[] = []; let final;
     audits = [];
+    drafts = [];
     const start = performance.now();
     try {
       for (const question of c.turns) {
@@ -56,22 +59,28 @@ for (const c of cases) {
       const quoteMatch = outputs.every(a => a.segments.every(s => s.kind !== "quote" || sources.some(source => source.id === s.quoteId && source.sourceQuote === s.text)));
       const quoteIncluded = outputs.every((a, index) => {
         const quotes = a.segments.filter(s => s.kind === "quote");
-        if (!["FULL", "PARTIAL"].includes(a.decision) || !a.sources.length) return quotes.length === 0;
-        const context = quotationContext(c.turns[index], history.slice(0, index));
         const expected = c.turnQuotes?.[index];
         if (expected === "one" && quotes.length !== 1 || expected === "none" && quotes.length !== 0) return false;
+        if (!["FULL", "PARTIAL"].includes(a.decision) || !a.sources.length) return quotes.length === 0;
+        const context = quotationContext(c.turns[index], history.slice(0, index));
         return quotes.length <= 1 && quotes.every(s => context.repeatQuote || !context.quotedSourceIds.includes(s.quoteId!));
       });
       const sourcePolicyMatch = outputs.every((a, index) => {
         const expected = c.turnSources?.[index];
         return expected === "none" ? a.sources.length === 0 && a.segments.every(s => !s.sourceIds.length) : expected !== "some" || a.sources.length > 0;
       });
-      const passed = decisionMatch && safetyMatch && quoteMatch && quoteIncluded && sourcePolicyMatch;
+      const topicMatch = outputs.every((a, index) => {
+        const ids = c.turnSourceIds?.[index];
+        return !ids?.length || a.sources.length > 0 && a.sources.every(s => ids.includes(s.id));
+      });
+      const questionCounts = outputs.map(a => assistantQuestionCount(a.answer));
+      const questionPolicyMatch = questionCounts.every((count, index) => c.maxQuestions?.[index] === undefined || count <= c.maxQuestions[index]);
+      const passed = decisionMatch && safetyMatch && quoteMatch && quoteIncluded && sourcePolicyMatch && topicMatch && questionPolicyMatch;
       if (!passed) process.exitCode = 1;
       rows.push({ id: c.id, repeat, category: c.category, status: passed ? "automatic_checks_pass_human_review_required" : "automatic_check_failed",
-        elapsedMs: Math.round(performance.now() - start), turnTimingsMs, decisionMatch, safetyMatch, quoteMatch, quoteIncluded, sourcePolicyMatch, humanReview: "pending", rubric: c.review,
+        elapsedMs: Math.round(performance.now() - start), turnTimingsMs, decisionMatch, safetyMatch, quoteMatch, quoteIncluded, sourcePolicyMatch, topicMatch, questionPolicyMatch, questionCounts, humanReview: "pending", rubric: c.review,
         // These are predefined fictional evaluation cases, never application user logs.
-        fictionalConversation: history, outputs, audits });
+        fictionalConversation: history, outputs, audits, drafts });
       console.log(`${c.id}.${repeat} ${passed ? "CHECKS PASS" : "CHECK FAILED"} — human review pending`);
     } catch (error) {
       const code = error instanceof ProviderError ? error.code || `http_${error.status}` : "network_timeout_or_invalid_output";

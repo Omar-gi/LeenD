@@ -43,10 +43,7 @@ export function scopeBoundary(text: string, hasHistory: boolean): Answer | null 
   const t = normalizeArabic(text);
   // Individual faith judgments are outside every card, including reassuring verdicts.
   if (/كافر|تكفير|ايمانه|ايمان (?:صديقي|خويي)/.test(t)) return limitation();
-  // The V1 draft's illustrative husn-al-dhann quotation is not in this corpus.
-  // Revisit this boundary when Sarah supplies a reviewed card for this topic.
-  if (/حسن (?:ال)?ظن|سوء (?:ال)?ظن/.test(t) && /حديث|دليل|اي[ةه]|النبي/.test(t)) return limitation();
-  // None of the three cards supplies a specific supplication or reward claim,
+  // None of the cards supplies a specific supplication or reward claim,
   // even when the request mentions a friend or an ordinary practical problem.
   if (/(?:دعاء|ادعيه).{0,20}(?:مخصوص|خاص|محدد)|(?:كم|وش|ايش|ما) (?:هو )?(?:الاجر|اجره|ثواب|عدد الحسنات)/.test(t)) return limitation();
   // A speech-related hadith is not evidence for teaching unrelated acts of worship.

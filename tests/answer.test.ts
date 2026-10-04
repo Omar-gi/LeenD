@@ -89,12 +89,14 @@ test("approved but repetitive advice is replaced with a grounded next-step fallb
 });
 test("an assistant suggestion is never treated as a completed user action", async () => {
   const invented = { ...candidate, segments: [{ ...candidate.segments[0], text: "إذا استمر رغم أنك طلبت منه يوقف، اطلب مساعدة معلم." }] };
-  const result = await generateAnswer("ولو كرر نفس التصرف بعدين؟", [{ user: "صديقي يستهزئ فيني", assistant: "اطلب منه يوقف" }], undefined, sequence(invented, approved));
-  assert.equal(result.decision, "CLARIFY"); assert.equal(result.answer, policy.clarifyAction);
+  const fixed = { ...candidate, segments: [{ ...candidate.segments[0], text: "إذا كرر السخرية، تقدر تبتعد وتطلب مساعدة معلم." }] };
+  const result = await generateAnswer("ولو كرر نفس التصرف بعدين؟", [{ user: "صديقي يستهزئ فيني", assistant: "اطلب منه يوقف" }], undefined, sequence(invented, approved, fixed, approved));
+  assert.equal(result.decision, "FULL"); assert.ok(!/[؟?]/.test(result.answer)); assert.ok(!result.answer.includes("رغم"));
 });
-test("hypothetical teasing follow-up asks whether advice was tried without assuming it", async () => {
-  const result = await generateAnswer("طيب إذا سواها بكرة؟", [{ user: "صديقي يستهزئ فيني إذا قرأت", assistant: "اطلب منه يوقف" }], undefined, sequence());
-  assert.equal(result.decision, "CLARIFY"); assert.equal(result.answer, policy.clarifyAction);
+test("hypothetical teasing follow-up can get a conditional answer without an interview", async () => {
+  const conditional = { ...candidate, segments: [{ ...candidate.segments[0], text: "إذا كرر السخرية، تقدر تبتعد وتطلب مساعدة معلم." }] };
+  const result = await generateAnswer("طيب إذا سواها بكرة؟", [{ user: "صديقي يستهزئ فيني إذا قرأت", assistant: "اطلب منه يوقف" }], undefined, sequence(conditional, approved));
+  assert.equal(result.decision, "FULL"); assert.ok(!/[؟?]/.test(result.answer));
 });
 test("a failed stop request is not replaced by the hypothetical-action clarification", async () => {
   const result = await generateAnswer("طيب إذا سواها بكرة؟", [{ user: "صديقي يستهزئ فيني وقلت له يوقف", assistant: "اطلب مساعدة معلم" }], undefined, sequence(candidate, approved));
@@ -211,10 +213,13 @@ test("a greeting or goodbye prefix never hides danger in the rest of the message
   assert.equal(semantic.safety, "threat");
 });
 
-test("the draft's missing hadith cannot be replaced with a speech quotation", async () => {
+test("the verified draft suspicion card supplies its own exact evidence", async () => {
+  const source = sources.find(s => s.id === "friendship_suspicion")!;
   for (const text of ["أعطيني حديثًا عن حسن الظن لأن صديقاتي يهمسون.", "وش الدليل عن سوء الظن؟"]) {
-    const answer = await generateAnswer(text, [], undefined, sequence());
-    assert.equal(answer.decision, "REFER"); assert.deepEqual(answer.sources, []);
+    const lesson = { ...candidate, segments: [{ ...candidate.segments[0], text: "الظن وحده ما يكفي للجزم بقصد الآخرين.", sourceIds: [source.id] }] };
+    const answer = await generateAnswer(text, [], undefined, sequence(lesson, approved));
+    assert.equal(answer.decision, "FULL"); assert.equal(answer.sources[0].id, source.id);
+    assert.ok(answer.answer.includes(source.sourceQuote)); assert.equal(source.reviewStatus, "draft");
   }
 });
 

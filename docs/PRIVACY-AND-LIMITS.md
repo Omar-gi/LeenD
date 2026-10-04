@@ -12,12 +12,13 @@ The evaluation runner is an explicit exception for **predefined fictional test f
 
 ## Grounding and safety
 
-- The whole three-card library is provided to generation and independent verification. No retrieval database, browsing or training occurs.
+- The whole five-card draft library is provided to generation and independent verification. No retrieval database, browsing or training occurs.
 - The server rejects unknown source IDs, inserts exact stored excerpts, forbids free-form quotation attribution and checks structure. A second model audits every ordinary answer. Both model passes may make mistakes; agreement does not prove religious correctness.
 - A conservative direct-threat detector and a model safety classification route to fixed draft safety wording. This is not a comprehensive threat-detection system. Negated/fictional mentions may trigger an extra clarification. Semantic failures and omissions require manual evaluation.
 - Unsupported ordinary religious guidance returns a transparent limitation instead of being spoken as a validated claim.
 - Explicit individual-faith questions and context-free ambiguous statements also have deterministic boundaries. If a generated reply repeats advice the user says already failed, a source-linked draft next-step fallback recommends trusted adult support. An earlier assistant suggestion is not treated as a completed user action. These limited pattern checks do not cover every paraphrase.
 - Source cards and safety text are drafts until a human reviewer signs off. A source link alone is not approval of every explanation.
+- Ordinary dialogue defaults to an answer without questions. A server check limits ordinary clarification to one within the bounded history and checks common question forms; quoted sample phrases and safety guidance are handled separately. The model still determines semantic necessity and can make mistakes. A repeated violation gets a declarative limitation, not another question.
 
 ## Operational bounds
 

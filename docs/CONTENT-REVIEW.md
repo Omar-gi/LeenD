@@ -18,6 +18,8 @@ Review safety text separately for threat, immediate danger, uncertainty, limitat
 | Non-harm excerpt/explanation | Pending | — | — | Draft |
 | Good speech excerpt/explanation | Pending | — | — | Draft |
 | Stopping wrongdoing excerpt/explanation | Pending | — | — | Draft |
+| Suspicion excerpt/explanation | Pending | — | — | Draft; source reference checked 4 October. Review distinction between uncertain impressions and actual harm; no blaming feelings or forced investigation. |
+| Forgiveness excerpt/explanation | Pending | — | — | Draft; source reference checked 4 October. Review voluntary forgiveness, retained boundaries and no guaranteed acceptance of an apology. |
 | Safety and fallback wording | Pending | — | — | Draft |
 
-Re-run the evaluation after any content or prompt change. Do not mark an entire future response space approved merely because three cards were reviewed.
+Review the answer-first dialogue fallback in `src/lib/dialogue.ts` and the source-adoption limitation in `src/lib/answer.ts` too. Re-run the evaluation after content or prompt changes. Reviewing a finite set of cards does not approve every future generated response.
