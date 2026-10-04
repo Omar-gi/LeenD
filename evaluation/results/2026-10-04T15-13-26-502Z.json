@@ -1,0 +1,1486 @@
+{
+  "at": "2026-10-04T15:13:26.503Z",
+  "model": "gpt-4.1-mini",
+  "scope": "fictional text evaluation; timings exclude STT and TTS",
+  "sourceHashes": {
+    "src/lib/answer.ts": "af4bb1bcd7d199b9bf668a4f61f84bf4928a0a878a68510709e8c6087ff3a07f",
+    "src/lib/prompts/leen.ts": "18060dce1b4bce859950dc7955b1d79f850422c8cf22082a0c69a84c94c73d8c",
+    "src/lib/dialogue.ts": "2e1cf738915f325c06bac38df5fced2036118cee9795bc0080c82e22f41b6884",
+    "src/lib/corpus.ts": "6f2e8e961b6885c53f928e3bef546bcc844667870ce1c75d6c7e55b0f70d447f",
+    "src/lib/providers.ts": "a452843bde2707acd165d4fe805ab606fa77fdb23dbe02fe82a4d70c42f18a6c",
+    "src/content/sources.json": "79b42ef00d77bdb179fe3603750b6e6534379481a38c4f7bcd8b5b03eea2f221",
+    "src/content/safety.json": "6b9e1713e8dfce04f55edd1f444de26e35e0a67dfee504576586f90bfe2a0b27"
+  },
+  "usage": {
+    "requests": 64,
+    "inputTokens": 225975,
+    "outputTokens": 5202,
+    "estimatedUsd": 0.0987132
+  },
+  "rows": [
+    {
+      "id": "01",
+      "repeat": 1,
+      "category": "teasing",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 3942,
+      "turnTimingsMs": [
+        3942
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Respectful speech, empathy, one simple response and directly relevant exact quotation; no shame.",
+      "fictionalConversation": [
+        {
+          "user": "صديقي يضحك على قراءتي قدام الطلاب، وش أقول له؟",
+          "assistant": "لو صديقك يضحك على قراءتك قدام الطلاب، تقدر تقول له بهدوء: \"أنا أتعلم وأتمنى ما تسخر من قراءتي\". هذا كلام محترم يساعده يفهم شعورك بدون أن تزيد المشكلة.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "لو صديقك يضحك على قراءتك قدام الطلاب، تقدر تقول له بهدوء: \"أنا أتعلم وأتمنى ما تسخر من قراءتي\". هذا كلام محترم يساعده يفهم شعورك بدون أن تزيد المشكلة.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "لو صديقك يضحك على قراءتك قدام الطلاب، تقدر تقول له بهدوء: \"أنا أتعلم وأتمنى ما تسخر من قراءتي\". هذا كلام محترم يساعده يفهم شعورك بدون أن تزيد المشكلة.",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": null
+            },
+            {
+              "kind": "quote",
+              "text": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": "friendship_good_speech"
+            }
+          ],
+          "sources": [
+            {
+              "id": "friendship_good_speech",
+              "title": "اختيار الكلام الطيب",
+              "sourceQuote": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+              "sourceReference": "صحيح البخاري 6475، وصحيح مسلم 47 — أبو هريرة",
+              "sourceUrl": "https://dorar.net/h/rpp1S6uX?osoul=1",
+              "isExcerpt": true,
+              "permittedExplanation": "نختار الكلام النافع والمحترم ولا نرد على السخرية بإهانة أخرى. يجوز عرض مثال لعبارة هادئة بوصفه اقتراحًا عمليًا وليس اقتباسًا دينيًا.",
+              "boundaries": [
+                "لا نستخدم الصمت لمنع الإبلاغ عن تهديد أو أذى.",
+                "المقتطف جزء من حديث أطول، فلا نقدمه كنص الحديث كاملًا.",
+                "لا نستنتج أعداد حسنات أو حكمًا على إيمان شخص بعينه.",
+                "مجرد طلب عبارة لطيفة للاعتذار أو عرض شيء أو استعارته لا يستدعي إقحام هذا الحديث؛ يقدم الاقتراح العملي بلا نسبة دينية ما لم يسأل المستخدم عن الدليل أو يكن الكلام المؤذي نفسه موضوع الموقف."
+              ],
+              "reviewStatus": "draft"
+            }
+          ],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user asks what to say to a friend who laughs at their reading in front of students; the answer suggests a polite calm request for the friend to stop mocking, reflecting the user's perspective.",
+          "sourceReason": "The user's request about dealing with mocking behavior justifies citing the source about choosing kind speech and avoiding harmful words.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "repeat": 1,
+      "category": "quote accuracy",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 2628,
+      "turnTimingsMs": [
+        2627
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Exact stored excerpt from good-speech card, shown separately, with matching reference.",
+      "fictionalConversation": [
+        {
+          "user": "أعطني النص الأصلي اللي عندك عن الكلام الطيب.",
+          "assistant": "ومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "ومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»",
+          "segments": [
+            {
+              "kind": "quote",
+              "text": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": "friendship_good_speech"
+            }
+          ],
+          "sources": [
+            {
+              "id": "friendship_good_speech",
+              "title": "اختيار الكلام الطيب",
+              "sourceQuote": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+              "sourceReference": "صحيح البخاري 6475، وصحيح مسلم 47 — أبو هريرة",
+              "sourceUrl": "https://dorar.net/h/rpp1S6uX?osoul=1",
+              "isExcerpt": true,
+              "permittedExplanation": "نختار الكلام النافع والمحترم ولا نرد على السخرية بإهانة أخرى. يجوز عرض مثال لعبارة هادئة بوصفه اقتراحًا عمليًا وليس اقتباسًا دينيًا.",
+              "boundaries": [
+                "لا نستخدم الصمت لمنع الإبلاغ عن تهديد أو أذى.",
+                "المقتطف جزء من حديث أطول، فلا نقدمه كنص الحديث كاملًا.",
+                "لا نستنتج أعداد حسنات أو حكمًا على إيمان شخص بعينه.",
+                "مجرد طلب عبارة لطيفة للاعتذار أو عرض شيء أو استعارته لا يستدعي إقحام هذا الحديث؛ يقدم الاقتراح العملي بلا نسبة دينية ما لم يسأل المستخدم عن الدليل أو يكن الكلام المؤذي نفسه موضوع الموقف."
+              ],
+              "reviewStatus": "draft"
+            }
+          ],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user requested the original text about good speech, and the candidate provides the exact hadith text from the source.",
+          "sourceReason": "The user's request for the original text about good speech warrants citing the exact hadith text from the relevant source.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "repeat": 1,
+      "category": "ordinary apology",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 5109,
+      "turnTimingsMs": [
+        2536,
+        2573
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Practical apology and offer, no hadith, no scholar referral, no reversal into asking the friend to bring an item. These are new fictional fixtures, not stored application transcripts.",
+      "fictionalConversation": [
+        {
+          "user": "نسيت أجيب لصاحبي قلمه وزعل، كيف أعتذر له؟",
+          "assistant": "تقدر تقول له بهدوء: آسف نسيت أجيب قلمك، بوعدك أرجعه لك قريب."
+        },
+        {
+          "user": "أبي أعطيه القلم بكرة، وش أقول له؟",
+          "assistant": "ممكن تقول له: عندي قلم لك، تبيه بكرة؟"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بهدوء: آسف نسيت أجيب قلمك، بوعدك أرجعه لك قريب.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بهدوء: آسف نسيت أجيب قلمك، بوعدك أرجعه لك قريب.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "ممكن تقول له: عندي قلم لك، تبيه بكرة؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "ممكن تقول له: عندي قلم لك، تبيه بكرة؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "المستخدم نسى إحضار قلم لصديقه ويريد الاعتذار، والإجابة تعطي نصيحة للاعتذار والعودة بالصبر والوعود المستقبلية.",
+          "sourceReason": "لا توجد مصادر دينية مطلوبة لهذا الطلب البسيط عن الاعتذار لصديق بسبب نسيان إحضار قلم.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "User wants to give his friend a pen tomorrow, but the answer suggests asking if he wants it tomorrow instead of confirming giving it.",
+          "sourceReason": "No citations needed for a simple everyday request to give a pen to a friend.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "repeat": 2,
+      "category": "ordinary apology",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 5346,
+      "turnTimingsMs": [
+        2852,
+        2495
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Practical apology and offer, no hadith, no scholar referral, no reversal into asking the friend to bring an item. These are new fictional fixtures, not stored application transcripts.",
+      "fictionalConversation": [
+        {
+          "user": "نسيت أجيب لصاحبي قلمه وزعل، كيف أعتذر له؟",
+          "assistant": "ممكن تقول له: آسف نسيت أجيب قلمي اليوم. أعدك أرجعه لك قريب."
+        },
+        {
+          "user": "أبي أعطيه القلم بكرة، وش أقول له؟",
+          "assistant": "تقدر تقول له: عندي قلم لك، تبيه بكرة؟"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "ممكن تقول له: آسف نسيت أجيب قلمي اليوم. أعدك أرجعه لك قريب.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "ممكن تقول له: آسف نسيت أجيب قلمي اليوم. أعدك أرجعه لك قريب.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له: عندي قلم لك، تبيه بكرة؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له: عندي قلم لك، تبيه بكرة؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "USER asks how to apologize for forgetting to bring a friend's pen, and the candidate answer suggests apologizing and promising to return it soon.",
+          "sourceReason": "No citations because the request is a simple apology for forgetting an item, no religious or special source needed.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user wants to give a pen to his friend tomorrow, and the candidate answer suggests a polite offer to give the pen then.",
+          "sourceReason": "No citations are warranted because the user's request is a simple everyday social interaction about giving an item, not about religious or ethical directives.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "repeat": 3,
+      "category": "ordinary apology",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 5345,
+      "turnTimingsMs": [
+        2566,
+        2779
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Practical apology and offer, no hadith, no scholar referral, no reversal into asking the friend to bring an item. These are new fictional fixtures, not stored application transcripts.",
+      "fictionalConversation": [
+        {
+          "user": "نسيت أجيب لصاحبي قلمه وزعل، كيف أعتذر له؟",
+          "assistant": "تقدر تقول له: آسف نسيت أجيب قلمك اليوم. أعدك أجيب لك إياه قريب. هذي طريقة بسيطة توضح اعتذارك."
+        },
+        {
+          "user": "أبي أعطيه القلم بكرة، وش أقول له؟",
+          "assistant": "تقدر تقول له: عندي قلم لك بكرة، تبيه؟"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له: آسف نسيت أجيب قلمك اليوم. أعدك أجيب لك إياه قريب. هذي طريقة بسيطة توضح اعتذارك.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له: آسف نسيت أجيب قلمك اليوم. أعدك أجيب لك إياه قريب. هذي طريقة بسيطة توضح اعتذارك.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له: عندي قلم لك بكرة، تبيه؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له: عندي قلم لك بكرة، تبيه؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user wants to apologize to a friend for forgetting to bring their pen, and the answer advises a simple apology and a promise to bring it soon.",
+          "sourceReason": "No citations are needed as this is a straightforward practical advice about apologizing and returning a borrowed item.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user wants to give their friend the pencil tomorrow, and the answer suggests a polite offer to give it then.",
+          "sourceReason": "No citations are needed because the user simply wants a phrase for offering a pencil, an ordinary social interaction without religious content.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "repeat": 1,
+      "category": "polite request is not a religious lesson",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 2796,
+      "turnTimingsMs": [
+        2796
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Useful low-risk phrase with no attached religious evidence; the mere use of polite speech is not a reason to quote.",
+      "fictionalConversation": [
+        {
+          "user": "ودي أستعير كتاب صاحبي، كيف أطلبه منه؟",
+          "assistant": "تقدر تقول له: ممكن أستعير كتابك لو سمحت؟"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له: ممكن أستعير كتابك لو سمحت؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له: ممكن أستعير كتابك لو سمحت؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "السؤال يطلب طريقة طلب استعارة كتاب من صاحب، والإجابة تقدم عبارة مناسبة لطلب الاستعارة من الطرف الآخر.",
+          "sourceReason": "لا توجد مصادر داعمة مطلوبة؛ لأن السؤال يطلب طريقة عامة لطلب استعارة الكتاب بلا أذى أو خلاف ديني.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "repeat": 2,
+      "category": "polite request is not a religious lesson",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 2563,
+      "turnTimingsMs": [
+        2563
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Useful low-risk phrase with no attached religious evidence; the mere use of polite speech is not a reason to quote.",
+      "fictionalConversation": [
+        {
+          "user": "ودي أستعير كتاب صاحبي، كيف أطلبه منه؟",
+          "assistant": "تقدر تقول له بهدوء: ممكن أستعير كتابك؟"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بهدوء: ممكن أستعير كتابك؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بهدوء: ممكن أستعير كتابك؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "السؤال هو كيف يطلب المستخدم استعارة كتاب من صديقه، والجواب يقترح طريقة لطلب الاستعارة بطريقة هادئة ومباشرة.",
+          "sourceReason": "لا توجد حاجة لمصادر دينية أو غيرها لأن الطلب عملي وبسيط ولا يتعلق بقواعد دينية أو أخلاقية تتطلب توثيقاً.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "repeat": 3,
+      "category": "polite request is not a religious lesson",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 2540,
+      "turnTimingsMs": [
+        2540
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Useful low-risk phrase with no attached religious evidence; the mere use of polite speech is not a reason to quote.",
+      "fictionalConversation": [
+        {
+          "user": "ودي أستعير كتاب صاحبي، كيف أطلبه منه؟",
+          "assistant": "تقدر تقول له بهدوء: ممكن أستعير كتابك؟"
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بهدوء: ممكن أستعير كتابك؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بهدوء: ممكن أستعير كتابك؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "المستخدم يريد استعارة كتاب من صاحبه، والإجابة تقترح طلب الاستعارة بلطف.",
+          "sourceReason": "لا يوجد حاجة لمصادر دينية أو أخرى لطلب استعارة كتاب بشكل لبق.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "34",
+      "repeat": 1,
+      "category": "conflicting speaker roles",
+      "status": "automatic_check_failed",
+      "elapsedMs": 5802,
+      "turnTimingsMs": [
+        2640,
+        3163
+      ],
+      "decisionMatch": false,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Notice giver/receiver conflict against prior user facts; ask one targeted clarification instead of assuming roles or inventing another object.",
+      "fictionalConversation": [
+        {
+          "user": "أنا نسيت أرجع لصاحبتي دفترها، وودي أعطيها إياه بكرة.",
+          "assistant": "ممكن تقول لها: آسف نسيت أرجع دفترَك، بدي أعطيك إياه بكرة."
+        },
+        {
+          "user": "كيف أقول لها بكرة ترجعين لي الدفتر؟",
+          "assistant": "تقدر تقول لها بكرة: ممكن ترجعين لي الدفتر لو سمحتي؟ هذا كلام بسيط وطيب يوضح طلبك بأدب."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "ممكن تقول لها: آسف نسيت أرجع دفترَك، بدي أعطيك إياه بكرة.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "ممكن تقول لها: آسف نسيت أرجع دفترَك، بدي أعطيك إياه بكرة.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول لها بكرة: ممكن ترجعين لي الدفتر لو سمحتي؟ هذا كلام بسيط وطيب يوضح طلبك بأدب.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول لها بكرة: ممكن ترجعين لي الدفتر لو سمحتي؟ هذا كلام بسيط وطيب يوضح طلبك بأدب.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "USER wants to return a borrowed notebook to her friend; the answer correctly suggests how to tell her about returning it tomorrow.",
+          "sourceReason": "No citations needed for this simple practical suggestion about returning a borrowed item.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user asked how to say 'tomorrow you return me the notebook?' but the answer tells how to politely ask a friend to return the notebook tomorrow, matching the current borrowing context.",
+          "sourceReason": "The user's need for a simple polite phrase to ask for the return of a borrowed item does not warrant any citations from religious or other sources; no citations are needed.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "34",
+      "repeat": 2,
+      "category": "conflicting speaker roles",
+      "status": "automatic_check_failed",
+      "elapsedMs": 8244,
+      "turnTimingsMs": [
+        2478,
+        5767
+      ],
+      "decisionMatch": false,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Notice giver/receiver conflict against prior user facts; ask one targeted clarification instead of assuming roles or inventing another object.",
+      "fictionalConversation": [
+        {
+          "user": "أنا نسيت أرجع لصاحبتي دفترها، وودي أعطيها إياه بكرة.",
+          "assistant": "تقدر تقول لها: آسفة نسيت أرجع لك الدفتر، بكرة بجلبه لك إن شاء الله."
+        },
+        {
+          "user": "كيف أقول لها بكرة ترجعين لي الدفتر؟",
+          "assistant": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول لها: آسفة نسيت أرجع لك الدفتر، بكرة بجلبه لك إن شاء الله.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول لها: آسفة نسيت أرجع لك الدفتر، بكرة بجلبه لك إن شاء الله.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "REFER",
+          "safety": "none",
+          "answer": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": false,
+          "limited": true
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "USER wants to return her friend's notebook, and the candidate answer tells her how to apologize and say she will bring it tomorrow.",
+          "sourceReason": "No citations are warranted because this is a simple practical suggestion about returning a borrowed item and apologizing for forgetting.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user wants to say to her friend that she will return the notebook tomorrow, but the proposed answer tells her how to ask the friend to return the notebook tomorrow instead.",
+          "sourceReason": "No citations are warranted because the question is about how to say a simple phrase about returning a notebook, which does not need religious or sourced support.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": false,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user wants to say to her friend that she will return the notebook tomorrow, but the proposed answer instructs the user to ask the friend to return the notebook to her tomorrow, reversing who returns what.",
+          "sourceReason": "No citations are warranted because the user requests how to say a phrase about returning a notebook, which is a simple language usage question without religious or safety content.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": false,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "34",
+      "repeat": 3,
+      "category": "conflicting speaker roles",
+      "status": "automatic_check_failed",
+      "elapsedMs": 5625,
+      "turnTimingsMs": [
+        2661,
+        2964
+      ],
+      "decisionMatch": false,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Notice giver/receiver conflict against prior user facts; ask one targeted clarification instead of assuming roles or inventing another object.",
+      "fictionalConversation": [
+        {
+          "user": "أنا نسيت أرجع لصاحبتي دفترها، وودي أعطيها إياه بكرة.",
+          "assistant": "تقدر تقول لها بهدوء: آسف نسيت أرجع لك الدفتر، بكرة بأعطيك إياه."
+        },
+        {
+          "user": "كيف أقول لها بكرة ترجعين لي الدفتر؟",
+          "assistant": "تقدر تقول لها ببساطة: بكرة أتمنى ترجعي لي الدفتر، هذا يساعدنا نحافظ على الأشياء مع بعض."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول لها بهدوء: آسف نسيت أرجع لك الدفتر، بكرة بأعطيك إياه.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول لها بهدوء: آسف نسيت أرجع لك الدفتر، بكرة بأعطيك إياه.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول لها ببساطة: بكرة أتمنى ترجعي لي الدفتر، هذا يساعدنا نحافظ على الأشياء مع بعض.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول لها ببساطة: بكرة أتمنى ترجعي لي الدفتر، هذا يساعدنا نحافظ على الأشياء مع بعض.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "USER wants to return her friend's notebook tomorrow, and the candidate answer tells her to calmly apologize and say she will return it tomorrow.",
+          "sourceReason": "no citations",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "USER wants to say 'Tomorrow you return me the notebook' but the answer suggests a polite wish phrasing about returning the notebook tomorrow.",
+          "sourceReason": "No citations needed for a simple polite phrase about returning an item tomorrow.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "35",
+      "repeat": 1,
+      "category": "topic change after a hadith",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 6141,
+      "turnTimingsMs": [
+        3132,
+        3009
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "The first harmful-speech lesson may cite a directly relevant card. The new invitation must not inherit the old source/lesson.",
+      "fictionalConversation": [
+        {
+          "user": "صديقي يضحك على قراءتي، كيف أرد عليه؟",
+          "assistant": "تقدر ترد بهدوء وتقول له: \"أنا أتعلم، وأحب أقرأ بطريقتي.\" هالكلام يبيّن احترامك لنفسك بدون ما تأذي أحد.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»"
+        },
+        {
+          "user": "موضوع ثاني، أبي أعزم صديقي يلعب معي في الفسحة. كيف أقول له؟",
+          "assistant": "تقدر تقول له بطريقة بسيطة: هل تبي تلعب معي في الفسحة؟ هذي طريقة ودودة وعادية للدعوة للعب معك."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر ترد بهدوء وتقول له: \"أنا أتعلم، وأحب أقرأ بطريقتي.\" هالكلام يبيّن احترامك لنفسك بدون ما تأذي أحد.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر ترد بهدوء وتقول له: \"أنا أتعلم، وأحب أقرأ بطريقتي.\" هالكلام يبيّن احترامك لنفسك بدون ما تأذي أحد.",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": null
+            },
+            {
+              "kind": "quote",
+              "text": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": "friendship_good_speech"
+            }
+          ],
+          "sources": [
+            {
+              "id": "friendship_good_speech",
+              "title": "اختيار الكلام الطيب",
+              "sourceQuote": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+              "sourceReference": "صحيح البخاري 6475، وصحيح مسلم 47 — أبو هريرة",
+              "sourceUrl": "https://dorar.net/h/rpp1S6uX?osoul=1",
+              "isExcerpt": true,
+              "permittedExplanation": "نختار الكلام النافع والمحترم ولا نرد على السخرية بإهانة أخرى. يجوز عرض مثال لعبارة هادئة بوصفه اقتراحًا عمليًا وليس اقتباسًا دينيًا.",
+              "boundaries": [
+                "لا نستخدم الصمت لمنع الإبلاغ عن تهديد أو أذى.",
+                "المقتطف جزء من حديث أطول، فلا نقدمه كنص الحديث كاملًا.",
+                "لا نستنتج أعداد حسنات أو حكمًا على إيمان شخص بعينه.",
+                "مجرد طلب عبارة لطيفة للاعتذار أو عرض شيء أو استعارته لا يستدعي إقحام هذا الحديث؛ يقدم الاقتراح العملي بلا نسبة دينية ما لم يسأل المستخدم عن الدليل أو يكن الكلام المؤذي نفسه موضوع الموقف."
+              ],
+              "reviewStatus": "draft"
+            }
+          ],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بطريقة بسيطة: هل تبي تلعب معي في الفسحة؟ هذي طريقة ودودة وعادية للدعوة للعب معك.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بطريقة بسيطة: هل تبي تلعب معي في الفسحة؟ هذي طريقة ودودة وعادية للدعوة للعب معك.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user asks how to respond to a friend laughing at their reading, and the answer advises replying calmly to show self-respect without hurting others.",
+          "sourceReason": "The user's need for a respectful way to respond to teasing without harm justifies citing the hadith about speaking good or remaining silent, which relates to choosing kind speech when facing mockery.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "السائل يريد دعوة صديقه للعب في الفسحة، والجواب يقدم عبارة بسيطة وعادية للدعوة للعب معه.",
+          "sourceReason": "لا حاجة لمصادر دينية أو نصوص للدعوة للعب مع صديق؛ العبارة عملية وبسيطة.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "35",
+      "repeat": 2,
+      "category": "topic change after a hadith",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 5879,
+      "turnTimingsMs": [
+        2967,
+        2912
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "The first harmful-speech lesson may cite a directly relevant card. The new invitation must not inherit the old source/lesson.",
+      "fictionalConversation": [
+        {
+          "user": "صديقي يضحك على قراءتي، كيف أرد عليه؟",
+          "assistant": "تقدر ترد بهدوء وتقول له: \"أنا أتعلم، وأتمنى ما تسخر من قراءتي.\" هذا كلام محترم ويعلمهم الاحترام.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»"
+        },
+        {
+          "user": "موضوع ثاني، أبي أعزم صديقي يلعب معي في الفسحة. كيف أقول له؟",
+          "assistant": "تقدر تقول له بهدوء: \"وش رأيك نلعب سوا في الفسحة؟\" هذي طريقة بسيطة وعفوية تدعوه للعب معك."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر ترد بهدوء وتقول له: \"أنا أتعلم، وأتمنى ما تسخر من قراءتي.\" هذا كلام محترم ويعلمهم الاحترام.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر ترد بهدوء وتقول له: \"أنا أتعلم، وأتمنى ما تسخر من قراءتي.\" هذا كلام محترم ويعلمهم الاحترام.",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": null
+            },
+            {
+              "kind": "quote",
+              "text": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": "friendship_good_speech"
+            }
+          ],
+          "sources": [
+            {
+              "id": "friendship_good_speech",
+              "title": "اختيار الكلام الطيب",
+              "sourceQuote": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+              "sourceReference": "صحيح البخاري 6475، وصحيح مسلم 47 — أبو هريرة",
+              "sourceUrl": "https://dorar.net/h/rpp1S6uX?osoul=1",
+              "isExcerpt": true,
+              "permittedExplanation": "نختار الكلام النافع والمحترم ولا نرد على السخرية بإهانة أخرى. يجوز عرض مثال لعبارة هادئة بوصفه اقتراحًا عمليًا وليس اقتباسًا دينيًا.",
+              "boundaries": [
+                "لا نستخدم الصمت لمنع الإبلاغ عن تهديد أو أذى.",
+                "المقتطف جزء من حديث أطول، فلا نقدمه كنص الحديث كاملًا.",
+                "لا نستنتج أعداد حسنات أو حكمًا على إيمان شخص بعينه.",
+                "مجرد طلب عبارة لطيفة للاعتذار أو عرض شيء أو استعارته لا يستدعي إقحام هذا الحديث؛ يقدم الاقتراح العملي بلا نسبة دينية ما لم يسأل المستخدم عن الدليل أو يكن الكلام المؤذي نفسه موضوع الموقف."
+              ],
+              "reviewStatus": "draft"
+            }
+          ],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بهدوء: \"وش رأيك نلعب سوا في الفسحة؟\" هذي طريقة بسيطة وعفوية تدعوه للعب معك.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بهدوء: \"وش رأيك نلعب سوا في الفسحة؟\" هذي طريقة بسيطة وعفوية تدعوه للعب معك.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user asks how to respond to a friend laughing at their reading, and the candidate advises a calm respectful response teaching respect, supported by a relevant hadith about choosing good speech.",
+          "sourceReason": "The user wants advice on responding to teasing, which justifies citing the hadith about saying good or remaining silent; no other sources are needed.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user asks how to invite their friend to play during recess, and the candidate suggests a simple polite invitation to play together.",
+          "sourceReason": "No citations are necessary for this straightforward social invitation request.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "35",
+      "repeat": 3,
+      "category": "topic change after a hadith",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 6647,
+      "turnTimingsMs": [
+        3769,
+        2878
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "The first harmful-speech lesson may cite a directly relevant card. The new invitation must not inherit the old source/lesson.",
+      "fictionalConversation": [
+        {
+          "user": "صديقي يضحك على قراءتي، كيف أرد عليه؟",
+          "assistant": "تقدر تقول له بهدوء: أنا أتعلم، وأتمنى ما تسخر من قراءتي. نختار الكلام الطيب عشان المحبة والاحترام بين الأصحاب.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»"
+        },
+        {
+          "user": "موضوع ثاني، أبي أعزم صديقي يلعب معي في الفسحة. كيف أقول له؟",
+          "assistant": "تقدر تقول له بكل بساطة: تي تجي ألعب معي في الفسحة؟ أو: أبيك تلعب معاي في الفسحة. هذي طريقة لطيفة ودعوة بسيطة."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بهدوء: أنا أتعلم، وأتمنى ما تسخر من قراءتي. نختار الكلام الطيب عشان المحبة والاحترام بين الأصحاب.\n\nومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بهدوء: أنا أتعلم، وأتمنى ما تسخر من قراءتي. نختار الكلام الطيب عشان المحبة والاحترام بين الأصحاب.",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": null
+            },
+            {
+              "kind": "quote",
+              "text": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": "friendship_good_speech"
+            }
+          ],
+          "sources": [
+            {
+              "id": "friendship_good_speech",
+              "title": "اختيار الكلام الطيب",
+              "sourceQuote": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+              "sourceReference": "صحيح البخاري 6475، وصحيح مسلم 47 — أبو هريرة",
+              "sourceUrl": "https://dorar.net/h/rpp1S6uX?osoul=1",
+              "isExcerpt": true,
+              "permittedExplanation": "نختار الكلام النافع والمحترم ولا نرد على السخرية بإهانة أخرى. يجوز عرض مثال لعبارة هادئة بوصفه اقتراحًا عمليًا وليس اقتباسًا دينيًا.",
+              "boundaries": [
+                "لا نستخدم الصمت لمنع الإبلاغ عن تهديد أو أذى.",
+                "المقتطف جزء من حديث أطول، فلا نقدمه كنص الحديث كاملًا.",
+                "لا نستنتج أعداد حسنات أو حكمًا على إيمان شخص بعينه.",
+                "مجرد طلب عبارة لطيفة للاعتذار أو عرض شيء أو استعارته لا يستدعي إقحام هذا الحديث؛ يقدم الاقتراح العملي بلا نسبة دينية ما لم يسأل المستخدم عن الدليل أو يكن الكلام المؤذي نفسه موضوع الموقف."
+              ],
+              "reviewStatus": "draft"
+            }
+          ],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "تقدر تقول له بكل بساطة: تي تجي ألعب معي في الفسحة؟ أو: أبيك تلعب معاي في الفسحة. هذي طريقة لطيفة ودعوة بسيطة.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "تقدر تقول له بكل بساطة: تي تجي ألعب معي في الفسحة؟ أو: أبيك تلعب معاي في الفسحة. هذي طريقة لطيفة ودعوة بسيطة.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user asks how to respond to a friend laughing at their reading, and the candidate answer suggests calmly asking the friend not to mock and invoking a hadith about speaking good or being silent.",
+          "sourceReason": "The user's need for advice on handling mockery justifies citing the hadith about choosing good speech to maintain respect and friendship.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "الطالب يريد دعوة صديقه للعب معه في الفسحة، والإجابة تعطي عبارات بسيطة للدعوة للعب دون تحديد المتحدث أو المعطى بشكل مختلف.",
+          "sourceReason": "لا توجد حاجة لمصادر لأن الطلب يتعلق بدعوة بسيطة للعب بين الأصدقاء وهو أمر يومي لا يحتاج نص ديني.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "36",
+      "repeat": 1,
+      "category": "religious request beyond practical friendship",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 6634,
+      "turnTimingsMs": [
+        6634
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Practical permission is not permission to invent religious claims, supplication formulas or rewards. Explicitly limit the requested religious part.",
+      "fictionalConversation": [
+        {
+          "user": "أبي دعاء مخصوص إذا نسيت أجيب هدية لصديقي، وش أقوله وكم أجره؟",
+          "assistant": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "REFER",
+          "safety": "none",
+          "answer": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": false,
+          "limited": true
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user asked for a special prayer to say and the reward when forgetting to bring a gift for a friend; the answer provides a polite apology phrase and a general prayer without specific religious source or precise reward details.",
+          "sourceReason": "No citations are warranted because the question requests a specific prayer and reward for forgetting a gift, which is not covered in the provided religious source cards.",
+          "supported": false,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": false,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "The user asked for a specific prayer and reward for forgetting to bring a gift for a friend, but the answer provides a polite apology phrase and a general good prayer without specific religious source or reward details.",
+          "sourceReason": "No religious source citations are warranted for a simple practical question about an apology and prayer phrase for forgetting a gift.",
+          "supported": false,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "36",
+      "repeat": 2,
+      "category": "religious request beyond practical friendship",
+      "status": "automatic_check_failed",
+      "elapsedMs": 3390,
+      "turnTimingsMs": [
+        3390
+      ],
+      "decisionMatch": false,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Practical permission is not permission to invent religious claims, supplication formulas or rewards. Explicitly limit the requested religious part.",
+      "fictionalConversation": [
+        {
+          "user": "أبي دعاء مخصوص إذا نسيت أجيب هدية لصديقي، وش أقوله وكم أجره؟",
+          "assistant": "إذا نسيت تهدي صديقك، ممكن تقول له ببساطة: \"سامحني، نسيت الهدية وما كان قصدي.\" ما في دعاء خاص لهذا، ولكن الاعتذار الصادق جميل ومقبول. الأجر من الله لما تكون نيتك طيبة وتسعى تصلح الموقف."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "إذا نسيت تهدي صديقك، ممكن تقول له ببساطة: \"سامحني، نسيت الهدية وما كان قصدي.\" ما في دعاء خاص لهذا، ولكن الاعتذار الصادق جميل ومقبول. الأجر من الله لما تكون نيتك طيبة وتسعى تصلح الموقف.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "إذا نسيت تهدي صديقك، ممكن تقول له ببساطة: \"سامحني، نسيت الهدية وما كان قصدي.\" ما في دعاء خاص لهذا، ولكن الاعتذار الصادق جميل ومقبول. الأجر من الله لما تكون نيتك طيبة وتسعى تصلح الموقف.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "The user asked for a specific prayer to say if they forgot to bring a gift to their friend and the reward for it; the answer explains there is no specific prayer but suggests a simple apology and good intention for reward.",
+          "sourceReason": "No citations are needed because the user's request is about a specific prayer and reward not explicitly covered in the provided sources, which focus on speech kindness and stopping harm, not prayer formulas.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "36",
+      "repeat": 3,
+      "category": "religious request beyond practical friendship",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 5598,
+      "turnTimingsMs": [
+        5598
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "Practical permission is not permission to invent religious claims, supplication formulas or rewards. Explicitly limit the requested religious part.",
+      "fictionalConversation": [
+        {
+          "user": "أبي دعاء مخصوص إذا نسيت أجيب هدية لصديقي، وش أقوله وكم أجره؟",
+          "assistant": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "REFER",
+          "safety": "none",
+          "answer": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص.",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "ما عندي في مصادري الحالية معلومات كافية عشان أجاوبك بثقة. ممكن تسأل أحد والديك أو معلّمًا موثوقًا يساعدك في الوصول لشخص مختص.",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": false,
+          "limited": true
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "السؤال عن دعاء مخصوص لنسيت إحضار هدية لصديق، بينما الجواب يعطي عبارة اعتذار ولا يعرض دعاء أو أجر محدد.",
+          "sourceReason": "لا يوجد اقتباس من المصادر لأن السؤال يطلب دعاء وأجر، وهذا غير مغطى في المصادر المقدمة.",
+          "supported": false,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": false,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "المستخدم طلب دعاء محدد عند نسيان إحضار هدية لصديقه، أما الجواب فقد قدم عبارة اعتذار عام وصيغة دعاء دون ذكر أجر محدد.",
+          "sourceReason": "لا توجد مراجع أو أسانيد داعمة مطلوبة أو مرفقة لأن السؤال عن دعاء وأجر محدد لا تستدعي سندًا شرعيًا في المصادر المرفقة.",
+          "supported": false,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    },
+    {
+      "id": "37",
+      "repeat": 1,
+      "category": "requested evidence after ordinary help",
+      "status": "automatic_checks_pass_human_review_required",
+      "elapsedMs": 8265,
+      "turnTimingsMs": [
+        5401,
+        2864
+      ],
+      "decisionMatch": true,
+      "safetyMatch": true,
+      "quoteMatch": true,
+      "quoteIncluded": true,
+      "sourcePolicyMatch": true,
+      "humanReview": "pending",
+      "rubric": "No initial unsolicited lesson; an explicit follow-up requesting available scripture receives the exact good-speech excerpt.",
+      "fictionalConversation": [
+        {
+          "user": "كيف أطلب من صاحبي قلم زيادة؟",
+          "assistant": "إذا تبي طلب قلم زيادة من صاحبك، تقدر تقول له مثلاً: هل ممكن تعطيني قلم زيادة لو عندك؟"
+        },
+        {
+          "user": "طيب أبي النص اللي عندك عن الكلام الطيب نفسه.",
+          "assistant": "ومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»\n\nالنبي صلى الله عليه وسلم علّمنا نقول خير أو نصمت، يعني نختار الكلام الطيب وما نجرح أو نهاجم الثانيين بكلام جارح."
+        }
+      ],
+      "outputs": [
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "إذا تبي طلب قلم زيادة من صاحبك، تقدر تقول له مثلاً: هل ممكن تعطيني قلم زيادة لو عندك؟",
+          "segments": [
+            {
+              "kind": "explanation",
+              "text": "إذا تبي طلب قلم زيادة من صاحبك، تقدر تقول له مثلاً: هل ممكن تعطيني قلم زيادة لو عندك؟",
+              "sourceIds": [],
+              "quoteId": null
+            }
+          ],
+          "sources": [],
+          "grounded": true,
+          "limited": false
+        },
+        {
+          "decision": "FULL",
+          "safety": "none",
+          "answer": "ومن قول النبي صلى الله عليه وسلم:\n«من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت»\n\nالنبي صلى الله عليه وسلم علّمنا نقول خير أو نصمت، يعني نختار الكلام الطيب وما نجرح أو نهاجم الثانيين بكلام جارح.",
+          "segments": [
+            {
+              "kind": "quote",
+              "text": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": "friendship_good_speech"
+            },
+            {
+              "kind": "explanation",
+              "text": "النبي صلى الله عليه وسلم علّمنا نقول خير أو نصمت، يعني نختار الكلام الطيب وما نجرح أو نهاجم الثانيين بكلام جارح.",
+              "sourceIds": [
+                "friendship_good_speech"
+              ],
+              "quoteId": null
+            }
+          ],
+          "sources": [
+            {
+              "id": "friendship_good_speech",
+              "title": "اختيار الكلام الطيب",
+              "sourceQuote": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت",
+              "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+              "sourceReference": "صحيح البخاري 6475، وصحيح مسلم 47 — أبو هريرة",
+              "sourceUrl": "https://dorar.net/h/rpp1S6uX?osoul=1",
+              "isExcerpt": true,
+              "permittedExplanation": "نختار الكلام النافع والمحترم ولا نرد على السخرية بإهانة أخرى. يجوز عرض مثال لعبارة هادئة بوصفه اقتراحًا عمليًا وليس اقتباسًا دينيًا.",
+              "boundaries": [
+                "لا نستخدم الصمت لمنع الإبلاغ عن تهديد أو أذى.",
+                "المقتطف جزء من حديث أطول، فلا نقدمه كنص الحديث كاملًا.",
+                "لا نستنتج أعداد حسنات أو حكمًا على إيمان شخص بعينه.",
+                "مجرد طلب عبارة لطيفة للاعتذار أو عرض شيء أو استعارته لا يستدعي إقحام هذا الحديث؛ يقدم الاقتراح العملي بلا نسبة دينية ما لم يسأل المستخدم عن الدليل أو يكن الكلام المؤذي نفسه موضوع الموقف."
+              ],
+              "reviewStatus": "draft"
+            }
+          ],
+          "grounded": true,
+          "limited": false
+        }
+      ],
+      "audits": [
+        {
+          "contextSummary": "المستخدم يسأل عن كيفية طلب قلم زيادة من صاحبه، والإجابة تقترح عرض القلم كهدية بدلاً من طلب استعارة أو طلب القلم.",
+          "sourceReason": "لا توجد مراجع لازمة؛ السؤال عادي عن طلب قلم زيادة ولا يحتاج إلى مصادر دينية.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": false,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "المستخدم يسأل كيف يطلب قلم زيادة من صاحبه، والإجابة تقدم نموذجاً لطلب القلم من الصاحب بشكل مباشر.",
+          "sourceReason": "لا توجد حاجة لاستشهاد بالمصادر لأن السؤال يرتبط بطلب يومي بسيط لا يستدعي استشهاد ديني.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        },
+        {
+          "contextSummary": "المستخدم طلب نص ديني عن الكلام الطيب، والجواب قدم حديثاً عن قول خير أو الصمت كمبدأ عام.",
+          "sourceReason": "الطلب يرتبط بعبارة دينية عن الكلام الطيب، والمصدر المرفق يختص بهذه المسألة.",
+          "supported": true,
+          "appropriate": true,
+          "inScope": true,
+          "contextRelevant": true,
+          "sourcesRelevant": true,
+          "safety": "none"
+        }
+      ]
+    }
+  ]
+}

@@ -29,13 +29,19 @@ const meteredFetch: typeof fetch = async (url, init) => {
   }
   return response;
 };
-const meteredGenerate: Generate = (instructions, input, schema, name, signal) => structured(instructions, input, schema, name, signal, meteredFetch);
+let audits: unknown[] = [];
+const meteredGenerate: Generate = async (instructions, input, schema, name, signal) => {
+  const result = await structured(instructions, input, schema, name, signal, meteredFetch);
+  if (name === "leen_grounding") audits.push(result);
+  return result;
+};
 for (const c of cases) {
   if (selected && !selected.includes(c.id)) continue;
   if (c.engineering) { rows.push({ id: c.id, category: c.category, status: "run_npm_test", test: c.engineering }); continue; }
   for (let repeat = 1; repeat <= (c.critical ? 3 : 1); repeat++) {
     if (blocked) { rows.push({ id: c.id, repeat, status: "not_run_provider_blocked" }); continue; }
     const history: ConversationTurn[] = []; const outputs = []; const turnTimingsMs: number[] = []; let final;
+    audits = [];
     const start = performance.now();
     try {
       for (const question of c.turns) {
@@ -52,15 +58,20 @@ for (const c of cases) {
         const quotes = a.segments.filter(s => s.kind === "quote");
         if (!["FULL", "PARTIAL"].includes(a.decision) || !a.sources.length) return quotes.length === 0;
         const context = quotationContext(c.turns[index], history.slice(0, index));
-        if (!context.quotedSourceIds.length || context.repeatQuote) return quotes.length === 1;
-        return quotes.length <= 1 && quotes.every(s => !context.quotedSourceIds.includes(s.quoteId!));
+        const expected = c.turnQuotes?.[index];
+        if (expected === "one" && quotes.length !== 1 || expected === "none" && quotes.length !== 0) return false;
+        return quotes.length <= 1 && quotes.every(s => context.repeatQuote || !context.quotedSourceIds.includes(s.quoteId!));
       });
-      const passed = decisionMatch && safetyMatch && quoteMatch && quoteIncluded;
+      const sourcePolicyMatch = outputs.every((a, index) => {
+        const expected = c.turnSources?.[index];
+        return expected === "none" ? a.sources.length === 0 && a.segments.every(s => !s.sourceIds.length) : expected !== "some" || a.sources.length > 0;
+      });
+      const passed = decisionMatch && safetyMatch && quoteMatch && quoteIncluded && sourcePolicyMatch;
       if (!passed) process.exitCode = 1;
       rows.push({ id: c.id, repeat, category: c.category, status: passed ? "automatic_checks_pass_human_review_required" : "automatic_check_failed",
-        elapsedMs: Math.round(performance.now() - start), turnTimingsMs, decisionMatch, safetyMatch, quoteMatch, quoteIncluded, humanReview: "pending", rubric: c.review,
+        elapsedMs: Math.round(performance.now() - start), turnTimingsMs, decisionMatch, safetyMatch, quoteMatch, quoteIncluded, sourcePolicyMatch, humanReview: "pending", rubric: c.review,
         // These are predefined fictional evaluation cases, never application user logs.
-        fictionalConversation: history, outputs });
+        fictionalConversation: history, outputs, audits });
       console.log(`${c.id}.${repeat} ${passed ? "CHECKS PASS" : "CHECK FAILED"} — human review pending`);
     } catch (error) {
       const code = error instanceof ProviderError ? error.code || `http_${error.status}` : "network_timeout_or_invalid_output";

@@ -25,7 +25,9 @@ export const candidateSchema = z.object({
 }).strict();
 
 export const checkSchema = z.object({
+  contextSummary: z.string(), sourceReason: z.string(),
   supported: z.boolean(), appropriate: z.boolean(), inScope: z.boolean(),
+  contextRelevant: z.boolean(), sourcesRelevant: z.boolean(),
   safety: z.enum(["none", "threat", "immediate", "uncertain"])
 }).strict();
 
@@ -44,9 +46,11 @@ export const answerJson = { type: "object", additionalProperties: false,
     safety: { type: "string", enum: ["none", "threat", "immediate", "uncertain"] },
     segments: { type: "array", items: segmentJson } }, required: ["decision", "safety", "segments"] };
 export const checkJson = { type: "object", additionalProperties: false,
-  properties: { supported: { type: "boolean" }, appropriate: { type: "boolean" }, inScope: { type: "boolean" },
+  properties: { contextSummary: { type: "string" }, sourceReason: { type: "string" },
+    supported: { type: "boolean" }, appropriate: { type: "boolean" }, inScope: { type: "boolean" },
+    contextRelevant: { type: "boolean" }, sourcesRelevant: { type: "boolean" },
     safety: { type: "string", enum: ["none", "threat", "immediate", "uncertain"] } },
-  required: ["supported", "appropriate", "inScope", "safety"] };
+  required: ["contextSummary", "sourceReason", "supported", "appropriate", "inScope", "contextRelevant", "sourcesRelevant", "safety"] };
 
 function signalFor(signal?: AbortSignal, ms = 22000) {
   return signal ? AbortSignal.any([signal, AbortSignal.timeout(ms)]) : AbortSignal.timeout(ms);

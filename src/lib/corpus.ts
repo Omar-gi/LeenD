@@ -46,6 +46,9 @@ export function scopeBoundary(text: string, hasHistory: boolean): Answer | null 
   // The V1 draft's illustrative husn-al-dhann quotation is not in this corpus.
   // Revisit this boundary when Sarah supplies a reviewed card for this topic.
   if (/حسن (?:ال)?ظن|سوء (?:ال)?ظن/.test(t) && /حديث|دليل|اي[ةه]|النبي/.test(t)) return limitation();
+  // None of the three cards supplies a specific supplication or reward claim,
+  // even when the request mentions a friend or an ordinary practical problem.
+  if (/(?:دعاء|ادعيه).{0,20}(?:مخصوص|خاص|محدد)|(?:كم|وش|ايش|ما) (?:هو )?(?:الاجر|اجره|ثواب|عدد الحسنات)/.test(t)) return limitation();
   // A speech-related hadith is not evidence for teaching unrelated acts of worship.
   // Keep friendship questions that merely mention these settings on the normal path.
   if (/قنوت|زكاة|صلاة|وضوء|صيام|مناسك/.test(t) && !/صديق|صداق|خوي|اصحاب|يسخر|يستهز|استهزا|سخري|يضحك|يؤذي|يوذي|ظلم/.test(t)) return limitation();
@@ -65,7 +68,9 @@ export function needsNextStep(text: string): boolean {
 export function nextStepFallback(context?: QuotationContext): Answer {
   const ids = ["friendship_good_speech", "friendship_non_harm"];
   return { ...materialize({ decision: "FULL", safety: "none", segments: [
-    { kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null }
+    { kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null },
+    ...(!context?.quotedSourceIds.length || context.repeatQuote ?
+      [{ kind: "quote" as const, text: "", sourceIds: [ids[0]], quoteId: ids[0] }] : [])
   ] }, context), grounded: true };
 }
 
@@ -89,20 +94,16 @@ export function materialize(candidate: Candidate, context: QuotationContext = { 
     // Attribution and quotation belong exclusively in stored quote segments.
     if (/قال (?:الله|النبي|رسول)|قال تعالى|[«»]|https?:\/\//.test(text)) throw new Error("freeform_attribution");
     const normalized = normalizeArabic(text);
-    if (/النبي.{0,35}(?:قال|يقول)|الحديث.{0,20}(?:يقول|نصه)|رسول الله/.test(normalized) ||
+    if (/النبي|الحديث.{0,20}(?:يقول|نصه)|رسول الله/.test(normalized) ||
       sources.some(source => normalized.includes(normalizeArabic(source.sourceQuote)))) throw new Error("freeform_quotation");
+    // Ordinary practical dialogue needs no citation. Obvious religious claims do;
+    // the independent semantic audit also checks claims this narrow guard misses.
+    if (!segment.sourceIds.length && /ديننا (?:ي|ن)|الاسلام (?:ي|ح)|(?:هذا|هذه|ذلك|هو|هي|انه|انها) (?:حرام|حلال)|واجب ديني|سنه نبويه|(?:تربح|لك|تكسب|تحصل).{0,15}(?:اجر|حسن[ةه]|حسنات|ثواب)|(?:الاجر|الثواب|اجرك).{0,20}(?:الله|نيه|نيتك|طيب)|الله (?:يحب|يامر|ينهى|يجزي|يغفر)|(?:ما في|لا يوجد|ليس هناك) دعاء/.test(normalized)) throw new Error("missing_evidence");
     return { ...segment, text };
   }).filter(segment => segment.kind !== "quote" || context.repeatQuote || !context.quotedSourceIds.includes(segment.quoteId!));
   if (!segments.length) throw new Error("empty_answer_after_repeat_removal");
-  if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") && used.size === 0) throw new Error("missing_evidence");
-  // Introduce the hadith once, or repeat on request. References stay visible on follow-ups.
-  // Choose evidence already attached to the explanation, before the independent audit.
-  if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") &&
-    (!context.quotedSourceIds.length || context.repeatQuote) && !segments.some(s => s.kind === "quote")) {
-    const explanationIndex = segments.findIndex(s => s.sourceIds.length > 0);
-    const source = sources.find(s => s.id === segments[explanationIndex].sourceIds[0])!;
-    segments.splice(explanationIndex + 1, 0, { kind: "quote", text: source.sourceQuote, sourceIds: [source.id], quoteId: source.id });
-  }
+  // A source attachment must never trigger an unsolicited quotation. The model
+  // selects a quote explicitly, and the audit checks its fit to the user's need.
   const answer = segments.map(s => s.kind === "quote" ? `${sources.find(source => source.id === s.quoteId)!.quoteIntroduction}\n«${s.text}»` : s.text).join("\n\n");
   if (answer.length > 1500) throw new Error("answer_too_long");
   return { decision: candidate.decision, safety: "none", answer, segments,

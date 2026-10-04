@@ -1,0 +1,154 @@
+{
+  "scope": "Fictional deliberately incorrect candidates; real audit calls only, no TTS or application transcripts",
+  "requests": 12,
+  "fixtures": [
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "question": "كيف أطلب كتاب من صاحبي؟",
+      "field": "sourcesRelevant",
+      "candidate": {
+        "decision": "FULL",
+        "safety": "none",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "تقدر تقول له: ممكن أستعير كتابك؟",
+            "sourceIds": [
+              "friendship_good_speech"
+            ],
+            "quoteId": null
+          },
+          {
+            "kind": "quote",
+            "text": "",
+            "sourceIds": [
+              "friendship_good_speech"
+            ],
+            "quoteId": "friendship_good_speech"
+          }
+        ]
+      }
+    },
+    {
+      "name": "swapped_roles",
+      "question": "كيف أطلب كتاب من صاحبي؟",
+      "field": "contextRelevant",
+      "candidate": {
+        "decision": "FULL",
+        "safety": "none",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "تقدر تقول له: عندي كتاب زيادة، تبيه؟",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ]
+      }
+    }
+  ],
+  "rows": [
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "repeat": 1,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "السائل يريد أن يعرف كيف يطلب كتابًا من صاحبه، والإجابة تقدم صيغة طلب استعارة من وجهة نظر السائل.",
+        "sourceReason": "السؤال بسيط عن كيفية طلب استعارة كتاب، ما يستدعي شرح عملي فقط؛ المصدر الديني المذكور لا يلزم، لكنه يقدم نصيحة كلامية عامة غير ضرورية هنا.",
+        "supported": false,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": true,
+        "sourcesRelevant": false,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "repeat": 2,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "السائل يسأل عن كيفية طلب كتاب من صاحبه، والجواب يعرض صيغة طلب استعارة الكتاب مع إضافة حديث نبوي عن الكلام الطيب.",
+        "sourceReason": "المطلوب نص عملي لكيفية طلب الكتاب، والاستخدام الوحيد للحديث لتشجيع الكلام الطيب مناسب لكنه غير ضروري؛ لذلك مصدر الحديث ليس ملزمًا تمامًا.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": true,
+        "sourcesRelevant": false,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "exact_but_irrelevant_hadith",
+      "repeat": 3,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "المستخدم يسأل عن كيفية طلب كتاب من صاحبه للاستعارة، والجواب يقترح عبارة لطلب الاستعارة ويضيف حديثًا عن قول الخير أو الصمت.",
+        "sourceReason": "المستخدم طلب صيغة لطلب كتاب من صديقه، ولم يطلب نصًا دينيًا؛ لذلك استخدام حديث عن اختيار الكلام الطيب ليس مبررًا هنا.",
+        "supported": false,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": true,
+        "sourcesRelevant": false,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "swapped_roles",
+      "repeat": 1,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "السؤال يطلب كيفية طلب كتاب من صاحب، والإجابة تقترح عرض الكتاب على الصاحب بدلاً من طلبه.",
+        "sourceReason": "لا يوجد اقتباسات لأن السؤال يطلب تعبيرًا بسيطًا ليس له علاقة دينية أو ضرر يستوجب المصادر.",
+        "supported": true,
+        "appropriate": false,
+        "inScope": true,
+        "contextRelevant": false,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "swapped_roles",
+      "repeat": 2,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "السؤال يطلب كيفية طلب كتاب من الصاحب، والإجابة تقدم عرضًا لإعطاء الكتاب بدلاً من طلبه.",
+        "sourceReason": "لا توجد اقتباسات لأن السؤال عن كيفية طلب كتاب من صديق لا يتطلب مصادر دينية.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": false,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    },
+    {
+      "name": "swapped_roles",
+      "repeat": 3,
+      "passed": true,
+      "auditRejected": true,
+      "firstAudit": {
+        "contextSummary": "السؤال هو كيف يطلب المستخدم كتابًا من صاحبه، لكن الإجابة تقترح عرض كتاب إضافي بدلاً من الطلب.",
+        "sourceReason": "لا يوجد اقتباس مصدر لأن الطلب بسيط ولا يحتاج لإسناد ديني.",
+        "supported": true,
+        "appropriate": true,
+        "inScope": true,
+        "contextRelevant": false,
+        "sourcesRelevant": true,
+        "safety": "none"
+      },
+      "finalDecision": "REFER"
+    }
+  ]
+}

@@ -32,11 +32,11 @@ npm start
 - Tap-to-start/stop microphone, automatic stop at 30 seconds, typed input, readable transcript and answer.
 - Correct an earlier transcript: the corrected question and all later turns are replaced only when the new response succeeds.
 - Full / Partial / Clarify / Refer decisions; session follow-ups; visible source excerpts and links.
-- The first supported Full/Partial reply introduces an exact hadith in text and speech. Follow-ups keep visible references without routinely repeating it; an explicit request can repeat the excerpt. Safety, clarification and limitation responses remain direct.
+- Hadiths appear in text and speech when they directly fit the current lesson or the user requests an available excerpt. Ordinary practical friendship help needs no citation. Quotes are explicitly selected, filled from exact stored text and checked for contextual relevance; they are never automatically added because an answer has a source. Follow-ups avoid routine repetition. Safety, clarification and limitation responses remain direct.
 - The supplied Leen character is visible on desktop and mobile. Tap it to start/stop recording, or stop a spoken reply. Listening/thinking states and a playback-driven glow make the current action visible; reduced-motion preferences are respected. The microphone and typing controls remain available.
 - An adaptive, versioned dialogue prompt uses the current session to understand a situation and suggest a small safe step, without a forced sequence, promises or action tracking. See [dialogue adaptation](docs/DIALOGUE.md). Sarah's additional source cards remain pending.
 - Stop/replay speech, disable spoken replies, provider-error recovery, and session clearing.
-- Complete three-card server corpus on each request, strict output structure, exact server-inserted quotations, independent grounding audit before TTS, and a fixed safety path for threats.
+- Complete three-card server corpus on each request, strict output structure, exact server-filled quotations, separate answer/context and source-relevance checks in the independent grounding audit before TTS, and a fixed safety path for threats. One bounded repair can address a rejected format or relevance issue, then must pass the full audit again.
 - Bounded input/history, signed history receipts, same-origin checks, request timeouts, concurrency and request-budget controls.
 
 ## Architecture

@@ -4,9 +4,12 @@ import { generateAnswer } from "../src/lib/answer";
 import { sources, materialize, policy } from "../src/lib/corpus";
 import type { Candidate } from "../src/lib/types";
 import type { Generate } from "../src/lib/providers";
-import { quotationContext } from "../src/lib/dialogue";
-const candidate: Candidate = { decision: "FULL", safety: "none", segments: [{ kind: "explanation", text: "تقدر تطلب منه يتكلم معك باحترام.", sourceIds: [sources[0].id], quoteId: null }] };
-const approved = { supported: true, appropriate: true, inScope: true, safety: "none" };
+import { clarifyReturnRoles, practicalRequestWithoutEvidence, quotationContext } from "../src/lib/dialogue";
+const candidate: Candidate = { decision: "FULL", safety: "none", segments: [
+  { kind: "explanation", text: "تقدر تطلب منه يتكلم معك باحترام.", sourceIds: [sources[0].id], quoteId: null },
+  { kind: "quote", text: "", sourceIds: [sources[0].id], quoteId: sources[0].id }
+] };
+const approved = { contextSummary: "Relevant fictional response", sourceReason: "Applicable evidence or source-free practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
 function sequence(...values: unknown[]): Generate { return async () => { assert.ok(values.length); return values.shift(); }; }
 test("valid answer requires independent grounding approval", async () => {
   const result = await generateAnswer("صديقي يسخر من قراءتي", [], undefined, sequence(candidate, approved));
@@ -52,8 +55,10 @@ test("history is bounded input data, stripped of receipts, and kept out of trust
   };
   await generateAnswer("وبعدين؟", [{ user: "سابق", assistant: "UNTRUSTED_TEST_TEXT", receipt: "dummy" }], undefined, generate);
 });
-test("full answer without evidence and invented attribution fail closed", () => {
-  assert.throws(() => materialize({ ...candidate, segments: [{ ...candidate.segments[0], sourceIds: [] }] }));
+test("practical help can be source-free but explicit religious claims and invented attribution fail closed", () => {
+  const practical = materialize({ ...candidate, segments: [{ ...candidate.segments[0], text: "تقدر تعرض عليه قلمك الزيادة.", sourceIds: [] }] });
+  assert.equal(practical.decision, "FULL"); assert.deepEqual(practical.sources, []);
+  assert.throws(() => materialize({ ...candidate, segments: [{ ...candidate.segments[0], text: "ديننا يعلمنا أن هذه الهدية واجب ديني.", sourceIds: [] }] }));
   assert.throws(() => materialize({ ...candidate, segments: [{ ...candidate.segments[0], text: "قال النبي هذا مختلق" }] }));
 });
 test("clarification and scope referral can be source-free", () => {
@@ -95,12 +100,11 @@ test("a failed stop request is not replaced by the hypothetical-action clarifica
   const result = await generateAnswer("طيب إذا سواها بكرة؟", [{ user: "صديقي يستهزئ فيني وقلت له يوقف", assistant: "اطلب مساعدة معلم" }], undefined, sequence(candidate, approved));
   assert.equal(result.decision, "FULL");
 });
-test("supported replies include exactly one exact hadith even when generation omits it", () => {
+test("source attachments never auto-insert a hadith into a reply", () => {
   for (const decision of ["FULL", "PARTIAL"] as const) {
-    const answer = materialize({ ...candidate, decision });
-    assert.equal(answer.segments.filter(s => s.kind === "quote").length, 1);
-    assert.equal(answer.segments[1].text, sources[0].sourceQuote);
-    assert.ok(answer.answer.includes(`${sources[0].quoteIntroduction}\n«${sources[0].sourceQuote}»`));
+    const answer = materialize({ ...candidate, decision, segments: [candidate.segments[0]] });
+    assert.equal(answer.segments.filter(s => s.kind === "quote").length, 0);
+    assert.equal(answer.sources[0].id, sources[0].id);
   }
 });
 test("an explicitly chosen quote keeps its position and context without a duplicate", () => {
@@ -127,7 +131,7 @@ test("the grounding audit sees the inserted hadith before the answer can be spok
 });
 test("clarifications and referrals do not receive an automatic quotation", () => {
   for (const decision of ["CLARIFY", "REFER"] as const) {
-    const answer = materialize({ ...candidate, decision });
+    const answer = materialize({ ...candidate, decision, segments: [candidate.segments[0]] });
     assert.equal(answer.segments.filter(s => s.kind === "quote").length, 0);
   }
 });
@@ -144,13 +148,12 @@ test("friendship questions mentioning worship still receive supported advice", a
 test("accidental JSON braces are removed from prose before display and audit", () => {
   const result = materialize({ ...candidate, segments: [{ ...candidate.segments[0], text: "تقدر تطلب منه يتكلم باحترام. {" }] });
   assert.equal(result.segments[0].text, "تقدر تطلب منه يتكلم باحترام.");
-  assert.equal(result.segments[1].text, sources[0].sourceQuote);
+  assert.equal(result.segments.length, 1);
 });
 
 test("a follow-up retains its evidence without repeating an earlier hadith", async () => {
   const first = materialize(candidate);
-  const repeated = { ...candidate, segments: [...candidate.segments,
-    { kind: "quote" as const, text: "", sourceIds: [sources[0].id], quoteId: sources[0].id }] };
+  const repeated = candidate;
   const result = await generateAnswer("وش أقدر أقول له؟", [{ user: "صديقي يسخر", assistant: first.answer }], undefined, sequence(repeated, approved));
   assert.equal(result.decision, "FULL"); assert.equal(result.sources[0].id, sources[0].id);
   assert.equal(result.segments.filter(s => s.kind === "quote").length, 0);
@@ -239,4 +242,97 @@ test("one format repair can recover a misplaced quotation but still requires the
   assert.equal(rejected.answer, policy.limitation);
   const repeated = await generateAnswer("صديقي يسخر مني، وش أقول؟", [], undefined, sequence(malformed, malformed));
   assert.equal(repeated.answer, policy.limitation);
+});
+
+test("an exact but irrelevant hadith requires repair and a second audit", async () => {
+  const practical: Candidate = { decision: "FULL", safety: "none", segments: [
+    { kind: "explanation", text: "تقدر تقول له: عندي قلم زيادة، تبيه؟", sourceIds: [], quoteId: null }
+  ] };
+  let calls = 0;
+  const result = await generateAnswer("ودي أعطي صاحبي قلم، كيف أعرضه عليه؟", [], undefined, async (_instructions, input, _schema, name) => {
+    calls++;
+    if (calls === 1) return candidate;
+    if (calls === 2) return { ...approved, sourcesRelevant: false };
+    if (calls === 3) {
+      assert.equal(JSON.parse(input).relevance.sourcesRelevant, false);
+      return practical;
+    }
+    assert.equal(name, "leen_grounding");
+    assert.deepEqual(JSON.parse(input).proposedAnswer.sources, []);
+    return approved;
+  });
+  assert.equal(calls, 4); assert.equal(result.grounded, true);
+  assert.deepEqual(result.sources, []); assert.equal(result.answer, practical.segments[0].text);
+});
+
+test("a repeated relevance failure cannot escape or fall back to a hadith", async () => {
+  for (const field of ["sourcesRelevant", "contextRelevant"]) {
+    const rejected = { ...approved, [field]: false };
+    const result = await generateAnswer("قلت له يوقف وما وقف، وش أسوي؟", [{ user: "صديقي يسخر مني", assistant: "وش صار؟" }], undefined,
+      sequence(candidate, rejected, candidate, rejected));
+    assert.equal(result.answer, policy.limitation); assert.deepEqual(result.sources, []);
+  }
+});
+
+test("swapped giver and receiver can be repaired into a targeted clarification", async () => {
+  const clarify: Candidate = { decision: "CLARIFY", safety: "none", segments: [
+    { kind: "explanation", text: "تقصد أنت بترجع له الكتاب، أو هو بيرجعه لك؟", sourceIds: [], quoteId: null }
+  ] };
+  const result = await generateAnswer("أبيه يرجع لي الكتاب", [{ user: "أنا نسيت أرجع له كتابه", assistant: "تقدر توضح له." }], undefined,
+    sequence(candidate, { ...approved, contextRelevant: false }, clarify, approved));
+  assert.equal(result.decision, "CLARIFY"); assert.deepEqual(result.sources, []);
+});
+
+test("format and relevance repairs share one attempt budget", async () => {
+  const malformed = { ...candidate, segments: [{ ...candidate.segments[0], text: "قال النبي كلام مختلق" }] };
+  const result = await generateAnswer("ودي أعرض قلم على صاحبي", [], undefined,
+    sequence(malformed, candidate, { ...approved, sourcesRelevant: false }));
+  assert.equal(result.answer, policy.limitation);
+});
+
+test("source-free practical help still needs religious-claim and safety checks", async () => {
+  const practical = { ...candidate, segments: [{ ...candidate.segments[0], text: "تقدر تعرض عليه القلم.", sourceIds: [] }] };
+  const allowed = await generateAnswer("كيف أعرض القلم على صديقي؟", [], undefined, sequence(practical, approved));
+  assert.equal(allowed.decision, "FULL"); assert.deepEqual(allowed.sources, []); assert.equal(allowed.grounded, true);
+  const rejected = await generateAnswer("سؤال", [], undefined, sequence(practical, { ...approved, supported: false }));
+  assert.equal(rejected.answer, policy.limitation);
+  const safety = await generateAnswer("موقف مع صديقي", [], undefined, sequence(practical, { ...approved, safety: "threat", contextRelevant: false }));
+  assert.equal(safety.answer, policy.threat);
+});
+
+test("an audit missing the relevance checks fails closed", async () => {
+  const { contextRelevant: _context, sourcesRelevant: _sources, ...oldAudit } = approved;
+  await assert.rejects(generateAnswer("صديقي يسخر مني", [], undefined, sequence(candidate, oldAudit)));
+});
+
+test("a direct same-item return-role conflict asks once without guessing or citing", async () => {
+  const history = [{ user: "أنا نسيت أرجع لصاحبتي دفترها، ودي أعطيها إياه بكرة.", assistant: "تقدر توضح لها." }];
+  const result = await generateAnswer("كيف أقول لها بكرة ترجعين لي الدفتر؟", history, undefined, sequence(candidate, approved));
+  assert.equal(result.decision, "CLARIFY"); assert.deepEqual(result.sources, []);
+  assert.equal(clarifyReturnRoles("كيف أقول لها ترجعين لي الكتاب؟", history), null);
+  assert.equal(clarifyReturnRoles("قصدي هي ترجع لي الدفتر، مو أنا", history), null);
+  assert.equal(clarifyReturnRoles("كيف أقول لها ترجعين لي الدفتر؟", []), null);
+  assert.equal(clarifyReturnRoles("أنا بأرجع لها الدفتر بكرة", history), null);
+  const threat = await generateAnswer("كيف أقول لها ترجعين لي الدفتر؟", history, undefined,
+    sequence(candidate, { ...approved, safety: "threat" }));
+  assert.equal(threat.answer, policy.threat);
+});
+
+test("practical friendship permission never admits unsupported supplications or rewards", async () => {
+  const result = await generateAnswer("أبي دعاء مخصوص إذا نسيت هدية لصديقي وكم أجره؟", [], undefined, sequence());
+  assert.equal(result.decision, "REFER"); assert.deepEqual(result.sources, []);
+  for (const text of ["الأجر من الله لما تكون نيتك طيبة.", "ما في دعاء خاص لهذا.", "الله يحبك إذا أعطيت صاحبك قلم."]) {
+    assert.throws(() => materialize({ ...candidate, segments: [{ ...candidate.segments[0], text, sourceIds: [] }] }));
+  }
+});
+
+test("ordinary item requests reject a forced source even when the model audit wrongly approves it", async () => {
+  for (const text of ["كيف أطلب كتاب من صاحبي؟", "ودي أعطيه بسكوت، وش أقول؟", "أبي أعزم صديقي يلعب معي في الفسحة"]) {
+    assert.equal(practicalRequestWithoutEvidence(text), true);
+    const result = await generateAnswer(text, [], undefined, sequence(candidate, approved, candidate, approved));
+    assert.equal(result.answer, policy.limitation); assert.deepEqual(result.sources, []);
+  }
+  for (const text of ["أبي الحديث عن الكلام الطيب", "أعطيني دعاء للهدية", "صديقي يسخر من كتابي", "صديقي يستهزئ بلعبتي", "كيف أرد على صديقي إذا يضحك على قلمي؟"]) {
+    assert.equal(practicalRequestWithoutEvidence(text), false);
+  }
 });
