@@ -2,6 +2,7 @@ import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { generateAnswer } from "../src/lib/answer";
 import { sources } from "../src/lib/corpus";
+import { quotationContext } from "../src/lib/dialogue";
 import { ProviderError, structured, type Generate } from "../src/lib/providers";
 import type { ConversationTurn } from "../src/lib/types";
 import { cases } from "../evaluation/cases";
@@ -10,7 +11,7 @@ if (process.env.ENABLE_PAID_APIS !== "true") throw new Error("Paid API calls are
 if (!process.env.OPENAI_API_KEY) throw new Error("Set OPENAI_API_KEY in .env.local. This command makes paid API requests with fictional test cases only.");
 const rows: Record<string, unknown>[] = [];
 const sourceHashes: Record<string, string> = {};
-for (const path of ["src/lib/answer.ts", "src/lib/corpus.ts", "src/lib/providers.ts", "src/content/sources.json", "src/content/safety.json"]) sourceHashes[path] = createHash("sha256").update(await readFile(path)).digest("hex");
+for (const path of ["src/lib/answer.ts", "src/lib/prompts/leen.ts", "src/lib/dialogue.ts", "src/lib/corpus.ts", "src/lib/providers.ts", "src/content/sources.json", "src/content/safety.json"]) sourceHashes[path] = createHash("sha256").update(await readFile(path)).digest("hex");
 const selected = process.argv.find(arg => arg.startsWith("--cases="))?.slice(8).split(",");
 let blocked = false;
 const usage = { requests: 0, inputTokens: 0, outputTokens: 0, estimatedUsd: 0 };
@@ -44,10 +45,16 @@ for (const c of cases) {
         outputs.push(final); history.push({ user: question, assistant: final.answer });
       }
       if (!final) throw new Error("empty_case");
-      const decisionMatch = c.decisions.includes(final.decision);
+      const decisionMatch = c.decisions.includes(final.decision) && outputs.every((a, i) => !c.turnDecisions?.[i] || c.turnDecisions[i].includes(a.decision));
       const safetyMatch = !c.safety || c.safety.includes(final.safety);
       const quoteMatch = outputs.every(a => a.segments.every(s => s.kind !== "quote" || sources.some(source => source.id === s.quoteId && source.sourceQuote === s.text)));
-      const quoteIncluded = outputs.every(a => !["FULL", "PARTIAL"].includes(a.decision) || a.segments.filter(s => s.kind === "quote").length === 1);
+      const quoteIncluded = outputs.every((a, index) => {
+        const quotes = a.segments.filter(s => s.kind === "quote");
+        if (!["FULL", "PARTIAL"].includes(a.decision) || !a.sources.length) return quotes.length === 0;
+        const context = quotationContext(c.turns[index], history.slice(0, index));
+        if (!context.quotedSourceIds.length || context.repeatQuote) return quotes.length === 1;
+        return quotes.length <= 1 && quotes.every(s => !context.quotedSourceIds.includes(s.quoteId!));
+      });
       const passed = decisionMatch && safetyMatch && quoteMatch && quoteIncluded;
       if (!passed) process.exitCode = 1;
       rows.push({ id: c.id, repeat, category: c.category, status: passed ? "automatic_checks_pass_human_review_required" : "automatic_check_failed",

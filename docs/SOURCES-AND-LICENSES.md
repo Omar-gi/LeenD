@@ -22,7 +22,9 @@ Each JSON card includes boundaries, permitted explanation and review status. Exa
 | TypeScript | Apache-2.0; upstream licence retained in dependency |
 | lucide-react icons | ISC; upstream licence retained in dependency |
 | Thmanyah Sans / Serif Display | Owner-supplied; proprietary [Thmanyah licence](https://font.thmanyah.com/licenses). Owner explicitly confirmed repository inclusion permission on 2 October 2026; unmodified files included on that basis. |
-| App favicon / layout | Newly created text/vector/CSS; no external photograph or character image |
+| App favicon / layout | Newly created text/vector/CSS |
+| Leen character (`public/leen-character.png`) | Owner-supplied `Leenpossible logo.png`, incorporated at the owner's request on 4 October 2026, without image edits. Original creator/licence details were not supplied; no independent redistribution licence is asserted. |
+| Product workbook / draft prompt | Team-supplied design input. Original copies remain outside the public repository; adapted behavior is documented in `docs/DIALOGUE.md`. Neither document is treated as approval of religious content. |
 | ElevenLabs voice | Noorah (`ckaeRWMtCV0u0pUT3wX1`), selected by Omar on 2 October 2026 after audition; live synthesis passed with Starter. Rights and entitlement follow the voice/account's terms. Formal pronunciation review is pending. |
 | Briefing documents | Owner-provided context; preserved outside the app repository, not redistributed |
 

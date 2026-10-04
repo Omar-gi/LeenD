@@ -4,6 +4,7 @@ import { generateAnswer } from "../src/lib/answer";
 import { sources, materialize, policy } from "../src/lib/corpus";
 import type { Candidate } from "../src/lib/types";
 import type { Generate } from "../src/lib/providers";
+import { quotationContext } from "../src/lib/dialogue";
 const candidate: Candidate = { decision: "FULL", safety: "none", segments: [{ kind: "explanation", text: "تقدر تطلب منه يتكلم معك باحترام.", sourceIds: [sources[0].id], quoteId: null }] };
 const approved = { supported: true, appropriate: true, inScope: true, safety: "none" };
 function sequence(...values: unknown[]): Generate { return async () => { assert.ok(values.length); return values.shift(); }; }
@@ -144,4 +145,98 @@ test("accidental JSON braces are removed from prose before display and audit", (
   const result = materialize({ ...candidate, segments: [{ ...candidate.segments[0], text: "تقدر تطلب منه يتكلم باحترام. {" }] });
   assert.equal(result.segments[0].text, "تقدر تطلب منه يتكلم باحترام.");
   assert.equal(result.segments[1].text, sources[0].sourceQuote);
+});
+
+test("a follow-up retains its evidence without repeating an earlier hadith", async () => {
+  const first = materialize(candidate);
+  const repeated = { ...candidate, segments: [...candidate.segments,
+    { kind: "quote" as const, text: "", sourceIds: [sources[0].id], quoteId: sources[0].id }] };
+  const result = await generateAnswer("وش أقدر أقول له؟", [{ user: "صديقي يسخر", assistant: first.answer }], undefined, sequence(repeated, approved));
+  assert.equal(result.decision, "FULL"); assert.equal(result.sources[0].id, sources[0].id);
+  assert.equal(result.segments.filter(s => s.kind === "quote").length, 0);
+  assert.equal(result.grounded, true);
+});
+
+test("an explicit request can repeat the exact stored text", async () => {
+  const first = materialize(candidate);
+  const result = await generateAnswer("كرر الحديث", [{ user: "صديقي يسخر", assistant: first.answer }], undefined, sequence(candidate, approved));
+  assert.equal(result.segments.filter(s => s.kind === "quote").length, 1);
+  assert.ok(result.answer.includes(sources[0].sourceQuote));
+});
+
+test("quote history comes only from assistant excerpts and clears with a new session", () => {
+  const first = materialize(candidate);
+  assert.deepEqual(quotationContext("وبعدين؟", [{ user: first.answer, assistant: "وش صار؟" }]).quotedSourceIds, []);
+  assert.deepEqual(quotationContext("وبعدين؟", [{ user: "سؤال", assistant: first.answer }]).quotedSourceIds, [sources[0].id]);
+  assert.equal(materialize(candidate, quotationContext("سؤال جديد", [])).segments.filter(s => s.kind === "quote").length, 1);
+});
+
+test("the failed-advice fallback does not introduce a new quotation on a follow-up", async () => {
+  const first = materialize(candidate);
+  const result = await generateAnswer("قلت له يوقف وما وقف. أرد عليه؟", [{ user: "صديقي يسخر", assistant: first.answer }], undefined, sequence(candidate, approved));
+  assert.equal(result.segments[0].text, policy.triedStop);
+  assert.equal(result.segments.filter(s => s.kind === "quote").length, 0);
+  assert.equal(result.sources.length, 2);
+});
+
+test("a newly relevant explicit quotation is allowed but not automatically added for variety", () => {
+  const context = { quotedSourceIds: [sources[0].id], repeatQuote: false };
+  const newSource: Candidate = { ...candidate, segments: [{ ...candidate.segments[0], sourceIds: [sources[2].id] }] };
+  assert.equal(materialize(newSource, context).segments.filter(s => s.kind === "quote").length, 0);
+  newSource.segments.push({ kind: "quote", text: "", sourceIds: [sources[2].id], quoteId: sources[2].id });
+  assert.equal(materialize(newSource, context).segments[1].text, sources[2].sourceQuote);
+});
+
+test("model-generated quotes cannot enter clarification or referral replies", () => {
+  for (const decision of ["CLARIFY", "REFER"] as const) assert.throws(() => materialize({ decision, safety: "none",
+    segments: [{ kind: "quote", text: "", sourceIds: [sources[0].id], quoteId: sources[0].id }] }));
+});
+
+test("short greetings and closings need neither a paid call nor an unsolicited lesson", async () => {
+  for (const text of ["السلام عليكم", "مرحبا", "خلاص شكرًا، مع السلامة.", "باي"]) {
+    const result = await generateAnswer(text, [], undefined, sequence());
+    assert.equal(result.decision, "FULL"); assert.deepEqual(result.sources, []);
+    assert.ok(!/[؟?]/.test(result.answer)); assert.equal(result.safety, "none");
+  }
+});
+
+test("a greeting or goodbye prefix never hides danger in the rest of the message", async () => {
+  const threat = await generateAnswer("شكرا بس هو بيضربني", [], undefined, sequence());
+  assert.equal(threat.safety, "threat");
+  const semantic = await generateAnswer("مرحبا شخص في اللعبة طلب صور خاصة وقال سر", [], undefined,
+    sequence({ decision: "REFER", safety: "threat", segments: [] }));
+  assert.equal(semantic.safety, "threat");
+});
+
+test("the draft's missing hadith cannot be replaced with a speech quotation", async () => {
+  for (const text of ["أعطيني حديثًا عن حسن الظن لأن صديقاتي يهمسون.", "وش الدليل عن سوء الظن؟"]) {
+    const answer = await generateAnswer(text, [], undefined, sequence());
+    assert.equal(answer.decision, "REFER"); assert.deepEqual(answer.sources, []);
+  }
+});
+
+test("freeform quotations and reversed attribution cannot bypass exact quote segments", () => {
+  for (const text of [sources[1].sourceQuote, `النبي صلى الله عليه وسلم قال: كلام مختلق`, `الحديث الشريف يقول: كلام مختلق`]) {
+    assert.throws(() => materialize({ ...candidate, segments: [{ ...candidate.segments[0], text }] }));
+  }
+});
+
+test("clear photo coercion, unwanted touching and self-harm interrupt the dialogue without a provider", async () => {
+  for (const text of ["واحد في اللعبة طلب مني صور جسمي وقال لا تعلم أحد", "واحد من أهلي يلمس جسمي بطريقة تضايقني ويقول سر العائلة", "أفكر أؤذي نفسي"]) {
+    const result = await generateAnswer(text, [], undefined, sequence());
+    assert.equal(result.safety, "threat"); assert.equal(result.answer, policy.threat);
+    assert.ok(result.answer.includes("معلّم")); assert.deepEqual(result.sources, []);
+  }
+  const negated = await generateAnswer("ما طلب مني صور خاصة، بس أسأل", [], undefined, sequence());
+  assert.equal(negated.safety, "uncertain");
+});
+
+test("one format repair can recover a misplaced quotation but still requires the audit", async () => {
+  const malformed = { ...candidate, segments: [{ ...candidate.segments[0], text: `النبي صلى الله عليه وسلم قال: ${sources[0].sourceQuote}` }] };
+  const fixed = await generateAnswer("صديقي يسخر مني، وش أقول؟", [], undefined, sequence(malformed, candidate, approved));
+  assert.equal(fixed.decision, "FULL"); assert.equal(fixed.grounded, true);
+  const rejected = await generateAnswer("صديقي يسخر مني، وش أقول؟", [], undefined, sequence(malformed, candidate, { ...approved, supported: false }));
+  assert.equal(rejected.answer, policy.limitation);
+  const repeated = await generateAnswer("صديقي يسخر مني، وش أقول؟", [], undefined, sequence(malformed, malformed));
+  assert.equal(repeated.answer, policy.limitation);
 });

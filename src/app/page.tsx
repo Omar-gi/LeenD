@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AudioLines, BookOpen, Check, ChevronDown, CircleHelp, Headphones, HeartHandshake, Keyboard,
+import { BookOpen, Check, ChevronDown, CircleHelp, Headphones, HeartHandshake, Keyboard,
   LoaderCircle, Mic, Pencil, Play, Send, ShieldCheck, Square, Volume2, VolumeX, X } from "lucide-react";
 import type { ConversationTurn, TurnResponse } from "@/lib/types";
+import { CharacterPortrait, LeenCharacter, type Phase } from "./leen-character";
 
-type Phase = "idle" | "permission" | "recording" | "thinking" | "speaking";
 type Message = TurnResponse & { id: string; audioUrl?: string };
 type Health = { textReady: boolean; voiceReady: boolean; reviewStatus: "draft" | "approved" };
 const errors: Record<string, string> = {
@@ -50,6 +50,7 @@ export default function Home() {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<HTMLAudioElement | null>(null);
   const messagesRef = useRef<Message[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -93,13 +94,15 @@ export default function Home() {
 
   function stopPlayback() {
     audioRef.current?.pause(); audioRef.current = null;
+    setPlayingAudio(null);
     setPlayingId(null); setPhase(p => p === "speaking" ? "idle" : p);
   }
   async function play(url: string, id: string) {
     stopPlayback();
     const audio = new Audio(url); audioRef.current = audio;
-    setPhase("speaking"); setPlayingId(id);
-    audio.onended = () => { if (audioRef.current === audio) { setPhase("idle"); setPlayingId(null); audioRef.current = null; } };
+    setPlayingId(id);
+    audio.onplaying = () => { if (audioRef.current === audio) { setPhase("speaking"); setPlayingAudio(audio); } };
+    audio.onended = () => { if (audioRef.current === audio) stopPlayback(); };
     audio.onerror = () => { if (audioRef.current === audio) { stopPlayback(); setNotice("تعذّر تشغيل الصوت. الإجابة المكتوبة موجودة."); } };
     try { await audio.play(); }
     catch { if (audioRef.current === audio) { stopPlayback(); setNotice("اضغط «اسمع الإجابة» لتشغيل الصوت."); } }
@@ -228,6 +231,7 @@ export default function Home() {
 
     {screen === "intro" ? <main id="main" className="intro">
       <section className="intro-copy">
+        <div className="intro-character-mobile"><CharacterPortrait /></div>
         <span className="eyebrow"><span className="tiny-line" /> حوار صغير، وفهم أكبر</span>
         <h1>أهلًا، أنا <span>لين.</span><br />سؤالك له مساحة.</h1>
         <p className="intro-description">نتكلم عن الصداقة والمواقف اللي تمرّ عليك.<br className="desktop-break" /> أسمع سؤالك، وأشرح لك بكلمات قريبة ومصادر واضحة.</p>
@@ -240,7 +244,7 @@ export default function Home() {
         </div>
       </section>
       <aside className="intro-panel" aria-label="كيف تعمل لين">
-        <span className="panel-tag">مساحة آمنة للسؤال</span><div className="panel-center"><AudioLines size={50} strokeWidth={1.25} /><p>نسأل بطريقتنا.<br /><span>ونفهم على مهل.</span></p><Wave /></div>
+        <span className="panel-tag">مساحة آمنة للسؤال</span><div className="panel-center"><div className="hero-character"><CharacterPortrait hero /></div><p>نسأل بطريقتنا.<br /><span>ونفهم على مهل.</span></p><Wave /></div>
         <div className="panel-bottom"><span className="panel-number">٠١</span><p>الصداقة وما حولها<span>الكلام الطيب، المواقف الصعبة، وحدود المساندة.</span></p></div>
       </aside>
     </main> : <main id="main" className="chat-layout">
@@ -254,8 +258,9 @@ export default function Home() {
           <div className="conversation-actions"><button className="icon-button" title={audioEnabled ? "إيقاف الردود الصوتية" : "تشغيل الردود الصوتية"} aria-label={audioEnabled ? "إيقاف الردود الصوتية" : "تشغيل الردود الصوتية"} aria-pressed={audioEnabled} onClick={() => { setAudioEnabled(!audioEnabled); if (audioEnabled) stopPlayback(); }}>{audioEnabled ? <Volume2 size={21} /> : <VolumeX size={21} />}</button>
           <button ref={endButtonRef} className="text-button end-button" onClick={() => setConfirmEnd(true)}>إنهاء الجلسة</button></div></div>
         <div className="review-banner"><ShieldCheck size={15} /><span>{health?.reviewStatus === "approved" ? "تجربة للبالغين بأمثلة خيالية" : "عرض تجريبي للبالغين · المحتوى والشرح قيد المراجعة"}</span></div>
+        <LeenCharacter phase={phase} audio={playingAudio} onActivate={() => phase === "recording" ? stopRecording() : phase === "speaking" ? stopPlayback() : void startRecording()} />
         <div className="messages" role="log" aria-label="سجل المحادثة" aria-live="polite" aria-relevant="additions text">
-          {!messages.length && !pending && <div className="empty-state"><div className="empty-symbol"><AudioLines size={35} strokeWidth={1.5} /></div><h2>خذ راحتك.<br />وش ودّك تسأل؟</h2><p>اضغط الميكروفون وقل سؤالك،<br />واضغط مرة ثانية إذا انتهيت.</p><span className="empty-pill">الميكروفون يفتح فقط لما تضغط</span></div>}
+          {!messages.length && !pending && <div className="empty-state"><h2>خذ راحتك.<br />وش ودّك تسأل؟</h2><p>اضغط على لين أو الميكروفون وقل سؤالك،<br />واضغط مرة ثانية إذا انتهيت.</p><span className="empty-pill">الميكروفون يفتح فقط لما تضغط</span></div>}
           {messages.map((message, index) => <article className="exchange" key={message.id}>
             <div className="user-message"><div className="message-label">أنت <button disabled={locked} className="edit-button" aria-label={`تعديل السؤال ${index + 1}`} onClick={() => correct(index)}><Pencil size={13} /> تعديل</button></div><p dir="auto">{message.transcript}</p></div>
             <div className={`assistant-message ${message.safety !== "none" ? "safety-message" : ""}`}><div className="message-label"><span className="mini-leen">ل</span> لين {message.safety !== "none" && <span className="safety-tag">سلامتك أولًا</span>}</div>

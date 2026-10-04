@@ -1,6 +1,7 @@
 import sourceData from "../content/sources.json";
 import safetyPolicy from "../content/safety.json";
 import type { Answer, Candidate, Safety, SourceCard } from "./types";
+import type { QuotationContext } from "./dialogue";
 
 export const sources = sourceData as SourceCard[];
 export const policy = safetyPolicy;
@@ -14,8 +15,12 @@ export function normalizeArabic(text: string): string {
 // Negated/quoted danger is clarified instead of treated as an established threat.
 export function detectSafety(text: string): Safety {
   const t = normalizeArabic(text);
-  const danger = /بيضربني|بيقتلني|هددني|يهددني|يضربني|بياذيني|ياذيني|تحرش|kill me|hurt me|threaten|hit me/i.test(t);
+  const privatePhotos = /(?:صور|صوره|فيديو).{0,20}(?:جسمي|خاص)/.test(t) && /طلب|يبي|يبغي|ارسل|لا تعلم|سر/.test(t);
+  const unwantedTouch = /(?:يلمس|لمس|يلمسني|لمسني).{0,35}(?:جسمي|خاص|تضايق|يضايق|غصب)/.test(t);
+  const selfHarm = /(?:ابي|ابغي|افكر|ناوي|راح).{0,18}(?:ا[وؤ]ذي نفسي|اقتل نفسي|انتحر)/.test(t);
+  const danger = privatePhotos || unwantedTouch || selfHarm || /بيضربني|بيقتلني|هددني|يهددني|يضربني|بياذيني|ياذيني|تحرش|kill me|hurt me|threaten|hit me/i.test(t);
   if (!danger) return "none";
+  if (/ما (?:طلب|لمس|يلمس|ابي)|مو (?:ناوي|افكر)|لم (?:يلمس|يطلب)|قصة خيالي[ةه]|ما صار/.test(t)) return "uncertain";
   if (/ما (?:هو |راح |احد )?(?:هددني|يهددني|يضربني|بيضربني|ياذيني)|مو (?:يهددني|بيضربني)|لم يهددني|never threatened|not threatening/i.test(t)) return "uncertain";
   if (/الحين|الان|قدامي|جنبي|right now|here now/i.test(t)) return "immediate";
   return "threat";
@@ -38,6 +43,9 @@ export function scopeBoundary(text: string, hasHistory: boolean): Answer | null 
   const t = normalizeArabic(text);
   // Individual faith judgments are outside every card, including reassuring verdicts.
   if (/كافر|تكفير|ايمانه|ايمان (?:صديقي|خويي)/.test(t)) return limitation();
+  // The V1 draft's illustrative husn-al-dhann quotation is not in this corpus.
+  // Revisit this boundary when Sarah supplies a reviewed card for this topic.
+  if (/حسن (?:ال)?ظن|سوء (?:ال)?ظن/.test(t) && /حديث|دليل|اي[ةه]|النبي/.test(t)) return limitation();
   // A speech-related hadith is not evidence for teaching unrelated acts of worship.
   // Keep friendship questions that merely mention these settings on the normal path.
   if (/قنوت|زكاة|صلاة|وضوء|صيام|مناسك/.test(t) && !/صديق|صداق|خوي|اصحاب|يسخر|يستهز|استهزا|سخري|يضحك|يؤذي|يوذي|ظلم/.test(t)) return limitation();
@@ -54,18 +62,18 @@ export function needsNextStep(text: string): boolean {
   return /(?:قلت|طلبت|جربت|كلمت).{0,45}(?:يوقف|يتوقف|توقف)/.test(t) && /(?:ما وقف|ما توقف|ما نفع|ماوقف|ماتوقف)/.test(t);
 }
 
-export function nextStepFallback(): Answer {
-  const ids = ["friendship_non_harm", "friendship_good_speech"];
+export function nextStepFallback(context?: QuotationContext): Answer {
+  const ids = ["friendship_good_speech", "friendship_non_harm"];
   return { ...materialize({ decision: "FULL", safety: "none", segments: [
-    { kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null },
-    { kind: "quote", text: "", sourceIds: ["friendship_good_speech"], quoteId: "friendship_good_speech" }
-  ] }), grounded: true };
+    { kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null }
+  ] }, context), grounded: true };
 }
 
-export function materialize(candidate: Candidate): Answer {
+export function materialize(candidate: Candidate, context: QuotationContext = { quotedSourceIds: [], repeatQuote: false }): Answer {
   if (candidate.safety !== "none") return fixedSafety(candidate.safety);
   if (!candidate.segments.length || candidate.segments.length > 5) throw new Error("invalid_segments");
   if (candidate.segments.filter(s => s.kind === "quote").length > 1) throw new Error("too_many_quotes");
+  if (["CLARIFY", "REFER"].includes(candidate.decision) && candidate.segments.some(s => s.kind === "quote")) throw new Error("quote_not_allowed");
   const used = new Set<string>();
   const segments = candidate.segments.map(segment => {
     if (segment.sourceIds.some(id => !sources.some(s => s.id === id))) throw new Error("unknown_source");
@@ -80,12 +88,17 @@ export function materialize(candidate: Candidate): Answer {
     if (segment.quoteId !== null || !text || text.length > 650) throw new Error("invalid_explanation");
     // Attribution and quotation belong exclusively in stored quote segments.
     if (/قال (?:الله|النبي|رسول)|قال تعالى|[«»]|https?:\/\//.test(text)) throw new Error("freeform_attribution");
+    const normalized = normalizeArabic(text);
+    if (/النبي.{0,35}(?:قال|يقول)|الحديث.{0,20}(?:يقول|نصه)|رسول الله/.test(normalized) ||
+      sources.some(source => normalized.includes(normalizeArabic(source.sourceQuote)))) throw new Error("freeform_quotation");
     return { ...segment, text };
-  });
+  }).filter(segment => segment.kind !== "quote" || context.repeatQuote || !context.quotedSourceIds.includes(segment.quoteId!));
+  if (!segments.length) throw new Error("empty_answer_after_repeat_removal");
   if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") && used.size === 0) throw new Error("missing_evidence");
-  // A supported answer includes its hadith in the dialogue, even if the model omits it.
-  // Choose from evidence already attached to the explanation, before the grounding audit.
-  if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") && !segments.some(s => s.kind === "quote")) {
+  // Introduce the hadith once, or repeat on request. References stay visible on follow-ups.
+  // Choose evidence already attached to the explanation, before the independent audit.
+  if ((candidate.decision === "FULL" || candidate.decision === "PARTIAL") &&
+    (!context.quotedSourceIds.length || context.repeatQuote) && !segments.some(s => s.kind === "quote")) {
     const explanationIndex = segments.findIndex(s => s.sourceIds.length > 0);
     const source = sources.find(s => s.id === segments[explanationIndex].sourceIds[0])!;
     segments.splice(explanationIndex + 1, 0, { kind: "quote", text: source.sourceQuote, sourceIds: [source.id], quoteId: source.id });

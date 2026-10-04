@@ -11,3 +11,31 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
 .intro h1,.chat-sidebar h2,.empty-state h2,.panel-center p{font-family:"Thmanyah Display",Thmanyah,serif;letter-spacing:0}.review-banner{font-size:12px}.conversation-title>div>span,.phase-caption,.start-footnote{font-size:12px}.end-button{font-size:12px;min-height:40px}.edit-button,.quiet-button{min-height:32px}.source-card>span,.source-disclaimer{font-size:12px}
+
+/* The supplied character stays inside a portrait; its original art is unmodified. */
+.character-portrait{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.hero-character{width:min(100%,270px);aspect-ratio:1;border-radius:50% 50% 44% 44%;overflow:hidden;border:5px solid #ffffff30;box-shadow:0 14px 42px #082c3740;margin-bottom:25px;animation:character-float 5s ease-in-out infinite}
+.panel-center{width:100%;padding:28px 0 20px}.panel-center p{font-size:26px}.panel-center .wave{height:40px;margin-top:14px;transform:scaleY(.65)}
+.intro-character-mobile{display:none}
+.leen-presence{display:flex;align-items:center;justify-content:center;gap:21px;padding:15px 22px;background:linear-gradient(110deg,#f3f9fc,#f7fbf7);border-bottom:1px solid #e5eff0;flex-shrink:0}
+.character-button{--voice-level:0;position:relative;flex-shrink:0;width:88px;height:88px;border-radius:50%;padding:4px;background:#d2e9f6;box-shadow:0 0 0 5px #e8f3fa;color:#173d37;transition:box-shadow .15s,background .15s}
+.character-button:disabled{opacity:1;cursor:wait}
+.character-frame{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;transform:scale(calc(1 + var(--voice-level)*.055))}
+.character-control{position:absolute;bottom:-2px;left:-2px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;border:3px solid #f5faf9;border-radius:50%;background:var(--green);color:white}
+.character-copy{display:flex;flex-direction:column;min-width:0;text-align:right}.character-copy strong{font-weight:600;font-size:17px}.character-copy>span{font-size:12px;color:var(--muted)}
+.character-activity{display:flex;align-items:center;gap:4px;height:20px;margin-top:3px;direction:ltr;align-self:flex-start}
+.character-activity i{height:4px;width:4px;border-radius:4px;background:#97b9c8;display:block}
+.is-idle .character-frame{animation:character-breathe 5s ease-in-out infinite}
+.is-recording .character-button{background:#b5634f;animation:character-listen 1.8s ease-out infinite}.is-recording .character-control{background:#a34735}
+.is-recording .character-activity i,.is-speaking .character-activity i{height:15px;animation:wave .85s ease-in-out infinite}
+.character-activity i:nth-child(2n){animation-delay:.15s}.character-activity i:nth-child(3n){animation-delay:.3s}
+.is-thinking .character-button,.is-permission .character-button{animation:character-think 2s ease-in-out infinite}
+.is-thinking .character-activity i,.is-permission .character-activity i{animation:blink 1.3s ease-in-out infinite}
+.is-speaking .character-button{background:#75b3d5;box-shadow:0 0 0 calc(5px + var(--voice-level)*10px) #c8e5f366,0 0 calc(12px + var(--voice-level)*24px) #80bbd955}
+.empty-state{min-height:220px}.messages{min-height:0}.conversation-header,.review-banner,.composer{flex-shrink:0}
+@keyframes character-float{50%{transform:translateY(-7px)}}
+@keyframes character-breathe{50%{transform:scale(1.025)}}
+@keyframes character-listen{50%{box-shadow:0 0 0 9px #b5634f16}}
+@keyframes character-think{50%{box-shadow:0 0 0 7px #bfd5ef88}}
+@media(max-width:600px){.intro-copy{position:relative}.intro-character-mobile{display:block;position:absolute;left:0;top:0;width:74px;height:74px;border-radius:50%;overflow:hidden;border:3px solid #d7e9f3}.intro-copy>.eyebrow{padding-left:82px;min-height:32px}.leen-presence{gap:16px;padding:10px 16px}.character-button{width:66px;height:66px;padding:3px}.character-copy strong{font-size:15px}.character-copy>span{font-size:11px}.character-activity{height:14px}.character-control{height:25px;width:25px}.empty-state{min-height:175px}.empty-state h2{font-size:22px}.empty-state>p{font-size:12px}.empty-pill{margin-top:8px}.conversation{height:calc(100dvh - 110px);min-height:540px}}
+@media(prefers-reduced-motion:reduce){.character-frame{transform:none!important}.is-speaking .character-button{box-shadow:0 0 0 5px #c8e5f3;transition:none}}

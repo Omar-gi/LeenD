@@ -2,6 +2,8 @@
 
 Omar will deploy from `Omar-gi/LeenD`. The repository root is the application; leave Railway's Root Directory empty (or `/`). No source briefing PDFs or API keys are included.
 
+The 4 October character/dialogue update needs no new environment variables, database, or paid avatar service. The portrait ships under `public/` and the adapted prompt stays on the server. Keep the draft-content banner until Sarah's review is recorded. See [current measured results and remaining dialogue limitations](../evaluation/RESULTS.md) before presenting the demo.
+
 1. Create a Railway project from the GitHub repository. Select the Hobby plan in your account if needed. Railway should detect the root `Dockerfile`; `railway.json` supplies a liveness healthcheck and one replica.
 2. Generate a Railway public domain. Set `APP_ORIGIN` to its **exact HTTPS origin**, without a trailing slash or path. Update this when changing domains.
 3. Add server variables from your private `.env.local`: `OPENAI_API_KEY`, `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`, `SESSION_SECRET`. Keep model defaults from `.env.example`. Set `ENABLE_PAID_APIS=true` only if you accept separate provider API billing; it defaults to false. Do not use `NEXT_PUBLIC_` for any credential. Use a random secret with at least 32 characters; generate one with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"` in your own terminal. Keep it unchanged across redeployments during a demo session.
