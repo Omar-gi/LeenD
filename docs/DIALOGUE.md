@@ -15,7 +15,7 @@ The adapted behavior is versioned in `src/lib/prompts/leen.ts`, combined with th
 
 ## Character interaction
 
-`public/leen-character.png` is the owner's supplied artwork, copied without image edits. The portrait is responsive; idle/listening/thinking/speaking states follow the real app state. On playback, Web Audio measures the reply amplitude for a subtle glow; if unavailable, normal audio and the CSS state remain. This is not mouth animation or lip synchronization. No character click on the introduction opens the microphone: adult confirmation and starting the conversation come first.
+`public/leen-character.png` is the owner's supplied artwork, copied without image edits and retained on the introduction. The conversation uses a transparent four-expression sprite derived from it. Idle gently floats; recording uses an attentive hand-to-head pose and nod; thinking sways; speaking bobs with a two-frame mouth driven by the reply's measured audio amplitude. Mouth changes have a short hold and separate open/close thresholds to reduce flicker. This is expressive animation, not phoneme-level lip synchronization. If Web Audio is unavailable, normal playback and a CSS talking animation remain. No character click on the introduction opens the microphone: adult confirmation and starting the conversation come first. See [asset provenance and generation prompt](CHARACTER-ANIMATION.md).
 
 In the conversation, clicking Leen starts a recording, stops/sends a recording, or stops current speech. Generation and permission-pending states disable repeat clicks. The existing microphone, typing, correction and playback controls remain. Reduced-motion settings stop decorative movement. No hands-free listening, LiveKit or avatar service is added.
 

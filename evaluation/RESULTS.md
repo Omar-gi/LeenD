@@ -2,6 +2,14 @@
 
 This is **an adult-operated fictional MVP**, not religious approval or evidence of child usability. Every source explanation and safety response is still marked draft. Engineering tests pass; live model responses retain the limitations recorded below.
 
+## 4 October: expressive character follow-up
+
+- Production build and separate TypeScript check passed. This update changes the character component, CSS and artwork only; the language evaluation and backend suite below were not rerun for it.
+- All four poses were inspected using a local component preview. The production app was checked at desktop size and 390×844, with no horizontal overflow on mobile.
+- A fictional typed friendship question produced real Noorah audio. During playback, the analyser was ready and both open and closed mouth states were observed with changing audio levels. A short greeting then verified stopping speech by clicking Leen, replaying it and stopping again; playback attributes were removed and the character returned to idle. No browser warnings/errors were recorded.
+- The recording pose was also seen in the app; that brief recording was discarded by ending the session without submitting it. This does not establish microphone transcription accuracy or outside-user acceptance. Reduced-motion behavior is implemented in CSS; it was reviewed in code rather than tested through an OS preference change.
+- Asset provenance, exact generation prompt and amplitude-animation limitations are in [the character animation note](../docs/CHARACTER-ANIMATION.md).
+
 ## 4 October: adaptive dialogue and character
 
 - **64/64 engineering tests passed** and the production build (including TypeScript) passed. Added coverage includes quotation cadence/repetition/reset, greeting/closing behavior, no swallowed disclosures, absent draft references, direct coercion/self-harm checks, and a single format repair followed by the independent audit.
