@@ -12,7 +12,7 @@ Ancient source excerpts are provided with references and linked to Dorar for ver
 | Avoiding unsupported suspicion | إياكم والظن؛ فإن الظن أكذب الحديث | Bukhari 6064 / Muslim 2563, Abu Huraira; [Dorar](https://dorar.net/h/trSPsnoz?osoul=1). Exact excerpt checked against the Bukhari subsection on 4 October 2026, not the Abu Dawud page heading. Draft explanation; never use to dismiss actual harm. |
 | Forgiveness | وما زاد الله عبدا بعفو إلا عزا | Muslim 2588, Abu Huraira; [Dorar](https://dorar.net/h/TiFZzO09?osoul=1). Exact excerpt checked against the Muslim subsection on 4 October 2026. Draft explanation; no pressure to forgive or abandon boundaries. |
 
-Each JSON card includes boundaries, permitted explanation and review status. Exact quotation text is inserted by the server, never synthesized by the language model. Fixed safety responses are separate application guidance, not scripture or a personal fatwa.
+Each JSON card includes boundaries, permitted explanation, authored short child/simple explanations and review status. The short explanations added on 5 October are new draft application wording based on the existing permitted meanings; they are not attributed to Sara's missing sheet or marked approved. Exact quotation text is inserted by the server, never synthesized by the language model. Fixed safety responses are separate application guidance, not scripture or a personal fatwa.
 
 ## Software and assets
 
@@ -27,6 +27,7 @@ Each JSON card includes boundaries, permitted explanation and review status. Exa
 | App favicon / layout | Newly created text/vector/CSS |
 | Leen character (`public/leen-character.png`) | Owner-supplied `Leenpossible logo.png`, incorporated at the owner's request on 4 October 2026, without image edits. Original creator/licence details were not supplied; no independent redistribution licence is asserted. |
 | Character expressions (`public/leen-character-expressions.png`) | AI-generated derivative of the supplied character, made with Codex's built-in image generator on 4 October 2026 for the owner's requested animation. [Generation prompt and frame map](CHARACTER-ANIMATION.md). Original artwork rights remain applicable; no independent asset licence is asserted. |
+| Scope CSV (5 October) | Team-supplied scope input. Only its 15 labels and descriptions (E4:F18) are represented in `src/content/scope.json`; derived stable IDs are engineering labels. It provides no new religious evidence or approval. |
 | Product workbook / draft prompt | Team-supplied design input. Original copies remain outside the public repository; adapted behavior is documented in `docs/DIALOGUE.md`. Neither document is treated as approval of religious content. |
 | ElevenLabs voice | Noorah (`ckaeRWMtCV0u0pUT3wX1`), selected by Omar on 2 October 2026 after audition; live synthesis passed with Starter. Rights and entitlement follow the voice/account's terms. Formal pronunciation review is pending. |
 | Briefing documents | Owner-provided context; preserved outside the app repository, not redistributed |

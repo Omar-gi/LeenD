@@ -28,20 +28,22 @@ npm start
 
 ## Implemented experience
 
+- Short everyday Arabic greetings and closings; simpler explanations on request, without adding an unrelated hadith. Friendship anger and boundaries receive practical support. The team's 15-area scope map guides classification; the detailed Sara content sheet is still missing from the supplied files. See [content handoff](docs/CONTENT-HANDOFF.md).
+
 - Intro with adult fictional-use acknowledgement and AI voice disclosure.
 - Tap-to-start/stop microphone, automatic stop at 30 seconds, typed input, readable transcript and answer.
 - Correct an earlier transcript: the corrected question and all later turns are replaced only when the new response succeeds.
 - Full / Partial / Clarify / Refer decisions; session follow-ups; visible source excerpts and links.
-- Hadiths appear promptly in text and speech for a directly relevant source-backed lesson or requested available excerpt. The server fills exact stored words before the relevance audit, including a missing first excerpt in a sourced lesson. Ordinary practical help needs no source. Follow-ups avoid routine repetition; safety and clarifications remain direct.
+- Hadiths appear promptly in text and speech for a directly relevant source-backed lesson or requested available excerpt. The server fills exact stored quotations and authored draft meanings before the relevance audit, including a missing first excerpt in a sourced lesson. Ordinary practical help needs no source. Simplification never adds a new quote. Follow-ups avoid routine repetition; safety and clarifications remain direct.
 - The supplied Leen character is visible on desktop and mobile. Tap it to start/stop recording, or stop a spoken reply. Listening/thinking states and a playback-driven glow make the current action visible; reduced-motion preferences are respected. The microphone and typing controls remain available.
-- Answer-first dialogue: a conclusion and a small safe step, with zero questions by default and at most one indispensable ordinary clarification within the bounded history. Safety questions override this limit. The server blocks repeated probing independently of the model's audit. See [dialogue adaptation](docs/DIALOGUE.md). Sarah's content review remains pending.
+- Answer-first dialogue: a conclusion and a small safe step, with zero questions by default and at most one indispensable ordinary clarification within the bounded history. Safety questions override this limit. The server blocks repeated probing independently of the model's audit. See [dialogue policy](docs/DIALOGUE.md). Sarah's content review remains pending.
 - Stop/replay speech, disable spoken replies, provider-error recovery, and session clearing.
-- Complete five-card draft server corpus on each request, including suspicion and forgiveness, strict output structure, exact server-filled quotations, separate context/source relevance checks before TTS, and a fixed safety path for threats. One bounded repair covers format, relevance or dialogue violations, followed by the full audit again.
+- Separate scope/source selection over the five-card draft catalog, including suspicion and forgiveness; only selected cards reach the writer and verifier, with a server-enforced source allowlist, per-request output schema allowing only selected meaning/quote placeholders, exact server-filled quotations, separate context/source relevance checks before TTS, and a fixed safety path for threats. One bounded repair covers format, relevance or dialogue violations, followed by the full audit again.
 - Bounded input/history, signed history receipts, same-origin checks, request timeouts, concurrency and request-budget controls.
 
 ## Architecture
 
-Browser → `POST /api/turn` → optional OpenAI transcription (`gpt-4o-mini-transcribe`, Arabic) → constrained OpenAI response and separate audit (`gpt-4.1-mini`) → ElevenLabs speech (`eleven_flash_v2_5`) → text, sources and optional audio.
+Browser → `POST /api/turn` → optional OpenAI transcription (`gpt-4o-mini-transcribe`, Arabic) → OpenAI scope/source selection → constrained response and separate audit (all `gpt-4.1-mini`) → ElevenLabs speech (`eleven_flash_v2_5`) → text, sources and optional audio.
 
 The browser holds at most 12 turns in memory; refresh/end session clears them. No localStorage, cookies containing content, filesystem uploads, database, or analytics are used. Provider processing is separate: `store:false` disables Responses storage, not all provider retention. See [privacy and reliability](docs/PRIVACY-AND-LIMITS.md).
 

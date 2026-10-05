@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { structured, speak, transcribe, ProviderError, candidateSchema } from "../src/lib/providers";
+import { structured, speak, transcribe, ProviderError, candidateSchema, answerJsonFor } from "../src/lib/providers";
 process.env.OPENAI_API_KEY = "test-key-not-real"; process.env.ELEVENLABS_API_KEY = "test-key-not-real";
 const fetchStub = (fn: (url: string, init: RequestInit) => Promise<Response>) => fn as typeof fetch;
 test("Responses uses store:false and strict schema; completed output is parsed", async () => {
@@ -35,4 +35,18 @@ test("structured segments cannot combine an explanation with a quote identifier 
   assert.equal(candidateSchema.safeParse(candidate).success, false);
   assert.equal(candidateSchema.safeParse({ ...candidate, segments: [{ ...candidate.segments[0], kind: "quote", text: "invented words" }] }).success, false);
   assert.equal(candidateSchema.safeParse({ ...candidate, segments: [{ ...candidate.segments[0], kind: "quote", text: "" }] }).success, true);
+});
+
+test("per-request schema excludes unselected evidence and keeps meanings server-filled", () => {
+  const empty = answerJsonFor([]).properties.segments.items.anyOf as Record<string, any>[];
+  assert.equal(empty.length, 1); assert.equal(empty[0].properties.sourceIds.maxItems, 0);
+  const selected = answerJsonFor(["friendship_suspicion"]).properties.segments.items.anyOf as Record<string, any>[];
+  assert.equal(selected.length, 3);
+  for (const item of selected.slice(1)) {
+    assert.deepEqual(item.properties.text.enum, [""]);
+    assert.deepEqual(item.properties.sourceIds.items.enum, ["friendship_suspicion"]);
+  }
+  assert.equal(candidateSchema.safeParse({ decision: "FULL", safety: "none", segments: [
+    { kind: "meaning", text: "an invented benefit", sourceIds: ["friendship_suspicion"], quoteId: null }
+  ] }).success, false);
 });

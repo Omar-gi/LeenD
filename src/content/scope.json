@@ -1,0 +1,23 @@
+{
+  "version": "2026-10-05.scope-v1",
+  "provenance": "Team CSV: لين_مرجع تصميم المنتج V1.xlsx - V1 نطاق لين .csv, columns E–F, rows 4–18",
+  "authority": "Scope only. Not religious evidence or Sara's detailed reviewed knowledge table.",
+  "detailedKnowledgeStatus": "awaiting_team_file",
+  "categories": [
+    { "id": "kindness", "label": "حسن التعامل", "scope": "حسن الخلق والمعاملة مع الأصدقاء والآخرين" },
+    { "id": "friendship_rights", "label": "حقوق الصداقة", "scope": "ما يرتبط بحقوق الصاحب ومسؤوليات العلاقة" },
+    { "id": "help", "label": "النصيحة والعون", "scope": "النصح، الاهتمام، المساعدة والتعاون على الخير" },
+    { "id": "conflict", "label": "الخلاف والإصلاح", "scope": "التعامل مع الخلاف، الإصلاح، وعدم استمرار الهجر" },
+    { "id": "gratitude", "label": "الشكر والتقدير", "scope": "شكر الآخرين وتقدير المعروف" },
+    { "id": "patience", "label": "الصبر والحِلم", "scope": "التعامل مع المواقف المزعجة دون تسرع أو إساءة" },
+    { "id": "others_success", "label": "الفرح للآخر", "scope": "الفرح للخير الذي يصيب الصديق وتجنب الحسد" },
+    { "id": "privacy", "label": "السر والخصوصية", "scope": "حفظ السر، الستر، وعدم كشف خصوصيات الآخرين" },
+    { "id": "talk_about_others", "label": "الكلام عن الآخرين", "scope": "الغيبة، النميمة، ونقل الكلام" },
+    { "id": "honesty", "label": "الصدق", "scope": "الصدق والكذب داخل العلاقات" },
+    { "id": "interpretation", "label": "الظن والتفسير", "scope": "حسن الظن وعدم بناء الأحكام على الظنون" },
+    { "id": "fairness", "label": "العدل", "scope": "عدم الظلم وعدم مقابلة الإساءة بظلم" },
+    { "id": "teasing", "label": "المزاح", "scope": "الفرق بين المزاح والإيذاء أو السخرية" },
+    { "id": "boundaries", "label": "المساحة والحدود", "scope": "احترام خصوصية الآخر ومساحته والاستئذان" },
+    { "id": "peer_pressure", "label": "ضغط الأصدقاء", "scope": "عدم المشاركة في الخطأ لإرضاء الأصدقاء" }
+  ]
+}

@@ -11,9 +11,10 @@ if (process.env.ENABLE_PAID_APIS !== "true") throw new Error("Paid API calls are
 if (!process.env.OPENAI_API_KEY) throw new Error("Set OPENAI_API_KEY in .env.local. This command makes paid API requests with fictional test cases only.");
 const rows: Record<string, unknown>[] = [];
 const sourceHashes: Record<string, string> = {};
-for (const path of ["src/lib/answer.ts", "src/lib/prompts/leen.ts", "src/lib/dialogue.ts", "src/lib/corpus.ts", "src/lib/providers.ts", "src/content/sources.json", "src/content/safety.json"]) sourceHashes[path] = createHash("sha256").update(await readFile(path)).digest("hex");
+for (const path of ["src/lib/answer.ts", "src/lib/routing.ts", "src/lib/prompts/leen.ts", "src/lib/dialogue.ts", "src/lib/corpus.ts", "src/lib/providers.ts", "src/content/scope.json", "src/content/sources.json", "src/content/safety.json"]) sourceHashes[path] = createHash("sha256").update(await readFile(path)).digest("hex");
 const selected = process.argv.find(arg => arg.startsWith("--cases="))?.slice(8).split(",");
 let blocked = false;
+let budgetReached = false;
 const usage = { requests: 0, inputTokens: 0, outputTokens: 0, estimatedUsd: 0 };
 if (process.env.OPENAI_TEXT_MODEL && process.env.OPENAI_TEXT_MODEL !== "gpt-4.1-mini") throw new Error("This cost-bounded runner currently supports gpt-4.1-mini only. Review pricing before changing models.");
 const meteredFetch: typeof fetch = async (url, init) => {
@@ -31,8 +32,10 @@ const meteredFetch: typeof fetch = async (url, init) => {
 };
 let audits: unknown[] = [];
 let drafts: unknown[] = [];
+let routes: unknown[] = [];
 const meteredGenerate: Generate = async (instructions, input, schema, name, signal) => {
   const result = await structured(instructions, input, schema, name, signal, meteredFetch);
+  if (name === "leen_route") routes.push(result);
   if (name === "leen_grounding") audits.push(result);
   if (name === "leen_answer") drafts.push({ currentQuestion: JSON.parse(input).currentQuestion, result });
   return result;
@@ -41,10 +44,11 @@ for (const c of cases) {
   if (selected && !selected.includes(c.id)) continue;
   if (c.engineering) { rows.push({ id: c.id, category: c.category, status: "run_npm_test", test: c.engineering }); continue; }
   for (let repeat = 1; repeat <= (c.critical ? 3 : 1); repeat++) {
-    if (blocked) { rows.push({ id: c.id, repeat, status: "not_run_provider_blocked" }); continue; }
+    if (blocked) { rows.push({ id: c.id, repeat, status: budgetReached ? "not_run_budget_reached" : "not_run_provider_blocked" }); continue; }
     const history: ConversationTurn[] = []; const outputs = []; const turnTimingsMs: number[] = []; let final;
     audits = [];
     drafts = [];
+    routes = [];
     const start = performance.now();
     try {
       for (const question of c.turns) {
@@ -80,13 +84,14 @@ for (const c of cases) {
       rows.push({ id: c.id, repeat, category: c.category, status: passed ? "automatic_checks_pass_human_review_required" : "automatic_check_failed",
         elapsedMs: Math.round(performance.now() - start), turnTimingsMs, decisionMatch, safetyMatch, quoteMatch, quoteIncluded, sourcePolicyMatch, topicMatch, questionPolicyMatch, questionCounts, humanReview: "pending", rubric: c.review,
         // These are predefined fictional evaluation cases, never application user logs.
-        fictionalConversation: history, outputs, audits, drafts });
+        fictionalConversation: history, outputs, routes, audits, drafts });
       console.log(`${c.id}.${repeat} ${passed ? "CHECKS PASS" : "CHECK FAILED"} — human review pending`);
     } catch (error) {
-      const code = error instanceof ProviderError ? error.code || `http_${error.status}` : "network_timeout_or_invalid_output";
+      const code = error instanceof Error && error.message === "evaluation_budget_reached" ? "evaluation_budget_reached" : error instanceof ProviderError ? error.code || `http_${error.status}` : "network_timeout_or_invalid_output";
       rows.push({ id: c.id, repeat, status: "provider_error", code, elapsedMs: Math.round(performance.now() - start) });
       console.log(`${c.id}.${repeat} blocked: ${code}`);
       if (error instanceof ProviderError && [401, 402, 403, 429].includes(error.status)) blocked = true;
+      if (code === "evaluation_budget_reached") { blocked = true; budgetReached = true; }
       process.exitCode = 1;
     }
   }

@@ -20,7 +20,7 @@ globalThis.fetch = async (input, init) => {
   const body = JSON.parse(String(init?.body));
   const incoming = JSON.parse(body.input); const question = String(incoming.currentQuestion);
   if (question === "اختبار فشل الخدمة") return Response.json({}, { status: 503 });
-  const result = body.text.format.name === "leen_grounding" ? { contextSummary: "Relevant fictional response", sourceReason: "Relevant lesson", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" } : {
+  const result = body.text.format.name === "leen_route" ? { mode: "friendship", inScopeText: null, categoryIds: ["teasing"], sourceIds: ["friendship_non_harm", "friendship_good_speech"], safety: "none" } : body.text.format.name === "leen_grounding" ? { responseMode: "friendship", categoryIds: ["kindness"], contextSummary: "Relevant fictional response", sourceReason: "Relevant lesson", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" } : {
     decision: "FULL", safety: "none", segments: [
       { kind: "explanation", text: incoming.conversation?.length ? "أفهم إنك جرّبت تطلب منه يوقف. تقدر تستعين بمعلّم بدل ما ترد بإهانة." : "السخرية تزعلك، ومن حقك تطلب كلامًا محترمًا. تقدر تقول: أنا أتعلّم، وكلنا نغلط.", sourceIds: [sources[1].id], quoteId: null },
       { kind: "quote", text: "", sourceIds: [sources[1].id], quoteId: sources[1].id }

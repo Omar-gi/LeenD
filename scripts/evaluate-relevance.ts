@@ -19,9 +19,9 @@ for (const fixture of fixtures) for (let repeat = 1; repeat <= 3; repeat++) {
   let firstAudit: Record<string, unknown> | undefined;
   const generate: Generate = async (instructions, input, schema, name, signal) => {
     if (name === "leen_answer") return fixture.candidate;
-    if (++requests > 12) throw Error("request_cap");
+    if (++requests > 18) throw Error("request_cap");
     const result = await structured(instructions, input, schema, name, signal) as Record<string, unknown>;
-    firstAudit ??= result;
+    if (name === "leen_grounding") firstAudit ??= result;
     return result;
   };
   const result = await generateAnswer(fixture.question, [], undefined, generate);
@@ -32,5 +32,5 @@ for (const fixture of fixtures) for (let repeat = 1; repeat <= 3; repeat++) {
   if (!passed) process.exitCode = 1;
 }
 const path = `evaluation/results/audit-relevance-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
-await writeFile(path, JSON.stringify({ scope: "Fictional deliberately incorrect candidates; real audit calls only, no TTS or application transcripts", requests, fixtures, rows }, null, 2));
+await writeFile(path, JSON.stringify({ scope: "Fictional deliberately incorrect candidates; real routing/audit calls; source-selection guards may reject before an audit; no TTS or application transcripts", requests, fixtures, rows }, null, 2));
 console.log(path);

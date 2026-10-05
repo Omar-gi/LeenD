@@ -1,6 +1,6 @@
 import sourceData from "../content/sources.json";
 import safetyPolicy from "../content/safety.json";
-import type { Answer, Candidate, Safety, SourceCard } from "./types";
+import type { Answer, Candidate, Safety, SourceCard, Segment } from "./types";
 import type { QuotationContext } from "./dialogue";
 
 export const sources = sourceData as SourceCard[];
@@ -75,11 +75,16 @@ export function materialize(candidate: Candidate, context: QuotationContext = { 
   if (candidate.safety !== "none") return fixedSafety(candidate.safety);
   if (!candidate.segments.length || candidate.segments.length > 5) throw new Error("invalid_segments");
   if (candidate.segments.filter(s => s.kind === "quote").length > 1) throw new Error("too_many_quotes");
-  if (["CLARIFY", "REFER"].includes(candidate.decision) && candidate.segments.some(s => s.kind === "quote")) throw new Error("quote_not_allowed");
+  if (["CLARIFY", "REFER"].includes(candidate.decision) && candidate.segments.some(s => s.kind !== "explanation")) throw new Error("quote_not_allowed");
   const used = new Set<string>();
-  const segments = candidate.segments.map(segment => {
+  const segments = candidate.segments.map((segment): Segment => {
     if (segment.sourceIds.some(id => !sources.some(s => s.id === id))) throw new Error("unknown_source");
     segment.sourceIds.forEach(id => used.add(id));
+    if (segment.kind === "meaning") {
+      if (!segment.sourceIds.length) throw new Error("missing_evidence");
+      return { kind: "explanation", text: segment.sourceIds.map(id => sources.find(s => s.id === id)!.childExplanation).join(" "),
+        sourceIds: segment.sourceIds, quoteId: null };
+    }
     if (segment.kind === "quote") {
       const source = sources.find(s => s.id === segment.quoteId);
       if (!source || !segment.sourceIds.includes(source.id)) throw new Error("invalid_quote");

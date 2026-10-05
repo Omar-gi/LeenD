@@ -1,12 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { generateAnswer } from "../src/lib/answer";
+import { generateAnswer } from "./helpers";
 import { assistantQuestionCount, clarificationBudget, dialogueLimit, includeLessonQuote } from "../src/lib/dialogue";
 import { policy, sources } from "../src/lib/corpus";
 import type { Candidate } from "../src/lib/types";
 import type { Generate } from "../src/lib/providers";
 
-const audit = { contextSummary: "Fictional case", sourceReason: "Matching source or practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
+const audit = { responseMode: "friendship", categoryIds: ["kindness"], contextSummary: "Fictional case", sourceReason: "Matching source or practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
 const question: Candidate = { decision: "CLARIFY", safety: "none", segments: [{ kind: "explanation", text: "وش صار بعدها؟", sourceIds: [], quoteId: null }] };
 const practical: Candidate = { decision: "FULL", safety: "none", segments: [{ kind: "explanation", text: "ما نقدر نجزم بقصدهم من مجرد نظرة. تقدر تكمل نشاطك بدون اتهام.", sourceIds: [], quoteId: null }] };
 function sequence(...values: unknown[]): Generate { return async () => { assert.ok(values.length); return values.shift(); }; }
@@ -88,7 +88,7 @@ test("first sourced lesson gets the matching exact excerpt before audit, never a
 
 test("an automatically completed lesson still cannot bypass source relevance", async () => {
   const lesson = { ...practical, segments: [{ ...practical.segments[0], sourceIds: ["friendship_forgiveness"] }] };
-  const result = await generateAnswer("أبي أستعير لعبة صاحبي", [], undefined, sequence(lesson, audit, lesson, audit));
+  const result = await generateAnswer("أبي أستعير لعبة صاحبي", [], undefined, sequence(lesson, lesson));
   assert.deepEqual(result.sources, []); assert.equal(result.limited, true);
 });
 

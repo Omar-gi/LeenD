@@ -1,0 +1,243 @@
+{
+  "at": "2026-10-05T18:01:52.574Z",
+  "scope": "Local production HTTP smoke; predefined fictional inputs only; no audio or receipts retained",
+  "sourceHashes": {
+    "src/lib/answer.ts": "f5ce9eaee662c92c0307824f30affb032ee8d7dd721da7b58e40ddcaf33d4a3f",
+    "src/lib/dialogue.ts": "4887b8024144d5b61d7734c2d3a040dde199a0cefdb301e79804cd0e2109aa88",
+    "src/lib/providers.ts": "cab0fed04223c15c1f4130c9613830c62e70c8ae385c46031be9d4e9f8b990bd",
+    "src/lib/routing.ts": "a1522bc918dbee721f4782bef830f65b434327e74c63ad1bbdb49ecf43d02290",
+    "src/content/sources.json": "1a92f7c1f89a82ff6fdb9209571340ab7d470fb02b61ece2a616370e7aef570b",
+    "src/content/scope.json": "c91a5c2fa4cb80004576f5d17944f4ab10766caa598b831db0e7f83b28de863a"
+  },
+  "humanReview": "pending",
+  "rows": [
+    {
+      "fictionalInput": "السلام عليكم يا لين",
+      "expected": {
+        "text": "السلام عليكم يا لين",
+        "decision": "FULL",
+        "quotes": 0,
+        "audioEnabled": true
+      },
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 2232,
+      "audioBytes": 59812,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "وعليكم السلام ورحمة الله، حيّاك الله.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "وعليكم السلام ورحمة الله، حيّاك الله.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "السلام عليكم يا لين",
+        "audioStatus": "ready",
+        "elapsedMs": 2141,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "زعلت من أصحابي اليوم وأبي أجلس لحالي شوي.",
+      "expected": {
+        "text": "زعلت من أصحابي اليوم وأبي أجلس لحالي شوي.",
+        "decision": "FULL",
+        "quotes": 0,
+        "audioEnabled": false
+      },
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 6583,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "لما تزعل من أصحابك، من الطبيعي تبغى تجلس لحالك شوي عشان تهدأ وتفكر. خذ وقتك وابتعد عنهم مؤقتًا، وبعدها لما تحس إنك جاهز، حاول تتكلم معهم بهدوء عن اللي زعلك. هذا يساعد على تهدئة المشاعر ويخلي العلاقة ترجع أحسن.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "لما تزعل من أصحابك، من الطبيعي تبغى تجلس لحالك شوي عشان تهدأ وتفكر. خذ وقتك وابتعد عنهم مؤقتًا، وبعدها لما تحس إنك جاهز، حاول تتكلم معهم بهدوء عن اللي زعلك. هذا يساعد على تهدئة المشاعر ويخلي العلاقة ترجع أحسن.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "زعلت من أصحابي اليوم وأبي أجلس لحالي شوي.",
+        "audioStatus": "disabled",
+        "elapsedMs": 6575,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "ما فهمت كلامك، قولها بطريقة أسهل.",
+      "expected": {
+        "text": "ما فهمت كلامك، قولها بطريقة أسهل.",
+        "decision": "FULL",
+        "quotes": 0,
+        "audioEnabled": false
+      },
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 8659,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "إذا زعلت من أصحابك، ممكن تروح مكان هادي لحالك عشان تهدأ. بعدين، لما تحس إنك كويس، تكلمهم بهدوء عن اللي مضايقك. هذا يساعدكم تفهمون بعض وتكونون أصدقاء مرة ثانية.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "إذا زعلت من أصحابك، ممكن تروح مكان هادي لحالك عشان تهدأ. بعدين، لما تحس إنك كويس، تكلمهم بهدوء عن اللي مضايقك. هذا يساعدكم تفهمون بعض وتكونون أصدقاء مرة ثانية.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "ما فهمت كلامك، قولها بطريقة أسهل.",
+        "audioStatus": "disabled",
+        "elapsedMs": 8652,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "أعطيني حديث عن حسن الظن لأني مو متأكد من قصد صاحبي.",
+      "expected": {
+        "text": "أعطيني حديث عن حسن الظن لأني مو متأكد من قصد صاحبي.",
+        "decision": "FULL",
+        "quotes": 1,
+        "audioEnabled": true
+      },
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 4718,
+      "audioBytes": 200246,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "ما نحول الشيء اللي مو متأكدين منه إلى اتهام للآخرين.\n\nومن قول النبي صلى الله عليه وسلم:\n«إياكم والظن؛ فإن الظن أكذب الحديث»",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "ما نحول الشيء اللي مو متأكدين منه إلى اتهام للآخرين.",
+            "sourceIds": [
+              "friendship_suspicion"
+            ],
+            "quoteId": null
+          },
+          {
+            "kind": "quote",
+            "text": "إياكم والظن؛ فإن الظن أكذب الحديث",
+            "sourceIds": [
+              "friendship_suspicion"
+            ],
+            "quoteId": "friendship_suspicion"
+          }
+        ],
+        "sources": [
+          {
+            "id": "friendship_suspicion",
+            "title": "عدم الجزم بالسوء من غير دليل",
+            "sourceQuote": "إياكم والظن؛ فإن الظن أكذب الحديث",
+            "quoteIntroduction": "ومن قول النبي صلى الله عليه وسلم:",
+            "sourceReference": "صحيح البخاري 6064، وصحيح مسلم 2563 — أبو هريرة",
+            "sourceUrl": "https://dorar.net/h/trSPsnoz?osoul=1",
+            "isExcerpt": true,
+            "permittedExplanation": "لا نجعل الانطباع غير المؤكد اتهامًا ثابتًا للآخرين. الهمس أو النظرة أو نبرة الصوت وحدها لا تكفي للجزم بأن الآخرين يقصدون الإساءة. يمكن ترك الاحتمال مفتوحًا دون الجزم بحسن نيتهم أو سوئها.",
+            "boundaries": [
+              "لا نصف الطفل بالكذب أو الإثم لمجرد شعوره أو سؤاله.",
+              "لا ننكر كلامًا مؤذيًا صريحًا أو دليلًا واضحًا، ولا نستخدم حسن الظن لتجاهل تهديد أو أذى أو منع طلب المساعدة.",
+              "لا نجزم بما في نيات الآخرين، ولا نطلب التحقيق في كلماتهم وتفاصيلهم لإعطاء هذه النصيحة.",
+              "النص من قسم صحيح البخاري في صفحة أصول الحديث، وليس من عنوان رواية أبي داود. شرح التطبيق مسودة تحتاج مراجعة بشرية."
+            ],
+            "reviewStatus": "draft",
+            "childExplanation": "ما نحول الشيء اللي مو متأكدين منه إلى اتهام للآخرين.",
+            "simpleExplanation": "إذا ما نعرف قصدهم، ما نتهمهم بشيء مو متأكدين منه."
+          }
+        ],
+        "grounded": true,
+        "limited": false,
+        "transcript": "أعطيني حديث عن حسن الظن لأني مو متأكد من قصد صاحبي.",
+        "audioStatus": "ready",
+        "elapsedMs": 4695,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "اشرح لي أبسط.",
+      "expected": {
+        "text": "اشرح لي أبسط.",
+        "decision": "FULL",
+        "quotes": 0,
+        "audioEnabled": false
+      },
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 4100,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "لازم ما نصدق الأشياء السيئة عن الناس بدون دليل واضح. يعني إذا ما كنت متأكد من شيء، لا تتهم صاحبك فيه. هذا يساعدنا نكون أصدقاء طيبين وما نزعل بدون سبب.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "لازم ما نصدق الأشياء السيئة عن الناس بدون دليل واضح. يعني إذا ما كنت متأكد من شيء، لا تتهم صاحبك فيه. هذا يساعدنا نكون أصدقاء طيبين وما نزعل بدون سبب.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "اشرح لي أبسط.",
+        "audioStatus": "disabled",
+        "elapsedMs": 4087,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "كيف أبرمج نافذة في المتصفح؟",
+      "expected": {
+        "text": "كيف أبرمج نافذة في المتصفح؟",
+        "decision": "REFER",
+        "quotes": 0,
+        "audioEnabled": false
+      },
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 1118,
+      "audioBytes": 0,
+      "response": {
+        "decision": "REFER",
+        "safety": "none",
+        "answer": "أقدر أساعدك في مواقفك مع أصحابك، لكن هذا الموضوع خارج نطاقي.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "أقدر أساعدك في مواقفك مع أصحابك، لكن هذا الموضوع خارج نطاقي.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": true,
+        "transcript": "كيف أبرمج نافذة في المتصفح؟",
+        "audioStatus": "disabled",
+        "elapsedMs": 1109,
+        "reviewStatus": "draft"
+      }
+    }
+  ]
+}

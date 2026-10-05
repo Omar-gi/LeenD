@@ -39,9 +39,17 @@ export function dialogueLimit(): Answer {
 // Complete the FIRST source-backed lesson before its independent audit. This
 // never creates evidence for a source-free response. The audit sees the quote
 // and can reject the entire lesson as irrelevant; practicalOnly still blocks it.
-export function includeLessonQuote(candidate: Candidate, context: QuotationContext): Candidate {
-  if (candidate.safety !== "none" || !["FULL", "PARTIAL"].includes(candidate.decision) ||
+export function includeLessonQuote(candidate: Candidate, context: QuotationContext, simplifying = false, selectedId?: string): Candidate {
+  if (simplifying || candidate.safety !== "none" || !["FULL", "PARTIAL"].includes(candidate.decision) ||
     candidate.segments.some(segment => segment.kind === "quote") || candidate.segments.length >= 5) return candidate;
+  // Selection is a separate, earlier decision. If the writer supplies only the
+  // practical step, complete the selected first lesson before relevance audit.
+  if (selectedId && !candidate.segments.some(s => s.sourceIds.length) && candidate.segments.length <= 3 &&
+    (context.repeatQuote || !context.quotedSourceIds.includes(selectedId))) {
+    candidate = { ...candidate, segments: [
+      { kind: "meaning", text: "", sourceIds: [selectedId], quoteId: null }, ...candidate.segments
+    ] };
+  }
   const index = candidate.segments.findIndex(segment => segment.sourceIds.some(id =>
     sources.some(source => source.id === id) && (context.repeatQuote || !context.quotedSourceIds.includes(id))));
   if (index < 0) return candidate;
@@ -77,6 +85,18 @@ export function repeatKnownQuotation(text: string, history: ConversationTurn[]):
   return null;
 }
 
+// A whole-message request for a known library excerpt is a lookup, not an open
+// religious question. Anything extra (including a disclosure) uses normal routing.
+export function requestedKnownQuotation(text: string): Answer | null {
+  const bare = normalizeArabic(text).replace(/[.،!؟?]/g, "").trim();
+  const match = /^(?:طيب )?(?:اعطني|اعطيني|ابي|اريد) (?:النص(?: الاصلي)?(?: اللي عندك)?|الحديث|حديثا?|حديثًا) عن (الكلام الطيب|حسن الظن|سوء الظن|العفو|التسامح)(?: نفسه)?$/.exec(bare);
+  if (!match) return null;
+  const id = match[1] === "الكلام الطيب" ? "friendship_good_speech" : /الظن/.test(match[1]) ? "friendship_suspicion" : "friendship_forgiveness";
+  return { ...materialize({ decision: "FULL", safety: "none", segments: [
+    { kind: "quote", text: "", sourceIds: [id], quoteId: id }
+  ] }), grounded: true };
+}
+
 // A narrow, reproducible guard for an observed transcription/conversation failure.
 // Only the SAME named item in the immediately preceding user turn can conflict;
 // explicit corrections and topic changes are left to the semantic audit.
@@ -110,13 +130,51 @@ export function practicalRequestWithoutEvidence(text: string): boolean {
 
 // Exact whole-message matches only: never swallow a disclosure after "hello" or "thanks".
 export function socialReply(text: string): Answer | null {
-  const bare = normalizeArabic(text).replace(/[.!،؟?]/g, "").trim();
+  const bare = normalizeArabic(text).replace(/[.!،؟?]/g, "").replace(/\s+/g, " ").trim()
+    .replace(/^(?:يا لين|لين)\s+|\s+(?:يا لين|لين)$/g, "");
   let answer: string | undefined;
-  if (/^(?:السلام عليكم(?: ورحمة الله(?: وبركاته)?)?|هلا|اهلا|مرحبا)$/.test(bare)) answer = "أهلًا، أنا لين. تقدر تحكي لي عن موقف مع أصحابك، بدون أسماء أو معلومات شخصية.";
+  if (/^السلام عليكم(?: ورحم[ةه] الله(?: وبركاته)?)?(?: (?:كيفك|كيف حالك|شلونك))?$/.test(bare)) answer = "وعليكم السلام ورحمة الله، حيّاك الله.";
+  if (/^(?:وعليكم السلام(?: ورحم[ةه] الله(?: وبركاته)?)?|هلا(?: والله)?|اهلا(?: وسهلا)?|مرحبا|صباح الخير|مساء الخير)$/.test(bare)) answer = "أهلًا وسهلًا فيك.";
+  if (/^(?:(?:هلا|مرحبا|اهلا) )?(?:كيفك|كيف حالك|شلونك|وش اخبارك|اخبارك|كيف الحال)$/.test(bare)) answer = "يا هلا، أنا هنا أساعدك.";
+  if (/^(?:الحمد ?لله|بخير(?: الحمد ?لله)?|تمام(?: الحمد ?لله)?|الحمد ?لله (?:بخير|تمام))$/.test(bare)) answer = "الحمد لله، يا هلا فيك.";
   if (/^(?:(?:خلاص|طيب) )?(?:شكرا|شكرًا|مشكور[ةه]?|يعطيك العافي[ةه])(?: (?:و)?مع السلام[ةه])?$/.test(bare)) answer = "العفو، على راحتك.";
   if (/^(?:مع السلام[ةه]|باي|خلاص انتهيت)$/.test(bare)) answer = "مع السلامة.";
   if (!answer) return null;
   return { decision: "FULL", safety: "none", answer,
     segments: [{ kind: "explanation", text: answer, sourceIds: [], quoteId: null }],
     sources: [], grounded: true, limited: false };
+}
+
+// These are hints about the user's request, never a substitute for the full
+// semantic safety/relevance audit. They cannot short-circuit a mixed disclosure.
+export function simplificationRequested(text: string): boolean {
+  const t = normalizeArabic(text);
+  return /(?:ما فهمت|مافهمت|لم افهم)(?:ك| كلامك| شرحك)?(?=$|[\s.،!؟?])/.test(t) && !/(?:ما فهمت|مافهمت|لم افهم) (?:قصده|قصدها|كلامه|كلامها|السؤال|الدرس)/.test(t) ||
+    /(?:ماني|مو|مش) فاهم[ةه]?(?: كلامك| شرحك| شي[ءئ]?| اي شي[ءئ]?)?(?=$|[\s.،!؟?])|(?:بسط|بسطي|سهل|سهلي) (?:لي )?(?:كلامك|شرحك|الشرح)|(?:اشرح|اشرحي) (?:لي )?(?:ابسط|ببساط[ةه])|كلامك (?:صعب|مو واضح)/.test(t);
+}
+
+export function previousSourceIds(history: ConversationTurn[]): string[] {
+  // A second simplification can follow a quote-free first simplification.
+  // Relevance still requires the current router selection and independent audit.
+  return quotationContext("", history).quotedSourceIds;
+}
+
+export function inventedAppearance(text: string, history: ConversationTurn[], answer: string): boolean {
+  const facts = normalizeArabic([...history.map(turn => turn.user), text].join(" "));
+  return !/شكل|مظهر|وجه|طول|وزن/.test(facts) &&
+    /(?:يسخر|يضحك|تضحك|تسخر|يعلق|تعلق).{0,18}(?:شكلك|شكلي|مظهرك|وجهي|وجهك)/.test(normalizeArabic(answer));
+}
+
+// Religious meanings are authored content, not unconstrained model prose.
+// Keep practical application in separate source-free segments, then audit the
+// assembled answer for fit to this particular situation before any speech.
+export function constrainSourceExplanations(answer: Answer, simplifying: boolean): Answer {
+  if (answer.safety !== "none" || !["FULL", "PARTIAL"].includes(answer.decision)) return answer;
+  return materialize({ decision: answer.decision, safety: answer.safety, segments: answer.segments.map(segment =>
+    segment.kind === "explanation" && segment.sourceIds.length ? { ...segment, text:
+      segment.sourceIds.map(id => {
+        const source = sources.find(s => s.id === id)!;
+        return simplifying ? source.simpleExplanation : source.childExplanation;
+      }).join(" ") } : segment
+  ) }, { quotedSourceIds: [], repeatQuote: true });
 }

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { generateAnswer } from "../src/lib/answer";
+import { generateAnswer } from "./helpers";
 import { sources, materialize, policy } from "../src/lib/corpus";
 import type { Candidate } from "../src/lib/types";
 import type { Generate } from "../src/lib/providers";
@@ -9,7 +9,7 @@ const candidate: Candidate = { decision: "FULL", safety: "none", segments: [
   { kind: "explanation", text: "تقدر تطلب منه يتكلم معك باحترام.", sourceIds: [sources[0].id], quoteId: null },
   { kind: "quote", text: "", sourceIds: [sources[0].id], quoteId: sources[0].id }
 ] };
-const approved = { contextSummary: "Relevant fictional response", sourceReason: "Applicable evidence or source-free practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
+const approved = { responseMode: "friendship", categoryIds: ["kindness"], contextSummary: "Relevant fictional response", sourceReason: "Applicable evidence or source-free practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
 function sequence(...values: unknown[]): Generate { return async () => { assert.ok(values.length); return values.shift(); }; }
 test("valid answer requires independent grounding approval", async () => {
   const result = await generateAnswer("صديقي يسخر من قراءتي", [], undefined, sequence(candidate, approved));
@@ -249,7 +249,7 @@ test("one format repair can recover a misplaced quotation but still requires the
   assert.equal(repeated.answer, policy.limitation);
 });
 
-test("an exact but irrelevant hadith requires repair and a second audit", async () => {
+test("a practical request rejects unselected scripture before auditing the repaired answer", async () => {
   const practical: Candidate = { decision: "FULL", safety: "none", segments: [
     { kind: "explanation", text: "تقدر تقول له: عندي قلم زيادة، تبيه؟", sourceIds: [], quoteId: null }
   ] };
@@ -257,16 +257,15 @@ test("an exact but irrelevant hadith requires repair and a second audit", async 
   const result = await generateAnswer("ودي أعطي صاحبي قلم، كيف أعرضه عليه؟", [], undefined, async (_instructions, input, _schema, name) => {
     calls++;
     if (calls === 1) return candidate;
-    if (calls === 2) return { ...approved, sourcesRelevant: false };
-    if (calls === 3) {
-      assert.equal(JSON.parse(input).relevance.sourcesRelevant, false);
+    if (calls === 2) {
+      assert.equal(JSON.parse(input).outsideEvidence, true);
       return practical;
     }
     assert.equal(name, "leen_grounding");
     assert.deepEqual(JSON.parse(input).proposedAnswer.sources, []);
     return approved;
   });
-  assert.equal(calls, 4); assert.equal(result.grounded, true);
+  assert.equal(calls, 3); assert.equal(result.grounded, true);
   assert.deepEqual(result.sources, []); assert.equal(result.answer, practical.segments[0].text);
 });
 
@@ -331,10 +330,10 @@ test("practical friendship permission never admits unsupported supplications or 
   }
 });
 
-test("ordinary item requests reject a forced source even when the model audit wrongly approves it", async () => {
+test("ordinary item requests reject forced sources before an auditor can approve them", async () => {
   for (const text of ["كيف أطلب كتاب من صاحبي؟", "ودي أعطيه بسكوت، وش أقول؟", "أبي أعزم صديقي يلعب معي في الفسحة"]) {
     assert.equal(practicalRequestWithoutEvidence(text), true);
-    const result = await generateAnswer(text, [], undefined, sequence(candidate, approved, candidate, approved));
+    const result = await generateAnswer(text, [], undefined, sequence(candidate, candidate));
     assert.equal(result.answer, policy.limitation); assert.deepEqual(result.sources, []);
   }
   for (const text of ["أبي الحديث عن الكلام الطيب", "أعطيني دعاء للهدية", "صديقي يسخر من كتابي", "صديقي يستهزئ بلعبتي", "كيف أرد على صديقي إذا يضحك على قلمي؟"]) {

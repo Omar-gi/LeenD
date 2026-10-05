@@ -1,5 +1,9 @@
 import { z } from "zod";
 import type { Candidate } from "./types";
+import scope from "../content/scope.json";
+
+const responseModes = ["friendship", "social", "simplify", "outside", "mixed", "clarify", "safety"] as const;
+const categoryIds = scope.categories.map(category => category.id);
 
 export class ProviderError extends Error {
   constructor(public service: "openai" | "elevenlabs", public status: number, public code?: string) {
@@ -20,11 +24,13 @@ export const candidateSchema = z.object({
   safety: z.enum(["none", "threat", "immediate", "uncertain"]),
   segments: z.array(z.discriminatedUnion("kind", [
     z.object({ kind: z.literal("explanation"), text: z.string(), sourceIds: z.array(z.string()), quoteId: z.null() }).strict(),
+    z.object({ kind: z.literal("meaning"), text: z.literal(""), sourceIds: z.array(z.string()).min(1).max(2), quoteId: z.null() }).strict(),
     z.object({ kind: z.literal("quote"), text: z.literal(""), sourceIds: z.array(z.string()), quoteId: z.string() }).strict()
   ])).max(5)
 }).strict();
 
 export const checkSchema = z.object({
+  responseMode: z.enum(responseModes), categoryIds: z.array(z.enum(categoryIds)).max(2),
   contextSummary: z.string(), sourceReason: z.string(),
   supported: z.boolean(), appropriate: z.boolean(), inScope: z.boolean(),
   contextRelevant: z.boolean(), sourcesRelevant: z.boolean(),
@@ -45,12 +51,31 @@ export const answerJson = { type: "object", additionalProperties: false,
   properties: { decision: { type: "string", enum: ["CLARIFY", "FULL", "PARTIAL", "REFER"] },
     safety: { type: "string", enum: ["none", "threat", "immediate", "uncertain"] },
     segments: { type: "array", items: segmentJson } }, required: ["decision", "safety", "segments"] };
+
+// Real provider calls use a per-request schema: explanations are practical prose
+// only, while religious meanings/quotations are empty server-filled placeholders.
+// With no selected sources, it is impossible to emit either placeholder kind.
+export function answerJsonFor(ids: string[]) {
+  const explanation = { type: "object", additionalProperties: false,
+    properties: { kind: { type: "string", enum: ["explanation"] }, text: { type: "string" },
+      sourceIds: { type: "array", maxItems: 0, items: { type: "string" } }, quoteId: { type: "null" } },
+    required: ["kind", "text", "sourceIds", "quoteId"] };
+  const choices: object[] = [explanation];
+  if (ids.length) for (const kind of ["meaning", "quote"]) choices.push({ type: "object", additionalProperties: false,
+    properties: { kind: { type: "string", enum: [kind] }, text: { type: "string", enum: [""] },
+      sourceIds: { type: "array", minItems: 1, maxItems: 2, items: { type: "string", enum: ids } },
+      quoteId: kind === "quote" ? { type: "string", enum: ids } : { type: "null" } },
+    required: ["kind", "text", "sourceIds", "quoteId"] });
+  return { ...answerJson, properties: { ...answerJson.properties, segments: { type: "array", maxItems: 5, items: { anyOf: choices } } } };
+}
 export const checkJson = { type: "object", additionalProperties: false,
-  properties: { contextSummary: { type: "string" }, sourceReason: { type: "string" },
+  properties: { responseMode: { type: "string", enum: responseModes },
+    categoryIds: { type: "array", maxItems: 2, items: { type: "string", enum: categoryIds } },
+    contextSummary: { type: "string" }, sourceReason: { type: "string" },
     supported: { type: "boolean" }, appropriate: { type: "boolean" }, inScope: { type: "boolean" },
     contextRelevant: { type: "boolean" }, sourcesRelevant: { type: "boolean" },
     safety: { type: "string", enum: ["none", "threat", "immediate", "uncertain"] } },
-  required: ["contextSummary", "sourceReason", "supported", "appropriate", "inScope", "contextRelevant", "sourcesRelevant", "safety"] };
+  required: ["responseMode", "categoryIds", "contextSummary", "sourceReason", "supported", "appropriate", "inScope", "contextRelevant", "sourcesRelevant", "safety"] };
 
 function signalFor(signal?: AbortSignal, ms = 22000) {
   return signal ? AbortSignal.any([signal, AbortSignal.timeout(ms)]) : AbortSignal.timeout(ms);
@@ -63,7 +88,7 @@ export async function structured(instructions: string, input: string, schema: ob
     method: "POST", signal: signalFor(signal),
     headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({ model: process.env.OPENAI_TEXT_MODEL || "gpt-4.1-mini", store: false,
-      instructions, input, max_output_tokens: 1500,
+      instructions, input, max_output_tokens: 1500, temperature: 0.2,
       text: { format: { type: "json_schema", name, strict: true, schema } } })
   });
   if (!response.ok) throw await providerFailure("openai", response);
