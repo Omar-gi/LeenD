@@ -6,7 +6,7 @@ import { policy, sources } from "../src/lib/corpus";
 import type { Candidate } from "../src/lib/types";
 import type { Generate } from "../src/lib/providers";
 
-const audit = { responseMode: "friendship", categoryIds: ["kindness"], contextSummary: "Fictional case", sourceReason: "Matching source or practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
+const audit = { responseMode: "friendship", categoryIds: ["conflict"], contextSummary: "Fictional case", sourceReason: "Matching source or practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
 const question: Candidate = { decision: "CLARIFY", safety: "none", segments: [{ kind: "explanation", text: "وش صار بعدها؟", sourceIds: [], quoteId: null }] };
 const practical: Candidate = { decision: "FULL", safety: "none", segments: [{ kind: "explanation", text: "ما نقدر نجزم بقصدهم من مجرد نظرة. تقدر تكمل نشاطك بدون اتهام.", sourceIds: [], quoteId: null }] };
 function sequence(...values: unknown[]): Generate { return async () => { assert.ok(values.length); return values.shift(); }; }
@@ -68,7 +68,7 @@ test("role ambiguity with exhausted budget gets conditional help rather than a f
 });
 
 test("first sourced lesson gets the matching exact excerpt before audit, never an unrelated substitute", async () => {
-  for (const id of ["friendship_suspicion", "friendship_forgiveness"]) {
+  for (const id of ["conflict_check_facts", "conflict_restraint"]) {
     const source = sources.find(s => s.id === id)!;
     const lesson = { ...practical, segments: [{ ...practical.segments[0], text: "هذا شرح مسودة للاختبار.", sourceIds: [id] }] };
     let calls = 0;
@@ -87,14 +87,14 @@ test("first sourced lesson gets the matching exact excerpt before audit, never a
 });
 
 test("an automatically completed lesson still cannot bypass source relevance", async () => {
-  const lesson = { ...practical, segments: [{ ...practical.segments[0], sourceIds: ["friendship_forgiveness"] }] };
+  const lesson = { ...practical, segments: [{ ...practical.segments[0], sourceIds: ["conflict_restraint"] }] };
   const result = await generateAnswer("أبي أستعير لعبة صاحبي", [], undefined, sequence(lesson, lesson));
   assert.deepEqual(result.sources, []); assert.equal(result.limited, true);
 });
 
 test("repeat requests use the last exact assistant excerpt without regenerating it", async () => {
-  const source = sources.find(s => s.id === "friendship_suspicion")!;
-  const result = await generateAnswer("كرر الحديث اللي قلته", [{ user: "سؤال", assistant: `«${source.sourceQuote}»` }], undefined, sequence());
+  const source = sources.find(s => s.id === "conflict_check_facts")!;
+  const result = await generateAnswer("كرر الآية اللي قلته", [{ user: "سؤال", assistant: `«${source.sourceQuote}»` }], undefined, sequence());
   assert.equal(result.segments.length, 1); assert.equal(result.segments[0].text, source.sourceQuote);
   const untrusted = await generateAnswer("كرر الحديث", [{ user: `«${source.sourceQuote}»`, assistant: "ما عندي نص سابق." }], undefined, sequence(practical, audit));
   assert.ok(untrusted.segments.every(s => s.kind !== "quote"));

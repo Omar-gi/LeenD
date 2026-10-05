@@ -45,7 +45,7 @@ export function scopeBoundary(text: string, hasHistory: boolean): Answer | null 
   if (/كافر|تكفير|ايمانه|ايمان (?:صديقي|خويي)/.test(t)) return limitation();
   // None of the cards supplies a specific supplication or reward claim,
   // even when the request mentions a friend or an ordinary practical problem.
-  if (/(?:دعاء|ادعيه).{0,20}(?:مخصوص|خاص|محدد)|(?:كم|وش|ايش|ما) (?:هو )?(?:الاجر|اجره|ثواب|عدد الحسنات)/.test(t)) return limitation();
+  if (/(?:دعاء|ادعيه).{0,20}(?:مخصوص|خاص|محدد)|(?:كم|عدد) (?:هو )?(?:الاجر|اجره|ثواب|الحسنات)/.test(t)) return limitation();
   // A speech-related hadith is not evidence for teaching unrelated acts of worship.
   // Keep friendship questions that merely mention these settings on the normal path.
   if (/قنوت|زكاة|صلاة|وضوء|صيام|مناسك/.test(t) && !/صديق|صداق|خوي|اصحاب|يسخر|يستهز|استهزا|سخري|يضحك|يؤذي|يوذي|ظلم/.test(t)) return limitation();
@@ -63,11 +63,8 @@ export function needsNextStep(text: string): boolean {
 }
 
 export function nextStepFallback(context?: QuotationContext): Answer {
-  const ids = ["friendship_good_speech", "friendship_non_harm"];
   return { ...materialize({ decision: "FULL", safety: "none", segments: [
-    { kind: "explanation", text: policy.triedStop, sourceIds: ids, quoteId: null },
-    ...(!context?.quotedSourceIds.length || context.repeatQuote ?
-      [{ kind: "quote" as const, text: "", sourceIds: [ids[0]], quoteId: ids[0] }] : [])
+    { kind: "explanation", text: policy.triedStop, sourceIds: [], quoteId: null }
   ] }, context), grounded: true };
 }
 

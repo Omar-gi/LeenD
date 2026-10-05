@@ -1,28 +1,23 @@
-# Teammate content review — pending
+# Workbook V5 review — pending
 
-Review `src/content/sources.json` and `src/content/safety.json`. All are deliberately marked `draft`; the interface reflects this. A developer passing tests does not approve religious interpretation.
+Review the active blue-domain [source register](SOURCES-AND-LICENSES.md) against `لين_مرجع تصميم المنتج V1(2).xlsx`, cells A9:I15. All previous source approvals/verification notes belong to retired versions and do not approve this replacement corpus.
 
-For each source card:
+Check G10's Quran classification; G9/G11 wording; G13's two distinct excerpts; G15's excerpt boundaries; and column-E interpretation, especially E12–E14. The supplied web links returned HTTP 403, so no external verification has been claimed. Confirm child/simple wording, voluntary applications, and the new unavailable-adult safety guidance. Record reviewer/date per card before changing draft status.
 
-- Confirm narrator, collection, number, source URL and exact excerpt. The Muslim 41 excerpt is from the Muslim attribution within its linked page; do not mislabel the page's other narrations as Muslim 41.
-- Confirm the excerpt boundaries preserve meaning and that `isExcerpt` is accurate.
-- Review `quoteIntroduction`, which is shown and spoken before the exact excerpt. Confirm that the stopping-wrongdoing introduction preserves the context of helping a wrongdoer stop wrongdoing.
-- Review `childExplanation` and `simpleExplanation`: these are the short fixed meanings actually spoken in source-backed segments. They were drafted from the existing permitted explanations, not imported from Sara's missing detailed sheet.
-- Review the permitted explanation and every prohibited extension (fatwas, judging faith, invented reward counts, physical confrontation).
-- Review generated explanations against the evaluation cases; confirm source support, age-appropriate language and Saudi phrasing.
-- Record reviewer, date, notes and version/commit below. Change only the reviewed card to `approved`.
+For each card, confirm the exact excerpt, attribution, selected link and main meaning against its workbook row. Check the child/simple wording and practical applications. Distinguish ordinary conflict from actual danger, and voluntary reconciliation from compulsory contact. Review the Quran/hadith introductions as displayed and spoken, including Noorah's pronunciation. This is spoken explanation, not a Quran-recitation feature.
 
-Review safety text separately for threat, immediate danger, uncertainty, limitation, clarification and the repeated-failed-advice fallback. It must make adult help explicit, override coercive secrecy, avoid blaming the speaker and never imply that Leen contacted help. Update `safety.json.reviewStatus` only after that review.
-
-| Material | Reviewer | Date | Version | Result / notes |
+| Material | Reviewer | Date | Version | Result |
 |---|---|---|---|---|
-| Non-harm excerpt/explanation | Pending | — | — | Draft |
-| Good speech excerpt/explanation | Pending | — | — | Draft |
-| Stopping wrongdoing excerpt/explanation | Pending | — | — | Draft |
-| Suspicion excerpt/explanation | Pending | — | — | Draft; source reference checked 4 October. Review distinction between uncertain impressions and actual harm; no blaming feelings or forced investigation. |
-| Forgiveness excerpt/explanation | Pending | — | — | Draft; source reference checked 4 October. Review voluntary forgiveness, retained boundaries and no guaranteed acceptance of an apology. |
-| Safety and fallback wording | Pending | — | — | Draft |
+| ضبط النفس — `conflict_anger_strength` (G13) | Pending | — | V5 | Draft |
+| ضبط النفس — `conflict_do_not_rage` (G13) | Pending | — | V5 | Draft |
+| الإصلاح بين المتخاصمين — `conflict_reconcile` (G15) | Pending | — | V5 | Draft |
+| التبين وحسن الظن — `conflict_check_facts` (G10) | Pending | — | V5 | Draft |
+| عدم التعدي على الغير — `conflict_restraint` (F14) | Pending | — | V5 | Draft |
+| عدم الهجر لأكثر من ثلاث أيام — `conflict_no_estrangement` (G9) | Pending | — | V5 | Draft |
+| المبادرة بالسلام — `conflict_greet` (G11) | Pending | — | V5 | Draft |
+| احترام رأي الآخرين — `conflict_respect` (F12) | Pending | — | V5 | Draft |
+| Safety, unavailable-adult alternatives and calm stopping points | Pending | — | V5 | Draft |
 
-Review the answer-first dialogue fallback in `src/lib/dialogue.ts` and the source-adoption limitation in `src/lib/answer.ts` too. Re-run the evaluation after content or prompt changes. Reviewing a finite set of cards does not approve every future generated response.
+Review `src/content/safety.json`, `src/lib/support.ts`, the dialogue fallback and source-adoption limitation separately. Ordinary conflict should not automatically end in adult referral; unresolved danger still requires real-world assistance. No blame, physical confrontation, promises to contact help or forced cheerful endings.
 
-Review the V4 social replies, simplification behavior and friendship-scope wording too. The 5 October scope CSV does not contain Sara's detailed classification/meaning/source table; see [content handoff](CONTENT-HANDOFF.md). No new religious approval is implied by importing its 15 domain descriptions.
+Record reviewer/date/notes and version before approving individual cards. Do not mark the corpus approved because automated tests passed. A source approval does not certify every future generated response. Re-run affected fictional cases after edits.

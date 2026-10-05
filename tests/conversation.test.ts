@@ -65,7 +65,7 @@ test("outside-topic classification cannot approve technical content even when it
   const tech = { ...practical, segments: [{ ...practical.segments[0], text: "افتح إعدادات المتصفح." }] };
   const result = await generateAnswer("كيف أوقف النوافذ المنبثقة في المتصفح؟", [], undefined,
     sequence(tech, { ...audit, responseMode: "outside", categoryIds: [] }));
-  assert.equal(result.decision, "REFER"); assert.match(result.answer, /خارج نطاقي/);
+  assert.equal(result.decision, "REFER"); assert.match(result.answer, /خارج نطاق/);
   assert.doesNotMatch(result.answer, /إعدادات/); assert.deepEqual(result.sources, []);
 });
 
@@ -84,8 +84,8 @@ test("unknown scope categories and incomplete classification audits fail closed"
 });
 
 test("an exact request for an available excerpt works without model routing", async () => {
-  const result = await generateAnswer("أعطني النص الأصلي اللي عندك عن الكلام الطيب.", [], undefined, noCalls);
-  assert.equal(result.decision, "FULL"); assert.equal(result.segments[0].text, sources[1].sourceQuote);
+  const result = await generateAnswer("أعطني النص الأصلي اللي عندك عن ضبط النفس.", [], undefined, noCalls);
+  assert.equal(result.decision, "FULL"); assert.equal(result.segments[0].text, sources[0].sourceQuote);
 });
 
 test("drawing cannot silently become appearance, and assistant claims do not establish that fact", () => {

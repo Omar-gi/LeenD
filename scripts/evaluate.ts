@@ -11,7 +11,7 @@ if (process.env.ENABLE_PAID_APIS !== "true") throw new Error("Paid API calls are
 if (!process.env.OPENAI_API_KEY) throw new Error("Set OPENAI_API_KEY in .env.local. This command makes paid API requests with fictional test cases only.");
 const rows: Record<string, unknown>[] = [];
 const sourceHashes: Record<string, string> = {};
-for (const path of ["src/lib/answer.ts", "src/lib/routing.ts", "src/lib/prompts/leen.ts", "src/lib/dialogue.ts", "src/lib/corpus.ts", "src/lib/providers.ts", "src/content/scope.json", "src/content/sources.json", "src/content/safety.json"]) sourceHashes[path] = createHash("sha256").update(await readFile(path)).digest("hex");
+for (const path of ["src/lib/answer.ts", "src/lib/support.ts", "src/content/workbook-snapshot.json", "src/lib/routing.ts", "src/lib/prompts/leen.ts", "src/lib/dialogue.ts", "src/lib/corpus.ts", "src/lib/providers.ts", "src/content/scope.json", "src/content/sources.json", "src/content/safety.json"]) sourceHashes[path] = createHash("sha256").update(await readFile(path)).digest("hex");
 const selected = process.argv.find(arg => arg.startsWith("--cases="))?.slice(8).split(",");
 let blocked = false;
 let budgetReached = false;

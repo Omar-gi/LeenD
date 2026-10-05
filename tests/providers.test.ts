@@ -40,13 +40,13 @@ test("structured segments cannot combine an explanation with a quote identifier 
 test("per-request schema excludes unselected evidence and keeps meanings server-filled", () => {
   const empty = answerJsonFor([]).properties.segments.items.anyOf as Record<string, any>[];
   assert.equal(empty.length, 1); assert.equal(empty[0].properties.sourceIds.maxItems, 0);
-  const selected = answerJsonFor(["friendship_suspicion"]).properties.segments.items.anyOf as Record<string, any>[];
+  const selected = answerJsonFor(["conflict_check_facts"]).properties.segments.items.anyOf as Record<string, any>[];
   assert.equal(selected.length, 3);
   for (const item of selected.slice(1)) {
     assert.deepEqual(item.properties.text.enum, [""]);
-    assert.deepEqual(item.properties.sourceIds.items.enum, ["friendship_suspicion"]);
+    assert.deepEqual(item.properties.sourceIds.items.enum, ["conflict_check_facts"]);
   }
   assert.equal(candidateSchema.safeParse({ decision: "FULL", safety: "none", segments: [
-    { kind: "meaning", text: "an invented benefit", sourceIds: ["friendship_suspicion"], quoteId: null }
+    { kind: "meaning", text: "an invented benefit", sourceIds: ["conflict_check_facts"], quoteId: null }
   ] }).success, false);
 });

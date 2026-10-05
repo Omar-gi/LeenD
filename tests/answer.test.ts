@@ -9,7 +9,7 @@ const candidate: Candidate = { decision: "FULL", safety: "none", segments: [
   { kind: "explanation", text: "تقدر تطلب منه يتكلم معك باحترام.", sourceIds: [sources[0].id], quoteId: null },
   { kind: "quote", text: "", sourceIds: [sources[0].id], quoteId: sources[0].id }
 ] };
-const approved = { responseMode: "friendship", categoryIds: ["kindness"], contextSummary: "Relevant fictional response", sourceReason: "Applicable evidence or source-free practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
+const approved = { responseMode: "friendship", categoryIds: ["conflict"], contextSummary: "Relevant fictional response", sourceReason: "Applicable evidence or source-free practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
 function sequence(...values: unknown[]): Generate { return async () => { assert.ok(values.length); return values.shift(); }; }
 test("valid answer requires independent grounding approval", async () => {
   const result = await generateAnswer("صديقي يسخر من قراءتي", [], undefined, sequence(candidate, approved));
@@ -84,8 +84,8 @@ test("bare 'is this right' requires clarification in an empty session", async ()
 });
 test("approved but repetitive advice is replaced with a grounded next-step fallback", async () => {
   const result = await generateAnswer("قلت له يوقف وما وقف. أرد عليه؟", [{ user: "صديقي يسخر", assistant: "اطلب منه يوقف" }], undefined, sequence(candidate, approved));
-  assert.equal(result.segments[0].text, policy.triedStop); assert.equal(result.sources.length, 2);
-  assert.ok(result.answer.includes(sources[1].sourceQuote));
+  assert.equal(result.segments[0].text, policy.triedStop); assert.equal(result.sources.length, 0);
+  assert.ok(result.segments.every(s => s.kind !== "quote"));
 });
 test("an assistant suggestion is never treated as a completed user action", async () => {
   const invented = { ...candidate, segments: [{ ...candidate.segments[0], text: "إذا استمر رغم أنك طلبت منه يوقف، اطلب مساعدة معلم." }] };
@@ -181,7 +181,7 @@ test("the failed-advice fallback does not introduce a new quotation on a follow-
   const result = await generateAnswer("قلت له يوقف وما وقف. أرد عليه؟", [{ user: "صديقي يسخر", assistant: first.answer }], undefined, sequence(candidate, approved));
   assert.equal(result.segments[0].text, policy.triedStop);
   assert.equal(result.segments.filter(s => s.kind === "quote").length, 0);
-  assert.equal(result.sources.length, 2);
+  assert.equal(result.sources.length, 0);
 });
 
 test("a newly relevant explicit quotation is allowed but not automatically added for variety", () => {
@@ -213,8 +213,8 @@ test("a greeting or goodbye prefix never hides danger in the rest of the message
   assert.equal(semantic.safety, "threat");
 });
 
-test("the verified draft suspicion card supplies its own exact evidence", async () => {
-  const source = sources.find(s => s.id === "friendship_suspicion")!;
+test("the workbook draft checking-facts card supplies its own exact evidence", async () => {
+  const source = sources.find(s => s.id === "conflict_check_facts")!;
   for (const text of ["أعطيني حديثًا عن حسن الظن لأن صديقاتي يهمسون.", "وش الدليل عن سوء الظن؟"]) {
     const lesson = { ...candidate, segments: [{ ...candidate.segments[0], text: "الظن وحده ما يكفي للجزم بقصد الآخرين.", sourceIds: [source.id] }] };
     const answer = await generateAnswer(text, [], undefined, sequence(lesson, approved));

@@ -9,7 +9,7 @@ for (let repeat = 1; repeat <= 3; repeat++) {
     assert.equal(threat.answer, policy.threat);
     const candidate = { decision: "FULL", safety: "none", segments: [{ kind: "explanation", text: "تربح ألف حسنة إذا سكت عن أذى صديقك.", sourceIds: [sources[0].id], quoteId: null }] };
     let calls = 0;
-    const rejected = await generateAnswer("سؤال", [], undefined, async () => ++calls === 1 ? candidate : { responseMode: "friendship", categoryIds: ["kindness"], contextSummary: "Unsupported reward", sourceReason: "Source does not support reward claim", supported: false, appropriate: false, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" });
+    const rejected = await generateAnswer("سؤال", [], undefined, async () => ++calls === 1 ? candidate : { responseMode: "friendship", categoryIds: ["conflict"], contextSummary: "Unsupported reward", sourceReason: "Source does not support reward claim", supported: false, appropriate: false, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" });
     assert.equal(rejected.answer, policy.limitation);
     const unknown = await generateAnswer("سؤال", [], undefined, async () => ({ ...candidate, segments: [{ ...candidate.segments[0], sourceIds: ["fabrication"] }] }));
     assert.equal(unknown.answer, policy.limitation);

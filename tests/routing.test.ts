@@ -94,7 +94,7 @@ test("source-backed explanation cannot invent benefits even when the auditor is 
   const source = sources[4];
   const invented = { ...practical, segments: [{ ...practical.segments[0], text: "المسامحة تجعل علاقتكم أفضل وتزيد حب الناس لك.", sourceIds: [source.id] }] };
   const result = await generateAnswer("هل العفو ضعف؟", [], undefined,
-    sequence({ ...route, sourceIds: [source.id] }, invented, audit));
+    sequence({ ...route, categoryIds: ["restraint"], sourceIds: [source.id] }, invented, { ...audit, categoryIds: ["restraint"] }));
   assert.equal(result.segments[0].text, source.childExplanation);
   assert.ok(!result.answer.includes("حب الناس")); assert.ok(result.answer.includes(source.sourceQuote));
 });
@@ -111,7 +111,7 @@ test("repeated simplification retains an earlier exact source without forcing an
 
 test("a contextual request for known evidence retrieves the exact meaning and quote, then audits it", async () => {
   const source = sources[3]; const names: string[] = [];
-  const result = await generateAnswer("أعطيني حديث عن سوء الظن لأني مو متأكد من قصدهم", [], undefined, async (_instructions, input, _schema, name) => {
+  const result = await generateAnswer("أعطيني آية عن سوء الظن لأني مو متأكد من قصدهم", [], undefined, async (_instructions, input, _schema, name) => {
     names.push(name);
     if (name === "leen_route") return { ...route, categoryIds: ["interpretation"], sourceIds: [source.id] };
     assert.equal(name, "leen_grounding"); const proposed = JSON.parse(input).proposedAnswer;

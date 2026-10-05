@@ -30,7 +30,7 @@ export function dialogueViolation(answer: Answer, budget: 0 | 1): boolean {
 }
 
 export function dialogueLimit(): Answer {
-  const answer = "ما أقدر أجزم بالتصرف الأنسب من المعلومات الموجودة، وما راح أضغط عليك بأسئلة أكثر. إذا الموقف يضايقك، تقدر تحكي لشخص كبير تثق فيه يساعدك.";
+  const answer = "مو لازم تحسم الخلاف الآن. تقدر تأخذ مساحة قصيرة من الجدال، وبعدها توضّح الشيء اللي ضايقك بكلام هادئ.";
   return { decision: "REFER", safety: "none", answer,
     segments: [{ kind: "explanation", text: answer, sourceIds: [], quoteId: null }],
     sources: [], grounded: false, limited: true };
@@ -66,7 +66,7 @@ export function quotationContext(text: string, history: ConversationTurn[]): Quo
   return {
     quotedSourceIds: sources.filter(source => history.some(turn =>
       normalizeArabic(turn.assistant).includes(normalizeArabic(`«${source.sourceQuote}»`)))).map(source => source.id),
-    repeatQuote: /حديث|الدليل|النص|اقتباس|كرر(?:ه|يه)|عيد(?:ه|يه)|اعد(?:ه|يه)/.test(normalizeArabic(text))
+    repeatQuote: /حديث|اي[ةه]|الدليل|النص|اقتباس|كرر(?:ه|يه)|عيد(?:ه|يه)|اعد(?:ه|يه)/.test(normalizeArabic(text))
   };
 }
 
@@ -75,9 +75,10 @@ export function quotationContext(text: string, history: ConversationTurn[]): Quo
 // matching prevents swallowing a new question or a disclosure after the request.
 export function repeatKnownQuotation(text: string, history: ConversationTurn[]): Answer | null {
   const bare = normalizeArabic(text).replace(/[.،!؟?]/g, "").trim();
-  if (!/^(?:طيب )?(?:كرر|كرري|اعد|اعيدي|عيد|عيدي) (?:لي )?الحديث(?: (?:اللي قلته|السابق|مر[ةه] ثاني[ةه]))?$/.test(bare)) return null;
+  if (!/^(?:طيب )?(?:كرر|كرري|اعد|اعيدي|عيد|عيدي) (?:لي )?(?:الحديث|الاي[ةه]|النص|الدليل)(?: (?:اللي قلته|اللي قلتيه|السابق|السابق[ةه]|مر[ةه] ثاني[ةه]))?$/.test(bare)) return null;
   for (const turn of [...history].reverse()) {
-    const source = sources.find(s => normalizeArabic(turn.assistant).includes(normalizeArabic(`«${s.sourceQuote}»`)));
+    const source = sources.find(s => normalizeArabic(turn.assistant).includes(normalizeArabic(`«${s.sourceQuote}»`)) &&
+      (!bare.includes("الحديث") || s.kind === "hadith") && (!/الاي[ةه]/.test(bare) || s.kind === "quran"));
     if (source) return { ...materialize({ decision: "FULL", safety: "none", segments: [
       { kind: "quote", text: "", sourceIds: [source.id], quoteId: source.id }
     ] }, { quotedSourceIds: [source.id], repeatQuote: true }), grounded: true };
@@ -89,9 +90,11 @@ export function repeatKnownQuotation(text: string, history: ConversationTurn[]):
 // religious question. Anything extra (including a disclosure) uses normal routing.
 export function requestedKnownQuotation(text: string): Answer | null {
   const bare = normalizeArabic(text).replace(/[.،!؟?]/g, "").trim();
-  const match = /^(?:طيب )?(?:اعطني|اعطيني|ابي|اريد) (?:النص(?: الاصلي)?(?: اللي عندك)?|الحديث|حديثا?|حديثًا) عن (الكلام الطيب|حسن الظن|سوء الظن|العفو|التسامح)(?: نفسه)?$/.exec(bare);
+  const match = /^(?:طيب )?(?:اعطني|اعطيني|ابي|اريد) (النص(?: الاصلي)?(?: اللي عندك)?|الحديث|حديثا?|حديثًا|الاي[ةه]|اي[ةه]) عن (ضبط النفس|الغضب|حسن الظن|سوء الظن|العفو|التسامح|المبادرة بالسلام)(?: نفسه)?$/.exec(bare);
   if (!match) return null;
-  const id = match[1] === "الكلام الطيب" ? "friendship_good_speech" : /الظن/.test(match[1]) ? "friendship_suspicion" : "friendship_forgiveness";
+  const id = /الظن/.test(match[2]) ? "conflict_check_facts" : /العفو|التسامح/.test(match[2]) ? "conflict_restraint" : /السلام/.test(match[2]) ? "conflict_greet" : "conflict_anger_strength";
+  const source = sources.find(s => s.id === id)!;
+  if ((/حديث/.test(match[1]) && source.kind !== "hadith") || (/اي[ةه]/.test(match[1]) && source.kind !== "quran")) return null;
   return { ...materialize({ decision: "FULL", safety: "none", segments: [
     { kind: "quote", text: "", sourceIds: [id], quoteId: id }
   ] }), grounded: true };
@@ -121,6 +124,7 @@ export function clarifyReturnRoles(text: string, history: ConversationTurn[]): A
 // Explicit religious requests and actual harmful speech still use the audit.
 export function practicalRequestWithoutEvidence(text: string): boolean {
   const t = normalizeArabic(text);
+  if (/اختلف|اختلاف|رايي|رايه|رايها|وجه[ةه] نظر|متخاصم|خصام|غضب|معصب|عصب/.test(t)) return false;
   if (/حديث|دليل|النص|اقتباس|دين|اجر|ثواب|دعاء|حلال|حرام|كرر|عيد الحديث|حسن الظن|سوء الظن|العفو|اسامح|يسامح|تسامح/.test(t)) return false;
   if (/يسخر|يستهز|استهزا|يقلدني|تنمر|يهين|اهان|شتمني|اسب|اشتم|انتقم|ننتقم|يضحك عل|يوذي|يؤذي|ظلم|تهديد/.test(t)) return false;
   const item = /بسكوت|بسكويت|قلم|كتاب|دفتر|لعب[ةه]|هدي[ةه]|غرض/.test(t);

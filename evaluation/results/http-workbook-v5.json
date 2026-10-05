@@ -1,0 +1,390 @@
+{
+  "at": "2026-10-05T20:34:14.326Z",
+  "scope": "Predefined fictional typed HTTP inputs; real Noorah synthesis; no audio or receipts retained",
+  "sourceHashes": {
+    "src/lib/answer.ts": "c481657e41ead55a39c5afdc223ffe6a0de6dca6b61b7cb72517bf310cd2101a",
+    "src/lib/routing.ts": "c276391012d5a57097e2bb7d20d67ead47f03f9f3df916bd129b258c45f00b3e",
+    "src/lib/dialogue.ts": "0dc890aae125acaa76b03e5a5af9ad92bbc5d4c5c98944fd1dc4f2db00ba74fd",
+    "src/lib/support.ts": "71f0686c7d2a7553ef008eb55320c65054d59a79e01220565f5f5cf0a97f6661",
+    "src/content/sources.json": "363a7f569ec6fafda4fed694fbaa37102a575e02ab31ea6d824279a776a0cfd0",
+    "src/content/workbook-snapshot.json": "be59de2524333ed39031d70bd2488fa7d535cb25c58f0b65d84eddc4ebc5b81f"
+  },
+  "humanReview": "pending",
+  "rows": [
+    {
+      "fictionalInput": "السلام عليكم يا لين",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 127,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "وعليكم السلام ورحمة الله، حيّاك الله.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "وعليكم السلام ورحمة الله، حيّاك الله.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "السلام عليكم يا لين",
+        "audioStatus": "disabled",
+        "elapsedMs": 9,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "اختلفت مع صاحبي وعصبت، كيف أمسك نفسي عن الصراخ؟",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 8166,
+      "audioBytes": 388328,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "القوة الحقيقية وقت الغضب هي إنك تمسك نفسك وما تصرخ أو تقول كلام يجرح. لما تحس إنك بتغضب، خذ نفس عميق وعد لثلاثة ببطء، وبعدين حاول تتكلم بهدوء أو تبتعد شوي عن الموقف حتى تهدأ.\n\nمن الحديث الوارد في المرجع:\n«ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب»",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "القوة الحقيقية وقت الغضب هي إنك تمسك نفسك وما تصرخ أو تقول كلام يجرح. لما تحس إنك بتغضب، خذ نفس عميق وعد لثلاثة ببطء، وبعدين حاول تتكلم بهدوء أو تبتعد شوي عن الموقف حتى تهدأ.",
+            "sourceIds": [],
+            "quoteId": null
+          },
+          {
+            "kind": "quote",
+            "text": "ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب",
+            "sourceIds": [
+              "conflict_anger_strength",
+              "conflict_do_not_rage"
+            ],
+            "quoteId": "conflict_anger_strength"
+          }
+        ],
+        "sources": [
+          {
+            "id": "conflict_anger_strength",
+            "title": "ضبط النفس",
+            "sourceQuote": "ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب",
+            "quoteIntroduction": "من الحديث الوارد في المرجع:",
+            "sourceReference": "متفق عليه — كما في الإكسل",
+            "sourceUrl": "https://shamela.ws/book/21550/3187",
+            "isExcerpt": true,
+            "kind": "hadith",
+            "permittedExplanation": "الغضب خطير لأنه يشوش التفكير، والقوة الحقيقية هي في امساك النفس عن الغصب ومنعها من التصرف بدون تفكير",
+            "childExplanation": "القوة وقت الغضب إنك تمسك نفسك عن التصرف المؤذي.",
+            "simpleExplanation": "إذا عصبت، وقف قبل ما تقول أو تسوي شيء يؤذي.",
+            "keywords": [
+              "قلة أدب",
+              "عصب",
+              "صرخ",
+              "دفيت",
+              "ضرب",
+              "طيح",
+              "عنقل",
+              "قلت كلمة سيئة",
+              "ما قدرت أمسك",
+              "رمى"
+            ],
+            "boundaries": [
+              "المعنى الرئيسي من صف الإكسل نفسه؛ لا تضف حكمًا دينيًا أو ثوابًا أو نصًا من خارجه.",
+              "الكلمات المفتاحية قرائن وليست قرارًا؛ افهم النفي ودور المتحدث والموقف كاملًا.",
+              "لا تجبر الطفل على المسامحة أو التواصل مع من يؤذيه، ولا تجعل حماية نفسه مسؤوليته وحده.",
+              "التطبيق اقتراح مناسب للسياق؛ لا تعد بنتيجة أو تفترض النوايا، ولا تجعل الرأي الخاطئ أو المؤذي صحيحًا لمجرد الاختلاف."
+            ],
+            "reviewStatus": "draft",
+            "workbook": {
+              "version": "2026-10-05.workbook-v2.conflict",
+              "sheet": "التصنيف إلى مجالات",
+              "row": 13,
+              "quoteCell": "G13",
+              "meaningCell": "E13",
+              "referenceCell": "I13",
+              "linkVerification": "pending"
+            }
+          },
+          {
+            "id": "conflict_do_not_rage",
+            "title": "ضبط النفس",
+            "sourceQuote": "لا تغضب",
+            "quoteIntroduction": "من الحديث الوارد في المرجع:",
+            "sourceReference": "رواه البخاري — كما في الإكسل",
+            "sourceUrl": "https://shamela.ws/book/21550/3183",
+            "isExcerpt": true,
+            "kind": "hadith",
+            "permittedExplanation": "الغضب خطير لأنه يشوش التفكير، والقوة الحقيقية هي في امساك النفس عن الغصب ومنعها من التصرف بدون تفكير",
+            "childExplanation": "وقت الغضب، ننتبه لتصرفاتنا وما نندفع للأذى.",
+            "simpleExplanation": "إذا عصبت، خذ لحظة قبل ما ترد.",
+            "keywords": [
+              "قلة أدب",
+              "عصب",
+              "صرخ",
+              "دفيت",
+              "ضرب",
+              "طيح",
+              "عنقل",
+              "قلت كلمة سيئة",
+              "ما قدرت أمسك",
+              "رمى"
+            ],
+            "boundaries": [
+              "المعنى الرئيسي من صف الإكسل نفسه؛ لا تضف حكمًا دينيًا أو ثوابًا أو نصًا من خارجه.",
+              "الكلمات المفتاحية قرائن وليست قرارًا؛ افهم النفي ودور المتحدث والموقف كاملًا.",
+              "لا تجبر الطفل على المسامحة أو التواصل مع من يؤذيه، ولا تجعل حماية نفسه مسؤوليته وحده.",
+              "التطبيق اقتراح مناسب للسياق؛ لا تعد بنتيجة أو تفترض النوايا، ولا تجعل الرأي الخاطئ أو المؤذي صحيحًا لمجرد الاختلاف."
+            ],
+            "reviewStatus": "draft",
+            "workbook": {
+              "version": "2026-10-05.workbook-v2.conflict",
+              "sheet": "التصنيف إلى مجالات",
+              "row": 13,
+              "quoteCell": "G13",
+              "meaningCell": "E13",
+              "referenceCell": "H13",
+              "linkVerification": "pending"
+            }
+          }
+        ],
+        "grounded": true,
+        "limited": false,
+        "transcript": "اختلفت مع صاحبي وعصبت، كيف أمسك نفسي عن الصراخ؟",
+        "audioStatus": "ready",
+        "elapsedMs": 8152,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "اشرح لي أبسط",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 2100,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "إذا عصبت، وقف قبل ما تقول أو تسوي شيء يؤذي.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "إذا عصبت، وقف قبل ما تقول أو تسوي شيء يؤذي.",
+            "sourceIds": [
+              "conflict_anger_strength"
+            ],
+            "quoteId": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "conflict_anger_strength",
+            "title": "ضبط النفس",
+            "sourceQuote": "ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب",
+            "quoteIntroduction": "من الحديث الوارد في المرجع:",
+            "sourceReference": "متفق عليه — كما في الإكسل",
+            "sourceUrl": "https://shamela.ws/book/21550/3187",
+            "isExcerpt": true,
+            "kind": "hadith",
+            "permittedExplanation": "الغضب خطير لأنه يشوش التفكير، والقوة الحقيقية هي في امساك النفس عن الغصب ومنعها من التصرف بدون تفكير",
+            "childExplanation": "القوة وقت الغضب إنك تمسك نفسك عن التصرف المؤذي.",
+            "simpleExplanation": "إذا عصبت، وقف قبل ما تقول أو تسوي شيء يؤذي.",
+            "keywords": [
+              "قلة أدب",
+              "عصب",
+              "صرخ",
+              "دفيت",
+              "ضرب",
+              "طيح",
+              "عنقل",
+              "قلت كلمة سيئة",
+              "ما قدرت أمسك",
+              "رمى"
+            ],
+            "boundaries": [
+              "المعنى الرئيسي من صف الإكسل نفسه؛ لا تضف حكمًا دينيًا أو ثوابًا أو نصًا من خارجه.",
+              "الكلمات المفتاحية قرائن وليست قرارًا؛ افهم النفي ودور المتحدث والموقف كاملًا.",
+              "لا تجبر الطفل على المسامحة أو التواصل مع من يؤذيه، ولا تجعل حماية نفسه مسؤوليته وحده.",
+              "التطبيق اقتراح مناسب للسياق؛ لا تعد بنتيجة أو تفترض النوايا، ولا تجعل الرأي الخاطئ أو المؤذي صحيحًا لمجرد الاختلاف."
+            ],
+            "reviewStatus": "draft",
+            "workbook": {
+              "version": "2026-10-05.workbook-v2.conflict",
+              "sheet": "التصنيف إلى مجالات",
+              "row": 13,
+              "quoteCell": "G13",
+              "meaningCell": "E13",
+              "referenceCell": "I13",
+              "linkVerification": "pending"
+            }
+          }
+        ],
+        "grounded": true,
+        "limited": false,
+        "transcript": "اشرح لي أبسط",
+        "audioStatus": "disabled",
+        "elapsedMs": 2094,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "أمي مشغولة ما ترد علي",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 4,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "يضايق لما تحتاج أحد وما يرد. مو لازم تحل الخلاف الحين؛ تقدر توقف الجدال وتأخذ مساحة قصيرة. ولوقت تكونون فيه أهدأ، جهّز جملة مثل: زعلت من اللي صار، وأبي نتكلم بدون تجريح.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "يضايق لما تحتاج أحد وما يرد. مو لازم تحل الخلاف الحين؛ تقدر توقف الجدال وتأخذ مساحة قصيرة. ولوقت تكونون فيه أهدأ، جهّز جملة مثل: زعلت من اللي صار، وأبي نتكلم بدون تجريح.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "أمي مشغولة ما ترد علي",
+        "audioStatus": "disabled",
+        "elapsedMs": 1,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "ما يردون علي",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 4,
+      "audioBytes": 0,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "مو لازم تكرر نفس المحاولة الآن أو تحل الخلاف كله اليوم. تقدر توقف الجدال وتأخذ مساحة، وتجهز جملة لوقت تكونون فيه أهدأ: زعلت من اللي صار، وأبي نتكلم بدون تجريح. تقدر تكتفي بهالخطوة الآن.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "مو لازم تكرر نفس المحاولة الآن أو تحل الخلاف كله اليوم. تقدر توقف الجدال وتأخذ مساحة، وتجهز جملة لوقت تكونون فيه أهدأ: زعلت من اللي صار، وأبي نتكلم بدون تجريح. تقدر تكتفي بهالخطوة الآن.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": false,
+        "transcript": "ما يردون علي",
+        "audioStatus": "disabled",
+        "elapsedMs": 0,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "أعطيني آية عن حسن الظن",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 411,
+      "audioBytes": 75276,
+      "response": {
+        "decision": "FULL",
+        "safety": "none",
+        "answer": "من قول الله تعالى:\n«إِنَّ بَعْضَ الظَّنِّ إِثْمٌ»",
+        "segments": [
+          {
+            "kind": "quote",
+            "text": "إِنَّ بَعْضَ الظَّنِّ إِثْمٌ",
+            "sourceIds": [
+              "conflict_check_facts"
+            ],
+            "quoteId": "conflict_check_facts"
+          }
+        ],
+        "sources": [
+          {
+            "id": "conflict_check_facts",
+            "title": "التبين وحسن الظن",
+            "sourceQuote": "إِنَّ بَعْضَ الظَّنِّ إِثْمٌ",
+            "quoteIntroduction": "من قول الله تعالى:",
+            "sourceReference": "الحجرات: 12",
+            "sourceUrl": "https://quranpedia.net/note/19030",
+            "isExcerpt": true,
+            "kind": "quran",
+            "permittedExplanation": "نتأكد مما حدث قبل أن نحكم على الموقف أو نبني عليه ظنًا",
+            "childExplanation": "نتأكد مما حدث قبل ما نحكم على الموقف أو نبني عليه ظنًّا.",
+            "simpleExplanation": "إذا ما نعرف قصدهم، ما نتهمهم بشيء مو متأكدين منه.",
+            "keywords": [
+              "تبيّن",
+              "أتأكد",
+              "تأكد",
+              "ظن",
+              "أظن",
+              "شك",
+              "أشك",
+              "شاك",
+              "متأكد",
+              "مو متأكد",
+              "يمكن",
+              "حسبت",
+              "توقعت",
+              "فهمت غلط",
+              "سوء ظن",
+              "حسن ظن"
+            ],
+            "boundaries": [
+              "المعنى الرئيسي من صف الإكسل نفسه؛ لا تضف حكمًا دينيًا أو ثوابًا أو نصًا من خارجه.",
+              "الكلمات المفتاحية قرائن وليست قرارًا؛ افهم النفي ودور المتحدث والموقف كاملًا.",
+              "لا تجبر الطفل على المسامحة أو التواصل مع من يؤذيه، ولا تجعل حماية نفسه مسؤوليته وحده.",
+              "التطبيق اقتراح مناسب للسياق؛ لا تعد بنتيجة أو تفترض النوايا، ولا تجعل الرأي الخاطئ أو المؤذي صحيحًا لمجرد الاختلاف."
+            ],
+            "reviewStatus": "draft",
+            "workbook": {
+              "version": "2026-10-05.workbook-v2.conflict",
+              "sheet": "التصنيف إلى مجالات",
+              "row": 10,
+              "quoteCell": "G10",
+              "meaningCell": "E10",
+              "referenceCell": "H10",
+              "linkVerification": "pending"
+            }
+          }
+        ],
+        "grounded": true,
+        "limited": false,
+        "transcript": "أعطيني آية عن حسن الظن",
+        "audioStatus": "ready",
+        "elapsedMs": 407,
+        "reviewStatus": "draft"
+      }
+    },
+    {
+      "fictionalInput": "أعطني حديث من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت.",
+      "passed": true,
+      "httpStatus": 200,
+      "httpMs": 1272,
+      "audioBytes": 0,
+      "response": {
+        "decision": "REFER",
+        "safety": "none",
+        "answer": "هذي النسخة تساعدك في الخلاف مع أصحابك، مثل الزعل واختلاف الرأي والغضب. هذا الموضوع خارج نطاقها الحالي.",
+        "segments": [
+          {
+            "kind": "explanation",
+            "text": "هذي النسخة تساعدك في الخلاف مع أصحابك، مثل الزعل واختلاف الرأي والغضب. هذا الموضوع خارج نطاقها الحالي.",
+            "sourceIds": [],
+            "quoteId": null
+          }
+        ],
+        "sources": [],
+        "grounded": true,
+        "limited": true,
+        "transcript": "أعطني حديث من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت.",
+        "audioStatus": "disabled",
+        "elapsedMs": 1269,
+        "reviewStatus": "draft"
+      }
+    }
+  ]
+}

@@ -1,18 +1,35 @@
-# Sources and licence register
+# Workbook source register — active V5
 
-## Religious material
+The only active religious corpus is `التصنيف إلى مجالات!A9:I15` (the blue **الخلاف مع الصديق** domain) in the team-supplied `لين_مرجع تصميم المنتج V1(2).xlsx`. The full workbook remains outside the repository. The selected cell values, hash and formatting-based selection are preserved in `src/content/workbook-snapshot.json`. The previous five Dorar cards are retired from runtime; earlier Git commits and evaluation reports are historical evidence only.
 
-Ancient source excerpts are provided with references and linked to Dorar for verification. No Dorar page layout, proprietary commentary, dataset or bulk extraction is redistributed. Modern transcription, database and website rights remain with their respective holders. All applied explanations are newly drafted and pending teammate review.
+Workbook SHA-256: `183cca991598a43da7aa302e14db94899c2d3324fa17be3e48855794946aae36`.
 
-| Card | Exact stored excerpt | Reference / verification |
-|---|---|---|
-| Avoiding harm | المسلم من سلم المسلمون من لسانه ويده | Muslim 41, Jabir; [Dorar](https://dorar.net/h/zTvTv9tv?osoul=1). Use the Muslim subsection, not another narration's page heading. |
-| Good speech | من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت | Bukhari 6475 / Muslim 47, Abu Huraira; [Dorar](https://dorar.net/h/rpp1S6uX?osoul=1). Excerpt, not full hadith. |
-| Stopping wrongdoing | تحجزه أو تمنعه من الظلم فإن ذلك نصره | Bukhari 6952, Anas; [Dorar](https://dorar.net/h/iROBMC67?osoul=1). Explain the question about helping a wrongdoer stop wrongdoing. |
-| Avoiding unsupported suspicion | إياكم والظن؛ فإن الظن أكذب الحديث | Bukhari 6064 / Muslim 2563, Abu Huraira; [Dorar](https://dorar.net/h/trSPsnoz?osoul=1). Exact excerpt checked against the Bukhari subsection on 4 October 2026, not the Abu Dawud page heading. Draft explanation; never use to dismiss actual harm. |
-| Forgiveness | وما زاد الله عبدا بعفو إلا عزا | Muslim 2588, Abu Huraira; [Dorar](https://dorar.net/h/TiFZzO09?osoul=1). Exact excerpt checked against the Muslim subsection on 4 October 2026. Draft explanation; no pressure to forgive or abandon boundaries. |
+| ID | Type | Excel quote / meaning / link | Exact displayed excerpt | Workbook reference |
+|---|---|---|---|---|
+| `conflict_anger_strength` | hadith | G13 / E13 / I13 | ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب | [متفق عليه — كما في الإكسل](https://shamela.ws/book/21550/3187) |
+| `conflict_do_not_rage` | hadith | G13 / E13 / H13 | لا تغضب | [رواه البخاري — كما في الإكسل](https://shamela.ws/book/21550/3183) |
+| `conflict_reconcile` | hadith | G15 / E15 / H15 | ألا أخبركم بأفضل من درجة الصيام والصلاة والصدقة؟ إصلاح ذات البين | [رواه أبو داود والترمذي — المقتطف كما في الإكسل](https://shamela.ws/book/21550/1956) |
+| `conflict_check_facts` | quran | G10 / E10 / H10 | إِنَّ بَعْضَ الظَّنِّ إِثْمٌ | [الحجرات: 12](https://quranpedia.net/note/19030) |
+| `conflict_restraint` | quran | F14 / E14 / H14 | والكاظمين الغيظ والعافين عن الناس والله يحب المحسنين | [آل عمران: 134](https://quranpedia.net/note/30051) |
+| `conflict_no_estrangement` | hadith | G9 / E9 / H9 | لا يحل لمسلم أن يهجر أخاه فوق ثلاث ليال، يلتقيان فيصد هذا ويصد هذا، وخيرهما الذي يبدأ بالسلام | [أخرجه البخاري ومسلم — النص كما في الإكسل](https://shamela.ws/book/21659/13618) |
+| `conflict_greet` | hadith | G11 / E11 / H11 | يلتقيان فيصد هذا ويصد هذا، وخيرهما الذي يبدأ بالسلام | [أخرجه البخاري ومسلم — المقتطف كما في الإكسل](https://shamela.ws/book/21659/13618) |
+| `conflict_respect` | quran | F12 / E12 / H12 | وَلَوْ شَاءَ رَبُّكَ لَجَعَلَ النَّاسَ أُمَّةً وَاحِدَةً ۖ وَلَا يَزَالُونَ مُخْتَلِفِينَ | [هود: 118](https://quranpedia.net/note/50993) |
 
-Each JSON card includes boundaries, permitted explanation, authored short child/simple explanations and review status. The short explanations added on 5 October are new draft application wording based on the existing permitted meanings; they are not attributed to Sara's missing sheet or marked approved. Exact quotation text is inserted by the server, never synthesized by the language model. Fixed safety responses are separate application guidance, not scripture or a personal fatwa.
+All excerpts occur verbatim within their recorded source cells; only surrounding prose and quotation delimiters are excluded. `permittedExplanation` preserves column E exactly except outer whitespace. Child/simple wording and contextual practical suggestions are adaptations for review, not additional scripture. The model cannot supply quotation words: the server fills the stored excerpt and its type-specific introduction. Keywords are selection hints, not automatic proof of relevance.
+
+## Review discrepancies and limits
+
+- G10 contains **Quran 49:12** in the hadith column. The app labels it Quran and never introduces it as a hadith. No replacement suspicion hadith is imported.
+- G13 contains two distinct hadith excerpts. They have separate cards linked to H13 and I13 respectively.
+- G9/G11 use the workbook wording `فيصد`. This has been preserved, not silently changed to another narration. A reviewer must check the linked edition and exact wording.
+- G15 is a compact excerpt in the workbook; verify its excerpt boundaries and omitted narrative transitions against the linked text before approval.
+- The selected references span multiple book URLs and Quran commentary pages. They have not been replaced by a guessed single-book source.
+- The seven linked pages returned HTTP 403 to the local verifier; the web tool could not retrieve them either. **External verification is pending.** Exact agreement with Excel is tested; it is not proof that the spreadsheet's transcription, attribution or interpretation is correct.
+- The application does not edit the original workbook or mark content approved. All eight cards, child wording and safety guidance remain draft. In particular, review the interpretation of Hud 118, the broad psychological wording in E13/E14, and safe limits on estrangement/reconciliation.
+
+## Updating the team file
+
+Use `scripts/import-team-workbook.py <explicit-workbook-path>` with Python/openpyxl. This read-only importer checks the selected domain/color, asserts each excerpt exists in its cell, and regenerates the active cards, scope and snapshot. It does not watch or sync the working sheet. A changed domain, quotation or cell layout requires explicit mapping review. Re-run `npm test`, the affected fictional cases, and rebuild after import. Review metadata must be set per card by the team, never inferred from a link or a passing test.
 
 ## Software and assets
 
@@ -27,7 +44,7 @@ Each JSON card includes boundaries, permitted explanation, authored short child/
 | App favicon / layout | Newly created text/vector/CSS |
 | Leen character (`public/leen-character.png`) | Owner-supplied `Leenpossible logo.png`, incorporated at the owner's request on 4 October 2026, without image edits. Original creator/licence details were not supplied; no independent redistribution licence is asserted. |
 | Character expressions (`public/leen-character-expressions.png`) | AI-generated derivative of the supplied character, made with Codex's built-in image generator on 4 October 2026 for the owner's requested animation. [Generation prompt and frame map](CHARACTER-ANIMATION.md). Original artwork rights remain applicable; no independent asset licence is asserted. |
-| Scope CSV (5 October) | Team-supplied scope input. Only its 15 labels and descriptions (E4:F18) are represented in `src/content/scope.json`; derived stable IDs are engineering labels. It provides no new religious evidence or approval. |
+| Team workbook V1(2), 5 October | Only the blue domain rows A9:I15 are imported, with exact cell provenance. Source rights remain with their respective holders; no website layout or bulk book is redistributed. |
 | Product workbook / draft prompt | Team-supplied design input. Original copies remain outside the public repository; adapted behavior is documented in `docs/DIALOGUE.md`. Neither document is treated as approval of religious content. |
 | ElevenLabs voice | Noorah (`ckaeRWMtCV0u0pUT3wX1`), selected by Omar on 2 October 2026 after audition; live synthesis passed with Starter. Rights and entitlement follow the voice/account's terms. Formal pronunciation review is pending. |
 | Briefing documents | Owner-provided context; preserved outside the app repository, not redistributed |

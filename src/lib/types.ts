@@ -5,6 +5,9 @@ export type SourceCard = {
   sourceUrl: string; isExcerpt: boolean; permittedExplanation: string;
   childExplanation: string; simpleExplanation: string;
   boundaries: string[]; reviewStatus: "draft" | "approved";
+  kind: "hadith" | "quran";
+  keywords: string[];
+  workbook: { version: string; sheet: string; row: number; quoteCell: string; meaningCell: string; referenceCell: string; linkVerification: string };
 };
 export type ConversationTurn = { user: string; assistant: string; receipt?: string };
 export type Segment = { kind: "explanation" | "quote"; text: string; sourceIds: string[]; quoteId: string | null };
