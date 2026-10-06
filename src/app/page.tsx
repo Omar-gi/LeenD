@@ -63,7 +63,7 @@ export default function Home() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => { messagesRef.current = messages; bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [messages, phase]);
+  useEffect(() => { messagesRef.current = messages; bottomRef.current?.parentElement?.scrollTo({ top: bottomRef.current.parentElement.scrollHeight, behavior: "smooth" }); }, [messages, phase]);
   useEffect(() => {
     fetch("/api/health", { cache: "no-store" }).then(r => r.json()).then(setHealth).catch(() => {});
     return () => {
@@ -224,7 +224,7 @@ export default function Home() {
   const locked = phase === "thinking" || phase === "permission" || phase === "recording";
   const phaseText: Record<Phase, string> = { idle: "على راحتك، الميكروفون مغلق", permission: "بانتظار إذن الميكروفون", recording: "أسمعك… اضغط إذا انتهيت", thinking: "أفهم سؤالك وأراجع الإجابة…", speaking: "لين تتكلم" };
 
-  return <div className="site-shell">
+  return <div className={`site-shell ${screen === "chat" ? "chat-screen" : ""}`}>
     <a className="skip-link" href="#main">انتقل إلى المحتوى</a>
     <header className="header"><Brand /><div className="header-end"><span className="demo-label">نسخة التحدي <span>٢٠٢٦</span></span>
       <button className="icon-button" aria-label="عن التجربة والخصوصية" onClick={() => setShowPrivacy(true)}><CircleHelp size={21} /></button></div></header>
@@ -234,33 +234,34 @@ export default function Home() {
         <div className="intro-character-mobile"><CharacterPortrait /></div>
         <span className="eyebrow"><span className="tiny-line" /> حوار صغير، وفهم أكبر</span>
         <h1>أهلًا، أنا <span>لين.</span><br />سؤالك له مساحة.</h1>
-        <p className="intro-description">نتكلم عن الخلاف مع أصحابك وكيف تتعامل معه.<br className="desktop-break" /> أسمع سؤالك، وأشرح لك بكلمات قريبة ومصادر واضحة.</p>
+        <p className="intro-description">نتكلم عن مواقفك مع أصحابك وكيف تتعامل معها.<br className="desktop-break" /> أسمع سؤالك، وأشرح لك بكلمات قريبة ومصادر واضحة.</p>
+        <div className="covered-domains" aria-label="المجالات التي تغطيها لين"><span>اختيار الصديق</span><span>الخلاف مع الصديق</span><span>الغيرة والمقارنة</span><span>الاستبعاد والتنمر</span></div>
         <div className="intro-points"><span><Headphones size={20} /> تتكلم بطريقتك</span><span><BookOpen size={20} /> تعرف مصدر الإجابة</span><span><HeartHandshake size={20} /> نعرف متى نطلب المساعدة</span></div>
         <div className="start-card">
-          <div className="start-note"><ShieldCheck size={22} /><p><strong>تجربة للبالغين والمقيّمين</strong><br />تحاكي حوارًا لطفل بعمر ٩–١٠ سنوات. استخدم مواقف خيالية، دون أسماء أو معلومات شخصية.</p></div>
-          <label className="consent"><input type="checkbox" checked={adult} onChange={e => setAdult(e.target.checked)} /><span>أنا بالغ، وسأستخدم أمثلة خيالية في هذه التجربة.</span></label>
+          <div className="start-note"><ShieldCheck size={22} /><p><strong>هذه النسخة مخصصة لتجربة لين.</strong><br />استخدم موقفًا خياليًا، ولا تدخل أسماء أو معلومات شخصية.</p></div>
+          <label className="consent"><input type="checkbox" checked={adult} onChange={e => setAdult(e.target.checked)} /><span>سأستخدم أمثلة خيالية في هذه التجربة.</span></label>
           <button className="primary start-button" disabled={!adult} onClick={() => { setScreen("chat"); setError(""); }}><Mic size={21} /> نبدأ الحديث</button>
           <span className="start-footnote">ما تحتاج حسابًا · صوت لين مولّد بالذكاء الاصطناعي</span>
         </div>
       </section>
       <aside className="intro-panel" aria-label="كيف تعمل لين">
         <span className="panel-tag">مساحة آمنة للسؤال</span><div className="panel-center"><div className="hero-character"><CharacterPortrait hero /></div><p>نسأل بطريقتنا.<br /><span>ونفهم على مهل.</span></p><Wave /></div>
-        <div className="panel-bottom"><span className="panel-number">٠١</span><p>الخلاف مع الصديق<span>الخصام، اختلاف الرأي، الغضب، والإصلاح.</span></p></div>
+        <div className="panel-bottom"><span className="panel-number">٠١</span><p>مواقفنا مع الأصحاب<span>اختيار الصديق، الخلاف، المقارنة، والتنمر.</span></p></div>
       </aside>
     </main> : <main id="main" className="chat-layout">
-      <aside className="chat-sidebar"><span className="eyebrow">في هذه المساحة</span><h2>الخلاف،<br />بفهمٍ أهدأ.</h2><p>اسأل بصوتك أو اكتب.<br />تقدر تعدّل السؤال إذا ما سمعته لين بشكل صحيح.</p>
+      <aside className="chat-sidebar"><span className="eyebrow">في هذه المساحة</span><h2>صداقاتنا،<br />بفهمٍ أهدأ.</h2><p>اسأل بصوتك أو اكتب.<br />تقدر تعدّل السؤال إذا ما سمعته لين بشكل صحيح.</p>
         <div className="sidebar-rule" /><div className="sidebar-item"><BookOpen size={22} /><div><strong>المصدر قريب منك</strong><p>تلقى المرجع تحت الإجابة، مع فصل النص الأصلي عن الشرح.</p></div></div>
         <div className="sidebar-item"><ShieldCheck size={22} /><div><strong>ولكل إجابة حدود</strong><p>إذا ما تكفي المصادر، توضح لين ذلك أو تقترح الرجوع لشخص مناسب.</p></div></div>
         <div className="sidebar-bottom"><span>جلسة مؤقتة</span><p>ينتهي سياق الحديث عند إنهاء الجلسة أو إغلاق الصفحة.</p></div>
       </aside>
       <section className="conversation" aria-label="المحادثة مع لين">
-        <div className="conversation-header"><div className="conversation-title"><span className="leen-badge">ل</span><div><h1>نتكلم مع لين</h1><span>عن الخلاف مع الأصحاب</span></div></div>
+        <div className="conversation-header"><div className="conversation-title"><span className="leen-badge">ل</span><div><h1>نتكلم مع لين</h1><span>عن مواقفنا مع الأصحاب</span></div></div>
           <div className="conversation-actions"><button className="icon-button" title={audioEnabled ? "إيقاف الردود الصوتية" : "تشغيل الردود الصوتية"} aria-label={audioEnabled ? "إيقاف الردود الصوتية" : "تشغيل الردود الصوتية"} aria-pressed={audioEnabled} onClick={() => { setAudioEnabled(!audioEnabled); if (audioEnabled) stopPlayback(); }}>{audioEnabled ? <Volume2 size={21} /> : <VolumeX size={21} />}</button>
           <button ref={endButtonRef} className="text-button end-button" onClick={() => setConfirmEnd(true)}>إنهاء الجلسة</button></div></div>
-        <div className="review-banner"><ShieldCheck size={15} /><span>{health?.reviewStatus === "approved" ? "تجربة للبالغين بأمثلة خيالية" : "عرض تجريبي للبالغين · المحتوى والشرح قيد المراجعة"}</span></div>
+        <div className="review-banner"><ShieldCheck size={15} /><span>استخدم مواقف خيالية، دون أسماء أو معلومات شخصية.</span></div>
         <LeenCharacter phase={phase} audio={playingAudio} onActivate={() => phase === "recording" ? stopRecording() : phase === "speaking" ? stopPlayback() : void startRecording()} />
         <div className="messages" role="log" aria-label="سجل المحادثة" aria-live="polite" aria-relevant="additions text">
-          {!messages.length && !pending && <div className="empty-state"><h2>خذ راحتك.<br />وش ودّك تسأل؟</h2><p>اضغط على لين أو الميكروفون وقل سؤالك،<br />واضغط مرة ثانية إذا انتهيت.</p><span className="empty-pill">الميكروفون يفتح فقط لما تضغط</span></div>}
+          {!messages.length && !pending && <div className="empty-state"><p>سؤالك له مساحة.</p></div>}
           {messages.map((message, index) => <article className="exchange" key={message.id}>
             <div className="user-message"><div className="message-label">أنت <button disabled={locked} className="edit-button" aria-label={`تعديل السؤال ${index + 1}`} onClick={() => correct(index)}><Pencil size={13} /> تعديل</button></div><p dir="auto">{message.transcript}</p></div>
             <div className={`assistant-message ${message.safety !== "none" ? "safety-message" : ""}`}><div className="message-label"><span className="mini-leen">ل</span> لين {message.safety !== "none" && <span className="safety-tag">سلامتك أولًا</span>}</div>
@@ -268,7 +269,7 @@ export default function Home() {
               <div className="answer-actions">{message.audioUrl && <button disabled={locked} className="quiet-button" onClick={() => playingId === message.id ? stopPlayback() : void play(message.audioUrl!, message.id)}>{playingId === message.id ? <Square size={14} /> : <Play size={14} />} {playingId === message.id ? "إيقاف الصوت" : "اسمع الإجابة"}</button>}
                 {message.safety !== "none" && <span className="policy-label">إرشاد للسلامة، وليس فتوى</span>}</div>
               {!!message.sources.length && <details className="source-details"><summary><BookOpen size={15} /> مرجع الإجابة <span>{message.sources.length.toLocaleString("ar-SA")}</span><ChevronDown size={14} /></summary>
-                <div className="source-list">{message.sources.map(source => <div key={source.id} className="source-card"><a href={source.sourceUrl} target="_blank" rel="noopener noreferrer">{source.sourceReference}</a><p>«{source.sourceQuote}»</p><span>{source.kind === "quran" ? "آية قرآنية" : "حديث"} · الإكسل: {source.workbook.quoteCell} · </span><span>{source.isExcerpt ? "مقتطف من النص الأصلي" : "النص الأصلي"} · {source.reviewStatus === "draft" ? "الشرح التطبيقي قيد المراجعة" : "تمت مراجعة المحتوى"}</span></div>)}<p className="source-disclaimer">الشرح مولّد من هذه المادة؛ وجود المرجع لا يغني عن المراجعة العلمية.</p></div>
+                <div className="source-list">{message.sources.map(source => <div key={source.id} className="source-card"><strong>{source.sourceReference}</strong><p>«{source.sourceQuote}»</p><div className="reference-links">{(source.referenceLinks || [source.sourceUrl]).map((url, linkIndex) => <a key={url} href={url} target="_blank" rel="noopener noreferrer">فتح المرجع{(source.referenceLinks?.length || 1) > 1 ? ` ${linkIndex + 1}` : ""}</a>)}</div><span>{source.kind === "quran" ? "آية قرآنية" : "حديث"} · </span><span>{source.isExcerpt ? "مقتطف من النص الأصلي" : "النص الأصلي"}</span></div>)}<p className="source-disclaimer">تستند الإجابة إلى المراجع الموضحة هنا.</p></div>
               </details>}
             </div>
           </article>)}
@@ -296,7 +297,7 @@ export default function Home() {
     <footer className="footer"><span>لين · تحدي الذكاء الاصطناعي في خدمة المحتوى الإسلامي</span><button onClick={() => setShowPrivacy(true)}>عن التجربة والخصوصية</button></footer>
     {(showPrivacy || confirmEnd) && <div className="modal-overlay" onClick={() => { setShowPrivacy(false); setConfirmEnd(false); }}><section role="dialog" aria-modal="true" aria-labelledby="dialog-title" className="modal" onClick={e => e.stopPropagation()}>
       <button className="icon-button modal-close" autoFocus aria-label="إغلاق" onClick={() => { setShowPrivacy(false); setConfirmEnd(false); endButtonRef.current?.focus(); }}><X size={22} /></button>
-      {confirmEnd ? <><ShieldCheck size={30} className="modal-icon" /><h2 id="dialog-title">ننهي الجلسة؟</h2><p>سيُحذف سياق الحديث والتسجيلات المؤقتة من هذه الصفحة. تبدأ الجلسة القادمة من جديد.</p><div className="modal-actions"><button className="primary" onClick={endSession}>نعم، إنهاء الجلسة</button><button className="secondary" onClick={() => setConfirmEnd(false)}>أكمل الحديث</button></div></> : <><BookOpen size={30} className="modal-icon" /><h2 id="dialog-title">عن هذه التجربة</h2><p>لين مساعد معرفي بالذكاء الاصطناعي، وليست إنسانًا أو مختصًا. هذه النسخة للبالغين والمقيّمين بأمثلة خيالية، وليست جاهزة لاستخدام الأطفال الفعلي.</p><h3>المحتوى وحدوده</h3><p>تغطي هذه النسخة مجال «الخلاف مع الصديق» من القسم الأزرق في مرجع الفريق، بسبع قيم وثمانية مقتطفات من الآيات والأحاديث الواردة فيه فقط. الشرح وإرشادات السلامة قيد المراجعة البشرية. لا تصدر لين فتوى شخصية ولا تتصل بأحد نيابة عنك.</p><h3>ماذا يحدث للصوت والكلام؟</h3><p>يُرسل السؤال إلى OpenAI لفهمه وتكوين الإجابة، ويُرسل نص الإجابة إلى ElevenLabs لتوليد الصوت. لا يحفظ تطبيق لين التسجيلات أو المحادثات في قاعدة بيانات أو سجلات محتوى. يحتفظ المتصفح بسياق الجلسة مؤقتًا، بحد أقصى ١٢ سؤالًا.</p><p>تنطبق سياسات معالجة واحتفاظ مزوّدي الخدمات بشكل مستقل؛ حذف الجلسة هنا لا يعني حذف بيانات المزوّدين. لا تستخدم أسماء أو مدارس أو معلومات شخصية حقيقية.</p><button className="primary" onClick={() => setShowPrivacy(false)}><Check size={18} /> فهمت</button></>}
+      {confirmEnd ? <><ShieldCheck size={30} className="modal-icon" /><h2 id="dialog-title">ننهي الجلسة؟</h2><p>سيُحذف سياق الحديث والتسجيلات المؤقتة من هذه الصفحة. تبدأ الجلسة القادمة من جديد.</p><div className="modal-actions"><button className="primary" onClick={endSession}>نعم، إنهاء الجلسة</button><button className="secondary" onClick={() => setConfirmEnd(false)}>أكمل الحديث</button></div></> : <><BookOpen size={30} className="modal-icon" /><h2 id="dialog-title">عن هذه التجربة</h2><p>لين مساعد معرفي بالذكاء الاصطناعي، وليست إنسانًا أو مختصًا. هذه النسخة للبالغين والمقيّمين بأمثلة خيالية، وليست جاهزة لاستخدام الأطفال الفعلي.</p><h3>المحتوى وحدوده</h3><p>تغطي هذه النسخة اختيار الصديق، والخلاف مع الصديق، والغيرة والمقارنة، والاستبعاد والتنمر. تستخدم الآيات والأحاديث الواردة في مرجع الفريق فقط. الشرح وإرشادات السلامة قيد المراجعة البشرية. لا تصدر لين فتوى شخصية ولا تتصل بأحد نيابة عنك.</p><h3>ماذا يحدث للصوت والكلام؟</h3><p>يُرسل السؤال إلى OpenAI لفهمه وتكوين الإجابة، ويُرسل نص الإجابة إلى ElevenLabs لتوليد الصوت. لا يحفظ تطبيق لين التسجيلات أو المحادثات في قاعدة بيانات أو سجلات محتوى. يحتفظ المتصفح بسياق الجلسة مؤقتًا، بحد أقصى ١٢ سؤالًا.</p><p>تنطبق سياسات معالجة واحتفاظ مزوّدي الخدمات بشكل مستقل؛ حذف الجلسة هنا لا يعني حذف بيانات المزوّدين. لا تستخدم أسماء أو مدارس أو معلومات شخصية حقيقية.</p><button className="primary" onClick={() => setShowPrivacy(false)}><Check size={18} /> فهمت</button></>}
     </section></div>}
   </div>;
 }

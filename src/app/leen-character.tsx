@@ -68,7 +68,7 @@ export function LeenCharacter({ phase, audio, onActivate }: {
 
   const label = phase === "recording" ? "لين: إنهاء التسجيل وإرسال السؤال" : phase === "speaking" ? "لين: إيقاف الصوت" : "لين: اضغط لبدء التسجيل";
   const hint = phase === "recording" ? "اضغط عليّ إذا انتهيت" : phase === "speaking" ? "اضغط عليّ لإيقاف الصوت" :
-    phase === "thinking" ? "أراجع كلامك والمصادر" : phase === "permission" ? "اسمح بالميكروفون للبدء" : "اضغط عليّ وتكلّم، أو اكتب سؤالك";
+    phase === "thinking" ? "لحظة وأجاوبك" : phase === "permission" ? "اسمح بالميكروفون للبدء" : "اسأل بصوتك أو اكتب";
   return <div className={`leen-presence is-${phase}`}>
     <link rel="preload" as="image" href="/leen-character-expressions.png" />
     <button ref={buttonRef} type="button" className="character-button" aria-label={label}

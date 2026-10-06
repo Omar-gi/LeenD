@@ -2,7 +2,7 @@ export type Decision = "CLARIFY" | "FULL" | "PARTIAL" | "REFER";
 export type Safety = "none" | "threat" | "immediate" | "uncertain";
 export type SourceCard = {
   id: string; title: string; sourceQuote: string; quoteIntroduction: string; sourceReference: string;
-  sourceUrl: string; isExcerpt: boolean; permittedExplanation: string;
+  sourceUrl: string; referenceLinks?: string[]; isExcerpt: boolean; permittedExplanation: string;
   childExplanation: string; simpleExplanation: string;
   boundaries: string[]; reviewStatus: "draft" | "approved";
   kind: "hadith" | "quran";

@@ -1,5 +1,8 @@
 # Submission and two-minute demo
 
+Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+
+
 Target: **6 October, 21:00 Riyadh**; stated deadline 23:59. This is a preparation checklist, not a submitted entry.
 
 ## Before recording or sharing the live link

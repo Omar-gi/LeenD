@@ -1,3 +1,7 @@
+## 6 October: four-domain workbook update
+
+134/134 unit regressions and final production build pass. Initial new-domain batch: 4/6 automatic checks passed; two cases lost lesson sources due to the practical-only guard. After fixes, the final targeted batch passed 10/10 executions (including safety and missing-evidence boundaries repeated three times). This is not a full-suite live rerun. Three reports are retained under results/2026-10-06T12-*.json. Estimated text API cost: USD 0.1187712, excluding the local browser turn and voice. Human review is still needed: live wording can be verbose, inconsistent in gender, or imply a desirable social outcome. No claim of zero hallucinations, religious approval or child usability. The final unclear-feeling reply is authored, tentative and source-free after scope/safety routing.
+
 # Measured evaluation — updated 5 October 2026
 
 This is **an adult-operated fictional MVP**, not religious approval or evidence of child usability. Every source explanation and safety response is still marked draft. Engineering tests pass; live model responses retain the limitations recorded below.

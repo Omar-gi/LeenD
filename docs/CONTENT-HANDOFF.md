@@ -1,5 +1,8 @@
 # Active team content and future handoff
 
+Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+
+
 The updated workbook now includes the detailed classification table. The active selection is **الخلاف مع الصديق**, the blue `التصنيف إلى مجالات!A9:I15` block. It covers four branches (خصام، اختلاف الرأي، الغضب، الإصلاح بين المتخاصمين), seven value rows and eight quotation records. All other workbook domains remain inactive for the hackathon demo.
 
 Column C supplies child-language matching hints. D labels the value. E is the main meaning and is preserved in each card. F/G supply exact Quran/hadith excerpts; H/I supply the only reference links. G10 is classified as Quran despite its column placement. No retired source is retained as a fallback. The model can adapt the practical wording to the context, but cannot import a religious text, claim or reference from memory.

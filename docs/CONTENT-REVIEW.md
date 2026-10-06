@@ -1,5 +1,8 @@
 # Workbook V5 review — pending
 
+Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+
+
 Review the active blue-domain [source register](SOURCES-AND-LICENSES.md) against `لين_مرجع تصميم المنتج V1(2).xlsx`, cells A9:I15. All previous source approvals/verification notes belong to retired versions and do not approve this replacement corpus.
 
 Check G10's Quran classification; G9/G11 wording; G13's two distinct excerpts; G15's excerpt boundaries; and column-E interpretation, especially E12–E14. The supplied web links returned HTTP 403, so no external verification has been claimed. Confirm child/simple wording, voluntary applications, and the new unavailable-adult safety guidance. Record reviewer/date per card before changing draft status.

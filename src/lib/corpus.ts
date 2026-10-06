@@ -79,7 +79,7 @@ export function materialize(candidate: Candidate, context: QuotationContext = { 
     segment.sourceIds.forEach(id => used.add(id));
     if (segment.kind === "meaning") {
       if (!segment.sourceIds.length) throw new Error("missing_evidence");
-      return { kind: "explanation", text: segment.sourceIds.map(id => sources.find(s => s.id === id)!.childExplanation).join(" "),
+      return { kind: "explanation", text: [...new Set(segment.sourceIds.map(id => sources.find(s => s.id === id)!.childExplanation))].join(" "),
         sourceIds: segment.sourceIds, quoteId: null };
     }
     if (segment.kind === "quote") {

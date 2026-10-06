@@ -1,5 +1,8 @@
 # Privacy and reliability limits
 
+Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+
+
 The hackathon interface is restricted by acknowledgement to adults using fictional scenarios. It does not verify age. The acknowledgement alone is not a child-safety, parental-consent, privacy or regulatory compliance system. Real child deployment requires a separate review of provider policies and data handling before access is expanded.
 
 ## Data flow

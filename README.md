@@ -1,5 +1,8 @@
 # لين — Leen
 
+Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+
+
 Arabic, right-to-left friendship conversation MVP for an Islamic-content hackathon. It is an **adult-operated fictional demo**, written in simple language suitable for a 9–10-year-old scenario. It is not approved for real child use. Religious explanations and fixed safety wording remain visibly **draft** until teammate review.
 
 ## Run locally

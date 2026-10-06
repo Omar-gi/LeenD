@@ -8,13 +8,25 @@ import { repeatKnownQuotation, requestedKnownQuotation } from "../src/lib/dialog
 import { generateAnswer } from "../src/lib/answer";
 import { unavailableSupport } from "../src/lib/support";
 import type { ConversationTurn } from "../src/lib/types";
+import { practicalRequestWithoutEvidence } from "../src/lib/dialogue";
+
+test("new workbook lessons are not swallowed by the ordinary invitation guard",()=>{
+  assert.equal(practicalRequestWithoutEvidence("صاحبتي صارت تلعب مع بنت ثانية وأنا أغار"),false);
+  assert.equal(practicalRequestWithoutEvidence("أنا ضحكت على صاحبي وما خليته يلعب، ندمت"),false);
+});
+test("unclear feelings receive tentative useful support without inferred emotions or scripture",async()=>{
+  const answer=await generateAnswer("صاحبتي جلست مع غيري، ما أعرف وش أحس",[],undefined,async()=>{throw Error("writer should not be needed")},async()=>({mode:"friendship",categoryIds:["value_16"],sourceIds:[],inScopeText:null,safety:"none"}));
+  assert.equal(answer.sources.length,0);
+  assert.match(answer.answer,/ممكن/);
+  assert.doesNotMatch(answer.answer,/أنت حزين|أنت غاضب|؟/);
+});
 
 test("every active quotation, meaning and URL traces to the selected workbook rows", () => {
-  assert.equal(scope.activeDomain, "الخلاف مع الصديق");
-  assert.equal(sources.length, 8);
+  assert.deepEqual(scope.activeDomains,["اختيار الصديق","الخلاف مع الصديق","الغيرة والمقارنة","الاستبعاد والتنمر"]);
+  assert.equal(sources.length, 32);
   for (const source of sources) {
     const row = snapshot.rows.find(row => row.row === source.workbook.row)!;
-    assert.ok(row && row.row >= 9 && row.row <= 15);
+    assert.ok(row && row.row >= 2 && row.row <= 24);
     const cells: Record<string,string | undefined> = row.cells;
     assert.ok(cells[source.workbook.quoteCell]?.includes(source.sourceQuote));
     assert.equal(cells[source.workbook.meaningCell]?.trim(), source.permittedExplanation);

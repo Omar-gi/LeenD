@@ -5,6 +5,29 @@ import { assistantQuestionCount, clarificationBudget, dialogueLimit, includeLess
 import { policy, sources } from "../src/lib/corpus";
 import type { Candidate } from "../src/lib/types";
 import type { Generate } from "../src/lib/providers";
+import { socialReply } from "../src/lib/dialogue";
+
+test("compound social openings and closings stay short and source-free",()=>{
+  for(const text of ["السلام عليكم، كيف حالك؟ أنا أريد أتكلم معك.","السلام عليكم، كيف حالك يا لين؟","السلام عليكم،كيف حالك؟","هلا لين، ودي أتكلم معك، كيف حالك؟","كيف حالك؟ أبي أسولف معك","شكرًا يا لين، ومع السلامة"]){
+    const answer=socialReply(text);
+    assert.ok(answer,text);
+    assert.equal(answer.sources.length,0);
+    assert.equal(answer.decision,"FULL");
+    assert.ok(answer.answer.length<120);
+  }
+  assert.match(socialReply("السلام عليكم، كيف حالك؟")!.answer,/وعليكم السلام/);
+});
+test("social matching never swallows domain questions, outside topics or danger",()=>{
+  for(const text of ["السلام عليكم، كيف حالك؟ صاحبي ضربني","هلا أبي أتكلم معك عن غيرتي من صاحبتي","كيف حالك؟ اشرح لي البرمجة","شكرًا، بس صاحبي ما خلاني ألعب","مع السلامة، أنا خايف أروح المدرسة"])
+    assert.equal(socialReply(text),null,text);
+});
+test("screenshot greeting after an earlier turn bypasses topic classification",async()=>{
+  const {generateAnswer: actualAnswer}=await import("../src/lib/answer");
+  const answer=await actualAnswer("السلام عليكم، كيف حالك؟ أنا أريد أتكلم معك.",[{user:"اختلفت مع صاحبي",assistant:"تقدر تتكلم معه بهدوء."}],undefined,async()=>{throw Error("No model needed")},async()=>{throw Error("No topic route needed")});
+  assert.match(answer.answer,/وعليكم السلام/);
+  assert.equal(answer.decision,"FULL");
+  assert.equal(answer.sources.length,0);
+});
 
 const audit = { responseMode: "friendship", categoryIds: ["conflict"], contextSummary: "Fictional case", sourceReason: "Matching source or practical help", supported: true, appropriate: true, inScope: true, contextRelevant: true, sourcesRelevant: true, safety: "none" };
 const question: Candidate = { decision: "CLARIFY", safety: "none", segments: [{ kind: "explanation", text: "وش صار بعدها؟", sourceIds: [], quoteId: null }] };

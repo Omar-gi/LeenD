@@ -124,6 +124,7 @@ export function clarifyReturnRoles(text: string, history: ConversationTurn[]): A
 // Explicit religious requests and actual harmful speech still use the audit.
 export function practicalRequestWithoutEvidence(text: string): boolean {
   const t = normalizeArabic(text);
+  if (/اغار|غير[ةه]|حسد|نسيتني|نساني|اشطر مني|احسن مني|فاشل|ما خلوني|ما خليته|ندمت|اصلح غلط|ضحكت عل|طردوني/.test(t)) return false;
   if (/اختلف|اختلاف|رايي|رايه|رايها|وجه[ةه] نظر|متخاصم|خصام|غضب|معصب|عصب/.test(t)) return false;
   if (/حديث|دليل|النص|اقتباس|دين|اجر|ثواب|دعاء|حلال|حرام|كرر|عيد الحديث|حسن الظن|سوء الظن|العفو|اسامح|يسامح|تسامح/.test(t)) return false;
   if (/يسخر|يستهز|استهزا|يقلدني|تنمر|يهين|اهان|شتمني|اسب|اشتم|انتقم|ننتقم|يضحك عل|يوذي|يؤذي|ظلم|تهديد/.test(t)) return false;
@@ -134,8 +135,27 @@ export function practicalRequestWithoutEvidence(text: string): boolean {
 
 // Exact whole-message matches only: never swallow a disclosure after "hello" or "thanks".
 export function socialReply(text: string): Answer | null {
-  const bare = normalizeArabic(text).replace(/[.!،؟?]/g, "").replace(/\s+/g, " ").trim()
-    .replace(/^(?:يا لين|لين)\s+|\s+(?:يا لين|لين)$/g, "");
+  const bare = normalizeArabic(text).replace(/[.!،,؛:؟?\n]/g, " ").replace(/\s+/g, " ").trim()
+    .replace(/(?:^|\s)(?:يا لين|لين)(?=\s|$)/g, " ").replace(/\s+/g, " ").trim();
+  // Consume only recognized social phrases, including combinations produced
+  // by transcription. Any remaining substantive text requires normal routing.
+  const phrase = /^(السلام عليكم(?: ورحم[ةه] الله(?: وبركاته)?)?|وعليكم السلام(?: ورحم[ةه] الله(?: وبركاته)?)?|كيف حالك|كيفك|شلونك|وش اخبارك|كيف الحال|اخبارك|هلا(?: والله)?|اهلا(?: وسهلا)?|مرحبا|صباح الخير|مساء الخير|الحمد ?لله(?: بخير| تمام)?|بخير(?: الحمد ?لله)?|تمام(?: الحمد ?لله)?|شكرا|مشكور[ةه]?|يعطيك العافي[ةه]|مع السلام[ةه]|باي|خلاص انتهيت|(?:ابي|ابغي|ابغى|ودي|اريد) (?:اتكلم|اتحدث|اسولف) مع(?:ك|اك)|(?:ممكن|اقدر) (?:اتكلم|اسولف) مع(?:ك|اك)|ابي اسالك سؤال)(?=\s|$)/;
+  let remaining = bare.replace(/(?:^|\s)انا (?=(?:ابي|ابغي|ابغى|ودي|اريد) (?:اتكلم|اتحدث|اسولف) مع)/g, " ").replace(/\s+/g, " ").trim();
+  const socialParts: string[] = [];
+  while (remaining && socialParts.length < 8) {
+    const match = phrase.exec(remaining);
+    if (!match) break;
+    socialParts.push(match[1]);
+    remaining = remaining.slice(match[0].length).trim().replace(/^و(?=\s|مع السلام|كيف|ابي|شكرا)/, "").trim();
+  }
+  if (!remaining && socialParts.length) {
+    const salam = socialParts.some(p => p.startsWith("السلام عليكم"));
+    const closing = socialParts.some(p => /مع السلام|باي|خلاص انتهيت/.test(p));
+    const talk = socialParts.some(p => /اتكلم|اسولف|اتحدث|اسالك/.test(p));
+    const thanks = socialParts.some(p => /شكرا|مشكور|يعطيك/.test(p));
+    const answer = `${salam ? "وعليكم السلام ورحمة الله، " : ""}${closing ? "مع السلامة." : talk ? "حيّاك، أنا أسمعك." : thanks ? "العفو، على راحتك." : "يا هلا، أنا هنا أساعدك."}`;
+    return {decision:"FULL",safety:"none",answer,segments:[{kind:"explanation",text:answer,sourceIds:[],quoteId:null}],sources:[],grounded:true,limited:false};
+  }
   let answer: string | undefined;
   if (/^السلام عليكم(?: ورحم[ةه] الله(?: وبركاته)?)?(?: (?:كيفك|كيف حالك|شلونك))?$/.test(bare)) answer = "وعليكم السلام ورحمة الله، حيّاك الله.";
   if (/^(?:وعليكم السلام(?: ورحم[ةه] الله(?: وبركاته)?)?|هلا(?: والله)?|اهلا(?: وسهلا)?|مرحبا|صباح الخير|مساء الخير)$/.test(bare)) answer = "أهلًا وسهلًا فيك.";
@@ -176,9 +196,9 @@ export function constrainSourceExplanations(answer: Answer, simplifying: boolean
   if (answer.safety !== "none" || !["FULL", "PARTIAL"].includes(answer.decision)) return answer;
   return materialize({ decision: answer.decision, safety: answer.safety, segments: answer.segments.map(segment =>
     segment.kind === "explanation" && segment.sourceIds.length ? { ...segment, text:
-      segment.sourceIds.map(id => {
+        [...new Set(segment.sourceIds.map(id => {
         const source = sources.find(s => s.id === id)!;
         return simplifying ? source.simpleExplanation : source.childExplanation;
-      }).join(" ") } : segment
+        }))].join(" ") } : segment
   ) }, { quotedSourceIds: [], repeatQuote: true });
 }
