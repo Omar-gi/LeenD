@@ -136,6 +136,8 @@ export function practicalRequestWithoutEvidence(text: string): boolean {
 // Exact whole-message matches only: never swallow a disclosure after "hello" or "thanks".
 export function socialReply(text: string): Answer | null {
   const bare = normalizeArabic(text).replace(/[.!،,؛:؟?\n]/g, " ").replace(/\s+/g, " ").trim()
+    .replace(/^(?:(?:اه|ها|امم|طيب)\s+)+(?=(?:ال)?سلام عليكم)/, "")
+    .replace(/^سلام عليكم/, "السلام عليكم")
     .replace(/(?:^|\s)(?:يا لين|لين)(?=\s|$)/g, " ").replace(/\s+/g, " ").trim();
   // Consume only recognized social phrases, including combinations produced
   // by transcription. Any remaining substantive text requires normal routing.
@@ -201,4 +203,10 @@ export function constrainSourceExplanations(answer: Answer, simplifying: boolean
         return simplifying ? source.simpleExplanation : source.childExplanation;
         }))].join(" ") } : segment
   ) }, { quotedSourceIds: [], repeatQuote: true });
+}
+
+export function hasOpeningSalam(text: string): boolean {
+  const opening = normalizeArabic(text).replace(/^[\s،,.!؟?]+/, "")
+    .replace(/^(?:(?:اه|ها|امم|طيب|يا لين|لين)\s*[،,.!؟?]*\s+)+/, "");
+  return /^(?:ال)?سلام عليكم(?=\s|[،,.!؟?]|$)/.test(opening);
 }

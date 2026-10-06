@@ -1,7 +1,8 @@
 import { generateAnswer } from "@/lib/answer";
 import { reviewStatus } from "@/lib/corpus";
 import { InputError, parseInput, signTurn, usageGate } from "@/lib/request";
-import { ProviderError, speak, transcribe } from "@/lib/providers";
+import { ProviderError, transcribe } from "@/lib/providers";
+import { speechUrl } from "@/lib/speech-ticket";
 import type { TurnResponse } from "@/lib/types";
 import { preparedSocialAudio } from "@/lib/social-audio";
 import { socialReply } from "@/lib/dialogue";
@@ -37,12 +38,16 @@ export async function POST(request: Request) {
         // greeting plus a problem, or any safety answer, uses fresh speech.
         if (result.safety === "none" && !result.sources.length && socialReply(transcript)?.answer === result.answer)
           audioUrl = preparedSocialAudio(result.answer) || undefined;
-        if (!audioUrl) audio = await speak(result.answer, signal);
+        if (!audioUrl && process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID) audioUrl = speechUrl(result.answer);
+        if (!audioUrl) throw new Error("voice_unavailable");
         audioStatus = "ready";
       }
       catch { /* Preserve the validated text response. Never log provider bodies or content. */ }
     }
-    const body: TurnResponse = { ...result, transcript, receipt: signTurn({ user: transcript, assistant: result.answer }),
+    const body: TurnResponse = { ...result,
+      sources: result.sources.map(({ id, title, sourceQuote, quoteIntroduction, sourceReference, sourceUrl, referenceLinks, isExcerpt, kind }) =>
+        ({ id, title, sourceQuote, quoteIntroduction, sourceReference, sourceUrl, referenceLinks, isExcerpt, kind })),
+      transcript, receipt: signTurn({ user: transcript, assistant: result.answer }),
       audio, audioUrl, audioStatus, elapsedMs: Date.now() - started, reviewStatus };
     return Response.json(body, { headers });
   } catch (error) {

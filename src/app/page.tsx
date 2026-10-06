@@ -5,6 +5,8 @@ import { BookOpen, Check, ChevronDown, CircleHelp, Headphones, HeartHandshake, K
   LoaderCircle, Mic, Pencil, Play, Send, ShieldCheck, Square, Volume2, VolumeX, X } from "lucide-react";
 import type { ConversationTurn, TurnResponse } from "@/lib/types";
 import { CharacterPortrait, LeenCharacter, type Phase } from "./leen-character";
+import { ParentEntry } from "./parent-entry";
+import { saveParentTurn } from "@/lib/parent-preview";
 
 type Message = TurnResponse & { id: string; audioUrl?: string };
 type Health = { textReady: boolean; voiceReady: boolean; reviewStatus: "draft" | "approved" };
@@ -93,7 +95,8 @@ export default function Home() {
   }, [showPrivacy, confirmEnd]);
 
   function stopPlayback() {
-    audioRef.current?.pause(); audioRef.current = null;
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute("src"); audioRef.current.load(); }
+    audioRef.current = null;
     setPlayingAudio(null);
     setPlayingId(null); setPhase(p => p === "speaking" ? "idle" : p);
   }
@@ -139,8 +142,9 @@ export default function Home() {
       if (!response.ok) throw new Error(result.error || "temporarily_unavailable");
       if (epoch !== epochRef.current) return;
       const reply = result as TurnResponse;
+      saveParentTurn(reply);
       const url = reply.audio ? audioUrl(reply.audio) :
-        reply.audioUrl && /^\/social-audio\/[a-f0-9]{24}\.mp3$/.test(reply.audioUrl) ? reply.audioUrl : undefined;
+        reply.audioUrl && /^(?:\/social-audio\/[a-f0-9]{24}\.mp3|\/api\/speech\?token=[A-Za-z0-9_-]{40,9000})$/.test(reply.audioUrl) ? reply.audioUrl : undefined;
       const message: Message = { ...reply, audio: null, audioUrl: url, id: crypto.randomUUID() };
       if (editing !== null) messagesRef.current.slice(editing).forEach(m => { if (m.audioUrl) URL.revokeObjectURL(m.audioUrl); });
       const updated = [...previous, message];
@@ -214,7 +218,7 @@ export default function Home() {
     epochRef.current++; abortRef.current?.abort(); busyRef.current = false;
     if (recorderRef.current) recorderRef.current.onstop = null;
     stopRecording(); streamRef.current?.getTracks().forEach(t => t.stop()); streamRef.current = null;
-    stopPlayback(); messagesRef.current.forEach(m => { if (m.audioUrl) URL.revokeObjectURL(m.audioUrl); });
+    sessionStorage.removeItem("leen-parent-session"); stopPlayback(); messagesRef.current.forEach(m => { if (m.audioUrl) URL.revokeObjectURL(m.audioUrl); });
     messagesRef.current = []; setMessages([]); setDraft(""); setPending(""); setEditing(null); setError(""); setNotice("");
     setPhase("idle"); setConfirmEnd(false); setScreen("intro"); setAdult(false); setTextOpen(false);
   }
@@ -227,7 +231,7 @@ export default function Home() {
 
   return <div className={`site-shell ${screen === "chat" ? "chat-screen" : ""}`}>
     <a className="skip-link" href="#main">انتقل إلى المحتوى</a>
-    <header className="header"><Brand /><div className="header-end"><span className="demo-label">نسخة التحدي <span>٢٠٢٦</span></span>
+    <header className="header"><Brand /><div className="header-end"><ParentEntry /><span className="demo-label">مساحة الصداقة <span>٢٠٢٦</span></span>
       <button className="icon-button" aria-label="عن التجربة والخصوصية" onClick={() => setShowPrivacy(true)}><CircleHelp size={21} /></button></div></header>
 
     {screen === "intro" ? <main id="main" className="intro">
@@ -241,6 +245,7 @@ export default function Home() {
         <div className="start-card">
           <div className="start-note"><ShieldCheck size={22} /><p>استخدم موقفًا خياليًا، ولا تدخل أسماء أو معلومات شخصية.</p></div>
           <label className="consent"><input type="checkbox" checked={adult} onChange={e => setAdult(e.target.checked)} /><span>سأستخدم أمثلة خيالية في هذه التجربة.</span></label>
+          <ParentEntry notice />
           <button className="primary start-button" disabled={!adult} onClick={() => { setScreen("chat"); setError(""); }}><Mic size={21} /> نبدأ الحديث</button>
           <span className="start-footnote">ما تحتاج حسابًا · صوت لين مولّد بالذكاء الاصطناعي</span>
         </div>
@@ -298,7 +303,7 @@ export default function Home() {
     <footer className="footer"><span>لين · تحدي الذكاء الاصطناعي في خدمة المحتوى الإسلامي</span><button onClick={() => setShowPrivacy(true)}>عن التجربة والخصوصية</button></footer>
     {(showPrivacy || confirmEnd) && <div className="modal-overlay" onClick={() => { setShowPrivacy(false); setConfirmEnd(false); }}><section role="dialog" aria-modal="true" aria-labelledby="dialog-title" className="modal" onClick={e => e.stopPropagation()}>
       <button className="icon-button modal-close" autoFocus aria-label="إغلاق" onClick={() => { setShowPrivacy(false); setConfirmEnd(false); endButtonRef.current?.focus(); }}><X size={22} /></button>
-      {confirmEnd ? <><ShieldCheck size={30} className="modal-icon" /><h2 id="dialog-title">ننهي الجلسة؟</h2><p>سيُحذف سياق الحديث والتسجيلات المؤقتة من هذه الصفحة. تبدأ الجلسة القادمة من جديد.</p><div className="modal-actions"><button className="primary" onClick={endSession}>نعم، إنهاء الجلسة</button><button className="secondary" onClick={() => setConfirmEnd(false)}>أكمل الحديث</button></div></> : <><BookOpen size={30} className="modal-icon" /><h2 id="dialog-title">عن هذه التجربة</h2><p>لين مساعد معرفي بالذكاء الاصطناعي، وليست إنسانًا أو مختصًا. هذه النسخة للبالغين والمقيّمين بأمثلة خيالية، وليست جاهزة لاستخدام الأطفال الفعلي.</p><h3>المحتوى وحدوده</h3><p>تغطي هذه النسخة اختيار الصديق، والخلاف مع الصديق، والغيرة والمقارنة، والاستبعاد والتنمر. تستخدم الآيات والأحاديث الواردة في مرجع الفريق فقط. الشرح وإرشادات السلامة قيد المراجعة البشرية. لا تصدر لين فتوى شخصية ولا تتصل بأحد نيابة عنك.</p><h3>ماذا يحدث للصوت والكلام؟</h3><p>يُرسل السؤال إلى OpenAI لفهمه وتكوين الإجابة، ويُرسل نص الإجابة إلى ElevenLabs لتوليد الصوت. لا يحفظ تطبيق لين التسجيلات أو المحادثات في قاعدة بيانات أو سجلات محتوى. يحتفظ المتصفح بسياق الجلسة مؤقتًا، بحد أقصى ١٢ سؤالًا.</p><p>تنطبق سياسات معالجة واحتفاظ مزوّدي الخدمات بشكل مستقل؛ حذف الجلسة هنا لا يعني حذف بيانات المزوّدين. لا تستخدم أسماء أو مدارس أو معلومات شخصية حقيقية.</p><button className="primary" onClick={() => setShowPrivacy(false)}><Check size={18} /> فهمت</button></>}
+      {confirmEnd ? <><ShieldCheck size={30} className="modal-icon" /><h2 id="dialog-title">ننهي الجلسة؟</h2><p>سيُحذف سياق الحديث والتسجيلات المؤقتة من هذه الصفحة. تبدأ الجلسة القادمة من جديد. سجل ولي الأمر يبقى إلى أن تحذفه من صفحته.</p><div className="modal-actions"><button className="primary" onClick={endSession}>نعم، إنهاء الجلسة</button><button className="secondary" onClick={() => setConfirmEnd(false)}>أكمل الحديث</button></div></> : <><BookOpen size={30} className="modal-icon" /><h2 id="dialog-title">عن هذه التجربة</h2><p>لين مساعد معرفي بالذكاء الاصطناعي، وليست إنسانًا أو مختصًا. استخدم مواقف خيالية دون معلومات شخصية. الاستخدام الحالي مخصص للبالغين والمقيّمين.</p><h3>المحتوى وحدوده</h3><p>تساعدك في اختيار الصديق، والخلاف مع الصديق، والغيرة والمقارنة، والاستبعاد والتنمر. تستند إلى المراجع المذكورة تحت الإجابة. الشرح وإرشادات السلامة قيد المراجعة البشرية. لا تصدر لين فتوى شخصية ولا تتصل بأحد نيابة عنك.</p><ParentEntry notice /><h3>ماذا يحدث للصوت والكلام؟</h3><p>يُرسل السؤال إلى OpenAI لفهمه وتكوين الإجابة، ويُرسل نص الإجابة إلى ElevenLabs لتوليد الصوت. لا يحفظ خادم لين التسجيلات أو المحادثات في قاعدة بيانات أو سجلات محتوى. عندما تتوفر مساحة ولي الأمر، يحتفظ هذا المتصفح بسجل نصي يمكن حذفه من هناك؛ لا يتضمن ملفات الصوت. يحتفظ المتصفح بسياق الجلسة مؤقتًا، بحد أقصى ١٢ سؤالًا.</p><p>تنطبق سياسات معالجة واحتفاظ مزوّدي الخدمات بشكل مستقل؛ حذف الجلسة هنا لا يعني حذف بيانات المزوّدين. لا تستخدم أسماء أو مدارس أو معلومات شخصية حقيقية.</p><button className="primary" onClick={() => setShowPrivacy(false)}><Check size={18} /> فهمت</button></>}
     </section></div>}
   </div>;
 }

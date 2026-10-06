@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "لين — مساحة لسؤالك",
-  description: "تجربة حوارية عربية عن الصداقة، تستند إلى مصادر محددة وتعرف حدود إجابتها. عرض تجريبي للبالغين.",
+  description: "مساحة لسؤالك عن الصداقة، بكلمات قريبة ومراجع واضحة.",
   robots: { index: false, follow: false }, icons: { icon: "/icon.svg" }
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -17,7 +17,9 @@ export type Answer = {
   decision: Decision; safety: Safety; answer: string; segments: Segment[];
   sources: SourceCard[]; grounded: boolean; limited: boolean;
 };
-export type TurnResponse = Answer & {
+export type PublicSource = Pick<SourceCard, "id" | "title" | "sourceQuote" | "quoteIntroduction" | "sourceReference" | "sourceUrl" | "referenceLinks" | "isExcerpt" | "kind">;
+export type TurnResponse = Omit<Answer, "sources"> & {
+  sources: PublicSource[];
   transcript: string; receipt: string; audio: string | null; audioUrl?: string;
   audioStatus: "ready" | "unavailable" | "disabled";
   elapsedMs: number; reviewStatus: "draft" | "approved";

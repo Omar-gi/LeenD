@@ -85,10 +85,12 @@ function signalFor(signal?: AbortSignal, ms = 22000) {
 export async function structured(instructions: string, input: string, schema: object, name: string,
   signal?: AbortSignal, fetcher: typeof fetch = fetch): Promise<unknown> {
   if (!process.env.OPENAI_API_KEY) throw new ProviderError("openai", 503);
+  const model = process.env.OPENAI_TEXT_MODEL || "gpt-6-luna";
   const response = await fetcher("https://api.openai.com/v1/responses", {
     method: "POST", signal: signalFor(signal),
     headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: process.env.OPENAI_TEXT_MODEL || "gpt-4.1-mini", store: false,
+    body: JSON.stringify({ model, store: false,
+      ...(model.startsWith("gpt-6-luna") ? { reasoning: { effort: "none" } } : {}),
       instructions, input, max_output_tokens: name === "leen_route" ? 400 : name === "leen_grounding" ? 550 : 1100, temperature: 0.2,
       text: { format: { type: "json_schema", name, strict: true, schema } } })
   });
@@ -136,4 +138,16 @@ export async function speak(text: string, signal?: AbortSignal, fetcher: typeof 
 }
 
 export type Generate = (instructions: string, input: string, schema: object, name: string, signal?: AbortSignal) => Promise<unknown>;
+export async function streamSpeech(text: string, signal: AbortSignal): Promise<Response> {
+  const voice = process.env.ELEVENLABS_VOICE_ID;
+  if (!process.env.ELEVENLABS_API_KEY || !voice || !/^[\w-]{8,80}$/.test(voice)) throw new ProviderError("elevenlabs", 503);
+  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}/stream?output_format=mp3_44100_128`, {
+    method: "POST", signal: signalFor(signal, 20000),
+    headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY, "Content-Type": "application/json", Accept: "audio/mpeg" },
+    body: JSON.stringify({ text, model_id: process.env.ELEVENLABS_MODEL || "eleven_flash_v2_5", language_code: "ar", voice_settings: speechSettings })
+  });
+  if (!response.ok) throw await providerFailure("elevenlabs", response);
+  if (!response.body || !(response.headers.get("content-type") || "").startsWith("audio/")) throw new ProviderError("elevenlabs", 502);
+  return response;
+}
 export type ParsedCandidate = Candidate;

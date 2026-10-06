@@ -19,6 +19,9 @@ export function LeenCharacter({ phase, audio, onActivate }: {
   // retain normal sound and the CSS speaking state; no microphone is opened here.
   useEffect(() => {
     if (!audio) return;
+    // Streaming audio is played once; fetching a second copy for metering
+    // would duplicate synthesis. Keep the normal CSS speaking animation.
+    if (new URL(audio.currentSrc || audio.src, window.location.href).pathname === "/api/speech") return;
     const controller = new AbortController();
     let frame = 0;
     let disposed = false;

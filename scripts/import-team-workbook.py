@@ -25,7 +25,7 @@ for row in range(2, 25):
         f'{col}{row}': sheet[f'{col}{row}'].value for col in 'ABCDEFGHI'
         if sheet[f'{col}{row}'].value is not None
     }})
-version = '2026-10-06.workbook-v3.four-domains'
+version = '2026-10-06.workbook-v4.four-domains' if '(4)' in path.name else '2026-10-06.workbook-v3.four-domains'
 snapshot = {'version': version, 'fileName': path.name,
     'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
     'sheet': sheet_name, 'domain': sheet['A9'].value,
@@ -90,8 +90,8 @@ cards = []
 for id,row,cell,refcell,kind,quote,reference,child,simple in specs:
     assert quote in sheet[cell].value, (cell, 'excerpt must occur verbatim in workbook')
     cards.append({'id':id,'title':sheet[f'D{row}'].value.strip(), 'sourceQuote':quote,
-        'quoteIntroduction':'من قول الله تعالى:' if kind=='quran' else 'من الحديث الوارد في المرجع:',
-        'sourceReference':reference,'sourceUrl':sheet[refcell].value.strip(),'isExcerpt':True,
+        'quoteIntroduction':'من قول الله تعالى:' if kind=='quran' else 'من الحديث:',
+        'sourceReference':reference.replace(' — كما في الإكسل','').replace(' — النص كما في الإكسل','').replace(' — المقتطف كما في الإكسل','').replace('مرجع الفريق — ',''),'sourceUrl':sheet[refcell].value.strip(),'isExcerpt':True,
         'kind':kind,'permittedExplanation':sheet[f'E{row}'].value.strip(),
         'childExplanation':child,'simpleExplanation':simple,
         'keywords':[x.strip() for x in sheet[f'C{row}'].value.split('،') if x.strip()],
