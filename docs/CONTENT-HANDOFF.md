@@ -1,14 +1,9 @@
-# Active team content and future handoff
+# Content handoff
 
-Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+The active source is the team workbook V1(3), sheet `التصنيف إلى مجالات`, rows A2:I24. It covers four domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر, with 23 value rows and 32 excerpts.
 
+Column C contains child-language keyword hints; D labels the value; E supplies its main meaning; F/G contain scripture; H/I contain the team's reference links. Keywords do not override context, negation or speaker roles. The team confirmed the supplied links on 6 October. Independent page-to-excerpt and explanation review remain separate and pending. G10 contains Quran despite being in the hadith column.
 
-The updated workbook now includes the detailed classification table. The active selection is **الخلاف مع الصديق**, the blue `التصنيف إلى مجالات!A9:I15` block. It covers four branches (خصام، اختلاف الرأي، الغضب، الإصلاح بين المتخاصمين), seven value rows and eight quotation records. All other workbook domains remain inactive for the hackathon demo.
+`src/content/workbook-snapshot.json` records selected cells and the workbook hash. `scripts/import-team-workbook.py` reads an explicit local export without editing it; changes require a reviewed re-import and tests. There is no automatic spreadsheet sync or runtime web retrieval.
 
-Column C supplies child-language matching hints. D labels the value. E is the main meaning and is preserved in each card. F/G supply exact Quran/hadith excerpts; H/I supply the only reference links. G10 is classified as Quran despite its column placement. No retired source is retained as a fallback. The model can adapt the practical wording to the context, but cannot import a religious text, claim or reference from memory.
-
-The source register lists every active output excerpt and its cells: [SOURCES-AND-LICENSES.md](SOURCES-AND-LICENSES.md). The original workbook is unchanged. `src/content/workbook-snapshot.json` preserves only the selected block, filename, hash, and import notes. `scripts/import-team-workbook.py` reproduces the mapping. A new downloaded export is a new version; changes do not sync automatically.
-
-Review exact quotations/attributions, their type, the column-E meanings, short child/simple adaptations, and safety wording. Links could not be independently fetched (HTTP 403), so matching Excel must not be presented as external verification. In particular review G9/G11 wording, G15 excerpt boundaries, G10's column correction and the interpretation in E12–E14. All cards remain draft until human review is recorded.
-
-Test each reviewed value with a direct scenario, a negated keyword, a follow-up, simplification, a near-but-irrelevant request, and a safety counterexample. Keep fictional evaluation data separate from real conversations. An unavailable adult needs a feasible changed next step; ordinary conflict does not automatically require adult intervention, while unresolved danger still requires real-world assistance.
+Review each exact excerpt, type, meaning, child wording and safety boundary before approving a card. Test direct scenarios, negated keywords, follow-ups, simplification and danger. See [source register](SOURCES-AND-LICENSES.md), [review checklist](CONTENT-REVIEW.md) and [results](../evaluation/RESULTS.md).

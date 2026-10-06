@@ -3,7 +3,7 @@
 Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
 
 
-The hackathon interface is restricted by acknowledgement to adults using fictional scenarios. It does not verify age. The acknowledgement alone is not a child-safety, parental-consent, privacy or regulatory compliance system. Real child deployment requires a separate review of provider policies and data handling before access is expanded.
+The hackathon interface is intended for adults using fictional scenarios, with a fictional-use acknowledgement. It does not verify age. The acknowledgement alone is not a child-safety, parental-consent, privacy or regulatory compliance system. Real child deployment requires a separate review of provider policies and data handling before access is expanded.
 
 ## Data flow
 
@@ -15,7 +15,7 @@ The evaluation runner is an explicit exception for **predefined fictional test f
 
 ## Grounding and safety
 
-- A separate semantic classifier selects up to two source IDs from the eight-card draft catalog. Only those records reach generation and independent verification; the server rejects other source IDs. Category headings alone are not religious evidence; the active meaning and excerpts come from the selected blue workbook rows. No vector database, browsing or training occurs.
+- A separate semantic classifier selects up to two source IDs from the 32-record draft catalog. Only those records reach generation and independent verification; the server rejects other source IDs. Category headings alone are not religious evidence; the active meaning and excerpts come from the four selected workbook domains. No vector database, browsing or training occurs.
 - The server rejects unknown source IDs, inserts exact stored excerpts, forbids free-form quotation attribution and checks structure. Source-backed meanings use authored draft child/simple explanations. An independent model call audits generated ordinary answers. Model stages may make mistakes; agreement does not prove religious correctness.
 - A conservative direct-threat detector and a model safety classification route to fixed draft safety wording. This is not a comprehensive threat-detection system. Negated/fictional mentions may trigger an extra clarification. Semantic failures and omissions require manual evaluation.
 - Unsupported ordinary religious guidance returns a transparent limitation instead of being spoken as a validated claim.
@@ -31,4 +31,4 @@ Ordinary generated answers now normally use three model calls before speech: sco
 
 Provider references: [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data), [OpenAI under-18 guidance](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance), [ElevenLabs privacy](https://elevenlabs.io/privacy-policy).
 
-V5 limits religious content to the blue conflict-domain workbook rows A9:I15. No external retrieval runs during a user conversation. The selected workbook snapshot is versioned content, not an application conversation log. Unavailable-adult handling uses only bounded session context and never contacts another person.
+The active corpus covers four workbook domains in rows A2:I24. No external retrieval runs during a user conversation. The selected workbook snapshot is versioned content, not an application conversation log. Unavailable-adult handling uses only bounded session context and never contacts another person.
