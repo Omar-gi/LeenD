@@ -2,7 +2,7 @@ import type { TurnResponse } from "./types";
 export const parentLogKey = "leen-parent-preview-v1";
 export type ParentRecord = { id: string; session: string; time: string; user: string; answer: string; referral: boolean; safety: string; decision: string };
 export function isLocalPreview() {
-  return typeof window !== "undefined" && ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
+  return typeof window !== "undefined";
 }
 export function readParentLog(): ParentRecord[] {
   if (!isLocalPreview()) return [];
@@ -12,6 +12,7 @@ export function readParentLog(): ParentRecord[] {
 }
 export function saveParentTurn(reply: TurnResponse) {
   if (!isLocalPreview()) return;
+  try { if (sessionStorage.getItem("leen-parent-enabled") !== "true") return; } catch { return; }
   const practical = reply.segments.filter(s => s.kind === "explanation" && !s.sourceIds.length).map(s => s.text).join(" ");
   const referral = reply.safety !== "none" || /(?:ماما|بابا|والديك|والدك|والدتك|ولي أمرك|شخص (?:كبير|بالغ)|المعلمة|المعلم)/.test(practical) && /(?:اسأل|تسأل|اطلب|أطلب|اطلبي|استع|تستعين|كلم|قول|أخبر|تخبر|مساعدة)/.test(practical);
   try {
