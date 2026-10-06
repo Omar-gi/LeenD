@@ -1,6 +1,6 @@
 # Privacy and reliability limits
 
-Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
+Current version: workbook V1(4), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
 
 
 The hackathon interface is intended for adults using fictional scenarios, with a fictional-use acknowledgement. It does not verify age. The acknowledgement alone is not a child-safety, parental-consent, privacy or regulatory compliance system. Real child deployment requires a separate review of provider policies and data handling before access is expanded.
@@ -9,7 +9,7 @@ The hackathon interface is intended for adults using fictional scenarios, with a
 
 Recording starts only after the microphone button and browser permission. A MediaRecorder buffer is kept in memory and submitted once stopped; tracks are stopped. The application server forwards audio to OpenAI, then uses the transcript and bounded session history to classify scope, select evidence, generate and audit the answer. It sends the answer text to ElevenLabs only when spoken responses are enabled. Reply audio is an in-memory browser Blob URL, revoked on removal/end session. Ending a session also aborts in-flight work and prevents late responses from repopulating the screen.
 
-No application audio/transcript files, database, cookies or browser localStorage are created. The server code avoids content logs. OpenAI Responses calls set `store:false`; audio endpoints have different controls. OpenAI and ElevenLabs can process/retain data under their own policies and account settings. Ending a browser session does not delete provider records. The UI discloses that distinction. Do not claim zero data retention without confirming the relevant provider eligibility and settings.
+No application audio files or central conversation database are created. When the parent feature is enabled, the browser stores up to 100 text turns and the server sets a signed parent-login cookie; see PARENT-PREVIEW.md. The server code avoids content logs. OpenAI Responses calls set `store:false`; audio endpoints have different controls. OpenAI and ElevenLabs can process/retain data under their own policies and account settings. Ending a browser session does not delete provider records. The UI discloses that distinction. Do not claim zero data retention without confirming the relevant provider eligibility and settings.
 
 The evaluation runner is an explicit exception for **predefined fictional test fixtures only**: it writes its synthetic questions/answers into evaluation reports. Do not replace those fixtures with actual user conversations.
 
@@ -32,3 +32,4 @@ Ordinary generated answers now normally use three model calls before speech: sco
 Provider references: [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data), [OpenAI under-18 guidance](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance), [ElevenLabs privacy](https://elevenlabs.io/privacy-policy).
 
 The active corpus covers four workbook domains in rows A2:I24. No external retrieval runs during a user conversation. The selected workbook snapshot is versioned content, not an application conversation log. Unavailable-adult handling uses only bounded session context and never contacts another person.
+

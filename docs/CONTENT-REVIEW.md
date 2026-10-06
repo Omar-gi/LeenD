@@ -1,8 +1,8 @@
 # Content review
 
-Active workbook: V1(3), four domains, A2:I24. Team reference links confirmed on 6 October; this does not approve every interpretation or generated response.
+Active workbook: V1(4), four domains, A2:I24. Team reference links confirmed on 6 October; this does not approve every interpretation or generated response.
 
-For every record, check the exact excerpt, Quran/hadith type, attribution, reference page, column-E meaning, concise child wording and voluntary practical application. Review G10's Quran placement, G9/G11 wording, G13's two excerpts and G15's excerpt boundaries. Check Noorah pronunciation; spoken explanation is not a Quran-recitation feature.
+For every record, check the exact excerpt, Quran/hadith type, attribution, reference page, column-E meaning, concise child wording and voluntary practical application. Review G10's Quran placement, G9/G11 wording, G13's two excerpts and G15's excerpt boundaries. Check Nora pronunciation; spoken explanation is not a Quran-recitation feature.
 
 | Record | Value | Review |
 | --- | --- | --- |
@@ -42,3 +42,4 @@ For every record, check the exact excerpt, Quran/hadith type, attribution, refer
 Review `src/content/safety.json` and `src/lib/support.ts` separately. Do not blame a child for harm, force reconciliation, suggest physical confrontation or promise help has been contacted. Ordinary disagreements need practical options; unresolved danger requires real-world assistance.
 
 Record reviewer, date and version before changing approval status. Automated tests do not constitute religious approval. Re-run affected scenarios after content changes.
+

@@ -31,7 +31,7 @@ The application additionally allows three concurrent turns and defaults to 120 t
 
 ### Prepared social speech
 
-The repository includes 11 short Noorah clips for exact authored greetings, thanks and goodbyes. A clip is selected only for a purely social turn whose actual answer matches exactly. A greeting containing a problem or safety disclosure uses contextual speech. No user data is stored in these assets. Changing the voice, model or speech settings disables old clips and falls back to fresh synthesis. Run `npm run prepare:audio` locally with the configured ElevenLabs key to regenerate them, then deploy the manifest and `public/social-audio` assets together. This command uses separately billed ElevenLabs generation; builds do not run it automatically.
+The repository includes 11 short Nora clips for exact authored greetings, thanks and goodbyes. A clip is selected only for a purely social turn whose actual answer matches exactly. A greeting containing a problem or safety disclosure uses contextual speech. No user data is stored in these assets. Changing the voice, model or speech settings disables old clips and falls back to fresh synthesis. Run `npm run prepare:audio` locally with the configured ElevenLabs key to regenerate them, then deploy the manifest and `public/social-audio` assets together. This command uses separately billed ElevenLabs generation; builds do not run it automatically.
 
 Ordinary replies target 35–55 Arabic explanation words, excluding exact quotations. Quotations and safety guidance are never truncated. Routing, source eligibility and the independent grounding audit remain active. These are latency-oriented changes, not measured speed claims.
 
@@ -46,3 +46,9 @@ Ordinary replies target 35–55 Arabic explanation words, excluding exact quotat
 - `invalid_history` after changing `SESSION_SECRET`: end the browser session and start a new one.
 
 References checked during implementation: [Railway Next.js](https://docs.railway.com/guides/nextjs), [Railway plans](https://docs.railway.com/pricing/plans), [Railway cost control](https://docs.railway.com/pricing/cost-control), [OpenAI billing separation](https://help.openai.com/en/articles/9039756-managing-billing-settings-on-the-chatgpt-web-and-api-platform).
+
+
+## Parent page
+For the hosted browser demo, set PARENT_USERNAME, PARENT_PASSWORD and SESSION_SECRET (at least 32 random characters). APP_ORIGIN must be the exact HTTPS origin. The parent link appears when these variables are configured. History remains in the same browser, not a central or cross-device database. Use fictional scenarios; see PARENT-PREVIEW.md for the login and storage limits.
+
+Current model: OPENAI_TEXT_MODEL=gpt-6-luna. Transcription: OPENAI_TRANSCRIBE_MODEL=gpt-4o-mini-transcribe. Voice: ELEVENLABS_VOICE_ID=FZeLZd39ejvLgzR2gY0t. Validated generated speech streams automatically; see RESPONSE-DELIVERY.md.

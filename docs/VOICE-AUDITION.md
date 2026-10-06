@@ -21,3 +21,6 @@ When access is ready, run `npm run audition`. Listen to the local MP3s in `tmp/a
 | Joud | — | — | — | Not tested | Pending |
 
 Save the chosen ID as `ELEVENLABS_VOICE_ID` in `.env.local` and Railway variables. Repeat the complete three-turn voice demo and record end-to-end latency. If no Saudi voice passes, disclose the voice limitation and keep the readable-text path usable; do not silently claim accent validation.
+
+## Current voice configuration
+The earlier audition above is retained as development history. On 6 October, Omar selected Nora, Saudi natural and calm, voice ID FZeLZd39ejvLgzR2gY0t, replacing Noorah. The configured voice and prepared social clips now use Nora. This change is not a formal pronunciation sign-off.
