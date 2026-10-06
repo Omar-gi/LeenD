@@ -5,7 +5,7 @@ Prepared social speech: 11 authored greeting/thanks/goodbye sentences generated 
 Current version: workbook V1(4), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
 
 
-Workbook SHA256: `d5963e282a87cd9b6633046c86ba91fc1d88c8ef5c6ee457b5444d84c9a7b31a`. Original workbook is unchanged and kept outside the repository. Only selected cell values and excerpts are imported. No external scripture has been added.
+Workbook SHA256: `332edd05baa8907ad2c06d27d02ed18ed7cabc6adb07b9998c376347f6813289`. Original workbook is unchanged and kept outside the repository. Only selected cell values and excerpts are imported. No external scripture has been added.
 
 The user confirmed the team's supplied H/I references on 6 October. The UI presents these confirmed row links without cell codes. Independent page-to-excerpt verification remains pending in linkVerification; this is separate from team confirmation. G10 is Quran in the hadith column; handled as Quran. Religious transcription and interpretation still need Sara’s review.
 
@@ -45,4 +45,3 @@ The user confirmed the team's supplied H/I references on 6 October. The UI prese
 | bullying_repair | مراجعة النفس | hadith | G24 | https://quranpedia.net/note/37861 / https://shamela.ws/book/13285/2575 |
 
 Team material remains owned by its respective authors. Only necessary excerpts are redistributed; website layouts and full books are not copied. The Thmanyah font is included with the user’s stated redistribution permission. See package manifests for software licences. Original character assets and generated variants remain demo assets, without an independent trademark clearance claim.
-
