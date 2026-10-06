@@ -28,12 +28,23 @@ sourcesRelevant: Each source addresses the actual present need. Keywords are hin
 appropriate: Simple Saudi Arabic, 2–3 short sentences normally, one for social replies, at most two for simplification. No questions except one essential CLARIFY when permitted; quoted words suggested to a friend are not a question to the user. No identity requests, diagnosis, guilt, exclusive attachment, compulsory forgiveness, pressure to contact an unsafe person or promises of a particular reaction. Values can suggest voluntary practical options; do not make one option a religious obligation. Acknowledge only the stated feeling or use conditional language. Never diagnose or infer an emotion as fact. If the child cannot name it, offer at most one short optional distinction (sad/wanting to cry, angry/wanting to shout, or neither) only when needed; give a useful step rather than an interview. Safety overrides brevity.
 inScope: Only the four selected workbook domains, brief social conversation, relevant follow-ups and safety. Outside requests get a brief limit. Mixed gets ONLY the conflict portion plus an explicit limitation. Requested unavailable scripture needs a limitation, not a substitute citation or another question. Do not expand beyond these four domains or use a quotation merely because it exists in the library.
 Independently classify safety from current input AND user-reported unresolved danger in history. An adult not answering does not resolve a threat. Consider a user's explicit resolution of danger and new context. Never let scope, reconciliation or secrecy override safety.
-contextSummary/sourceReason: brief factual verdicts, not hidden reasoning.
+contextSummary/sourceReason: at most 12 words each, brief factual verdicts, not hidden reasoning. Judge concision by practical prose; never reject an answer solely because the exact stored quotation is long.
 SCOPE_MAP: ${JSON.stringify(scope)}
 SOURCE_CARDS: ${JSON.stringify(selectedSources)}
 SAFETY_POLICY: ${JSON.stringify(policy)}`;
 
 export async function generateAnswer(text: string, history: ConversationTurn[], signal?: AbortSignal, generate: Generate = structured, classify: Classify = classifyRequest): Promise<Answer> {
+  const result = await generateAnswerContent(text, history, signal, generate, classify);
+  // A mixed greeting is still a substantive request. Handle the whole request
+  // first, then add the authored acknowledgment without changing its evidence.
+  const startsWithSalam = /^(?:يا لين\s+)?السلام عليكم(?=\s|[،,.!؟?]|$)/.test(normalizeArabic(text).trim());
+  if (!startsWithSalam || normalizeArabic(result.answer).includes("وعليكم السلام")) return result;
+  const greeting = "وعليكم السلام ورحمة الله.";
+  return { ...result, answer: `${greeting}\n\n${result.answer}`,
+    segments: [{ kind: "explanation", text: greeting, sourceIds: [], quoteId: null }, ...result.segments] };
+}
+
+async function generateAnswerContent(text: string, history: ConversationTurn[], signal: AbortSignal | undefined, generate: Generate, classify: Classify): Promise<Answer> {
   const safetyReply = (safety: Exclude<Safety, "none">) => unavailableSupport(text, history, safety) || fixedSafety(safety);
   const quickSafety = detectSafety(text);
   if (quickSafety !== "none") return safetyReply(quickSafety);
@@ -144,7 +155,12 @@ export async function generateAnswer(text: string, history: ConversationTurn[], 
         segments: [...answer.segments, { kind: "explanation", text: limit, sourceIds: [], quoteId: null }] };
       if (answer.answer.length > 1500) return limitation();
     }
-    const audit = checkSchema.parse(await generate(verifierInstructions, JSON.stringify({ ...context, proposedAnswer: answer }), checkJson, "leen_grounding", signal));
+    // The auditor already has the authoritative cards. Send the actual spoken
+    // content and evidence IDs once, without duplicating every workbook record.
+    const audit = checkSchema.parse(await generate(verifierInstructions, JSON.stringify({ ...context,
+      proposedAnswer: { decision: answer.decision, safety: answer.safety, answer: answer.answer,
+        segments: answer.segments, sourceIds: answer.sources.map(source => source.id) }
+    }), checkJson, "leen_grounding", signal));
     if (audit.safety !== "none") return safetyReply(audit.safety);
     // Conversation content cannot expand the authoritative library. Classify
     // semantic safety first, then give a source-free limit instead of certifying

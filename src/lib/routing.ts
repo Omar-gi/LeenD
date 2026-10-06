@@ -29,6 +29,7 @@ Allowed substantive topics: ONLY the four workbook domains اختيار الصد
 Everything else is OUTSIDE, even if it is harmless, simple, useful to a child or mentions a friend. In particular: computer/pop-up/browser explanations, programming/code, homework, general science, medicine, adult subjects and unrelated worship. 'Explain' does NOT make a request simplify. 'My friend wants code' is still outside. Never clarify an outside topic.
 بالعربي: لين ليست مساعدًا عامًا. شرح البوب أب أو المتصفح أو البرمجة خارج النطاق حتى لو طلبه صديق. الزعل من الأصحاب والرغبة في الابتعاد مؤقتًا داخل النطاق، ولا يحتاج رفضًا بسبب غياب حديث.
 Modes:
+- A greeting/how-are-you before a substantive request is social framing, not a separate unsupported question and not a reason to mark the request mixed. Jealousy over a friend's possession or achievement is comparison; it does not request buying advice unless the user actually asks how/what to buy.
 - friendship: serve a friendship need; choose 1–2 matching categoryIds.
 - social: brief everyday greeting/thanks/AI role only; no religious lesson.
 - simplify: user asks to simplify an EXISTING IN-SCOPE answer or clarify Leen's social wording. It is NOT a way to answer a new outside question. With no prior explanation, a vague request for simpler words may use clarify. If history was about an outside topic, mode=outside even if an earlier assistant mistakenly answered it.
@@ -67,7 +68,7 @@ export const classifyRequest: Classify = async (text, history, signal, generate 
 };
 
 export function outsideScope(): Answer {
-  const answer = "هذي النسخة تساعدك في اختيار الصديق، والخلاف مع الأصحاب، والغيرة والمقارنة، والاستبعاد والتنمر. هذا الموضوع خارج نطاقها الحالي.";
+  const answer = "أنا موجودة إذا تحب نتكلم عن الصداقة أو موقف صار مع أصحابك. وإذا كان سؤالك عن شيء ما أعرفه، ممكن تسأل ماما أو بابا، أو شخص كبير تثق فيه.";
   return { decision: "REFER", safety: "none", answer,
     segments: [{ kind: "explanation", text: answer, sourceIds: [], quoteId: null }],
     sources: [], grounded: true, limited: true };

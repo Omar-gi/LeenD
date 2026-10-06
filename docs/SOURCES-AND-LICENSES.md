@@ -1,5 +1,7 @@
 # Active source and licence register
 
+Prepared social speech: 11 authored greeting/thanks/goodbye sentences generated with the selected Noorah voice through ElevenLabs on 6 October 2026, under the user's configured paid account. Assets are in `public/social-audio`; exact text and configuration fingerprint are in `src/content/social-audio.json`. They contain no user recordings, personal details or religious lessons. Provider/account terms govern use; this register does not grant a separate asset licence.
+
 Current version: workbook V1(3), 6 October 2026. Four active domains: اختيار الصديق، الخلاف مع الصديق، الغيرة والمقارنة، الاستبعاد والتنمر. Selection A2:I24 contains 23 value rows and 32 exact quotation excerpts. All content and adapted wording remain draft. Older sections/reports describe earlier versions, not the active scope.
 
 

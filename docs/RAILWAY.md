@@ -29,6 +29,12 @@ The application additionally allows three concurrent turns and defaults to 120 t
 
 ## Troubleshooting
 
+### Prepared social speech
+
+The repository includes 11 short Noorah clips for exact authored greetings, thanks and goodbyes. A clip is selected only for a purely social turn whose actual answer matches exactly. A greeting containing a problem or safety disclosure uses contextual speech. No user data is stored in these assets. Changing the voice, model or speech settings disables old clips and falls back to fresh synthesis. Run `npm run prepare:audio` locally with the configured ElevenLabs key to regenerate them, then deploy the manifest and `public/social-audio` assets together. This command uses separately billed ElevenLabs generation; builds do not run it automatically.
+
+Ordinary replies target 35–55 Arabic explanation words, excluding exact quotations. Quotations and safety guidance are never truncated. Routing, source eligibility and the independent grounding audit remain active. These are latency-oriented changes, not measured speed claims.
+
 - `billing_disabled`: separately billed calls are intentionally off in the template. Set `ENABLE_PAID_APIS=true` only with funded API credit and your spending controls configured.
 - Thmanyah font missing on deployment: check the four committed WOFF2 assets under `public/fonts`; the owner confirmed permission to include them. The app also has system fallbacks.
 

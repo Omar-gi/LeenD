@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Candidate } from "./types";
 import scope from "../content/scope.json";
+import { speechSettings } from "./social-audio";
 
 const responseModes = ["friendship", "social", "simplify", "outside", "mixed", "clarify", "safety"] as const;
 const categoryIds = scope.categories.map(category => category.id);
@@ -88,7 +89,7 @@ export async function structured(instructions: string, input: string, schema: ob
     method: "POST", signal: signalFor(signal),
     headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({ model: process.env.OPENAI_TEXT_MODEL || "gpt-4.1-mini", store: false,
-      instructions, input, max_output_tokens: 1500, temperature: 0.2,
+      instructions, input, max_output_tokens: name === "leen_route" ? 400 : name === "leen_grounding" ? 550 : 1100, temperature: 0.2,
       text: { format: { type: "json_schema", name, strict: true, schema } } })
   });
   if (!response.ok) throw await providerFailure("openai", response);
@@ -127,7 +128,7 @@ export async function speak(text: string, signal?: AbortSignal, fetcher: typeof 
     method: "POST", signal: signalFor(signal, 12000),
     headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY, "Content-Type": "application/json", Accept: "audio/mpeg" },
     body: JSON.stringify({ text, model_id: process.env.ELEVENLABS_MODEL || "eleven_flash_v2_5", language_code: "ar",
-      voice_settings: { stability: 0.6, similarity_boost: 0.75, speed: 0.95 } })
+      voice_settings: speechSettings })
   });
   if (!response.ok) throw await providerFailure("elevenlabs", response);
   if (!(response.headers.get("content-type") || "").startsWith("audio/")) throw new ProviderError("elevenlabs", 502);

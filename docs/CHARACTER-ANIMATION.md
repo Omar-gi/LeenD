@@ -9,7 +9,9 @@ The conversation uses `public/leen-character-expressions.png`, a transparent 2×
 | Bottom left | Speaking pose, closed mouth |
 | Bottom right | Speaking pose, open mouth |
 
-`src/app/leen-character.tsx` measures existing reply playback amplitude through Web Audio. A smoothed level drives the glow/scale and open/closed mouth, with hysteresis and a 95 ms minimum hold. It follows speech energy, not phonemes or exact Arabic lip movements. CSS provides a talking fallback if the analyser cannot start. The real recording/playback state controls the pose; end/stop removes playback animation data. Reduced-motion preferences retain static expressions without decorative motion.
+`src/app/leen-character.tsx` decodes a separate silent copy of the reply with OfflineAudioContext and calculates amplitude in 50 ms windows. The native HTML audio element handles audible playback without being rerouted through Web Audio. This avoids switching the audio output path after speech starts. A smoothed level drives the glow/scale and open/closed mouth, with hysteresis and a 95 ms minimum hold. It follows speech energy, not phonemes or exact Arabic lip movements. CSS provides a talking fallback if decoding fails. The real recording/playback state controls the pose; end/stop cancels decoding and removes animation data. Reduced-motion preferences retain static expressions without decorative motion.
+
+6 October playback investigation: the prepared greeting MP3 decoded successfully, with peak level −3.64 dBFS (no full-scale clipping in that sample). This does not establish perceptual voice quality or prove the cause of reported static; the original affected replies were not available. The playback-path fix removes a concrete interference risk while keeping the chosen voice/model unchanged.
 
 ## Exact generation prompt
 

@@ -18,7 +18,7 @@ export type Answer = {
   sources: SourceCard[]; grounded: boolean; limited: boolean;
 };
 export type TurnResponse = Answer & {
-  transcript: string; receipt: string; audio: string | null;
+  transcript: string; receipt: string; audio: string | null; audioUrl?: string;
   audioStatus: "ready" | "unavailable" | "disabled";
   elapsedMs: number; reviewStatus: "draft" | "approved";
 };

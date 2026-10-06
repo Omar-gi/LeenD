@@ -3,6 +3,8 @@ import { reviewStatus } from "@/lib/corpus";
 import { InputError, parseInput, signTurn, usageGate } from "@/lib/request";
 import { ProviderError, speak, transcribe } from "@/lib/providers";
 import type { TurnResponse } from "@/lib/types";
+import { preparedSocialAudio } from "@/lib/social-audio";
+import { socialReply } from "@/lib/dialogue";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -27,13 +29,21 @@ export async function POST(request: Request) {
     if (!transcript || transcript.replace(/[\s.،!؟?]/g, "").length < 2) return failure("unclear_audio", 422);
     const result = await generateAnswer(transcript, input.history, signal);
     let audio: string | null = null;
+    let audioUrl: string | undefined;
     let audioStatus: TurnResponse["audioStatus"] = input.audioEnabled ? "unavailable" : "disabled";
     if (input.audioEnabled && !signal.aborted) {
-      try { audio = await speak(result.answer, signal); audioStatus = "ready"; }
+      try {
+        // Match the actual selected social reply, never just a keyword. A
+        // greeting plus a problem, or any safety answer, uses fresh speech.
+        if (result.safety === "none" && !result.sources.length && socialReply(transcript)?.answer === result.answer)
+          audioUrl = preparedSocialAudio(result.answer) || undefined;
+        if (!audioUrl) audio = await speak(result.answer, signal);
+        audioStatus = "ready";
+      }
       catch { /* Preserve the validated text response. Never log provider bodies or content. */ }
     }
     const body: TurnResponse = { ...result, transcript, receipt: signTurn({ user: transcript, assistant: result.answer }),
-      audio, audioStatus, elapsedMs: Date.now() - started, reviewStatus };
+      audio, audioUrl, audioStatus, elapsedMs: Date.now() - started, reviewStatus };
     return Response.json(body, { headers });
   } catch (error) {
     if (error instanceof InputError) return failure(error.code, error.status);

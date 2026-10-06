@@ -15,6 +15,7 @@
     "evaluate": "tsx --env-file-if-exists=.env.local scripts/evaluate.ts",
     "voices": "tsx --env-file-if-exists=.env.local scripts/voices.ts",
     "audition": "tsx --env-file-if-exists=.env.local scripts/audition.ts",
+    "prepare:audio": "tsx --env-file-if-exists=.env.local scripts/prepare-social-audio.ts",
     "test:ui-server": "tsx tests/ui-server.ts",
     "test:critical": "tsx --test tests/critical.test.ts"
   },

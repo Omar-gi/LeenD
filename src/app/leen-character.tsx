@@ -19,28 +19,40 @@ export function LeenCharacter({ phase, audio, onActivate }: {
   // retain normal sound and the CSS speaking state; no microphone is opened here.
   useEffect(() => {
     if (!audio) return;
-    let context: AudioContext | undefined;
+    const controller = new AbortController();
     let frame = 0;
     let disposed = false;
     const button = buttonRef.current;
     try {
-      if (!window.AudioContext) return;
-      context = new AudioContext();
-      const activeContext = context;
-      void activeContext.resume().then(() => {
-        if (disposed || activeContext.state !== "running") return;
-        const source = activeContext.createMediaElementSource(audio);
-        source.connect(activeContext.destination);
-        const analyser = activeContext.createAnalyser();
-        analyser.fftSize = 256; source.connect(analyser);
-        const samples = new Uint8Array(analyser.fftSize);
+      if (!window.OfflineAudioContext) return;
+      // Never reroute audible playback through a newly created AudioContext.
+      // Decode a separate copy solely for animation; native audio stays intact.
+      void (async () => {
+        const response = await fetch(audio.currentSrc || audio.src, { signal: controller.signal });
+        if (!response.ok) return;
+        const bytes = await response.arrayBuffer();
+        if (disposed) return;
+        const decoder = new OfflineAudioContext(1, 1, 44100);
+        const decoded = await decoder.decodeAudioData(bytes);
+        if (disposed) return;
+        const windowSize = Math.max(1, Math.round(decoded.sampleRate * .05));
+        const levels = new Float32Array(Math.ceil(decoded.length / windowSize));
+        for (let channel = 0; channel < decoded.numberOfChannels; channel++) {
+          const samples = decoded.getChannelData(channel);
+          for (let start = 0, bin = 0; start < samples.length; start += windowSize, bin++) {
+            const end = Math.min(start + windowSize, samples.length);
+            let energy = 0;
+            for (let i = start; i < end; i++) energy += samples[i] * samples[i];
+            levels[bin] = Math.max(levels[bin], Math.sqrt(energy / (end - start)));
+          }
+        }
         let smoothed = 0;
         let mouthChangedAt = 0;
         let mouthOpen = false;
         button?.setAttribute("data-audio-meter", "ready");
         const measure = () => {
-          analyser.getByteTimeDomainData(samples);
-          const rms = Math.sqrt(samples.reduce((sum, sample) => sum + ((sample - 128) / 128) ** 2, 0) / samples.length);
+          if (disposed) return;
+          const rms = levels[Math.floor(audio.currentTime / .05)] || 0;
           const target = audio.paused ? 0 : Math.min(1, rms * 6);
           smoothed += (target - smoothed) * .35;
           button?.style.setProperty("--voice-level", smoothed.toFixed(3));
@@ -54,7 +66,7 @@ export function LeenCharacter({ phase, audio, onActivate }: {
           frame = requestAnimationFrame(measure);
         };
         measure();
-      }).catch(() => {});
+      })().catch(() => {});
     } catch { /* The decorative animation must not interrupt an answer. */ }
     return () => {
       disposed = true;
@@ -62,7 +74,7 @@ export function LeenCharacter({ phase, audio, onActivate }: {
       button?.style.removeProperty("--voice-level");
       button?.removeAttribute("data-mouth");
       button?.removeAttribute("data-audio-meter");
-      void context?.close().catch(() => {});
+      controller.abort();
     };
   }, [audio]);
 

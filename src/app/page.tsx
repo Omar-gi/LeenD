@@ -139,7 +139,8 @@ export default function Home() {
       if (!response.ok) throw new Error(result.error || "temporarily_unavailable");
       if (epoch !== epochRef.current) return;
       const reply = result as TurnResponse;
-      const url = reply.audio ? audioUrl(reply.audio) : undefined;
+      const url = reply.audio ? audioUrl(reply.audio) :
+        reply.audioUrl && /^\/social-audio\/[a-f0-9]{24}\.mp3$/.test(reply.audioUrl) ? reply.audioUrl : undefined;
       const message: Message = { ...reply, audio: null, audioUrl: url, id: crypto.randomUUID() };
       if (editing !== null) messagesRef.current.slice(editing).forEach(m => { if (m.audioUrl) URL.revokeObjectURL(m.audioUrl); });
       const updated = [...previous, message];
@@ -238,7 +239,7 @@ export default function Home() {
         <div className="covered-domains" aria-label="المجالات التي تغطيها لين"><span>اختيار الصديق</span><span>الخلاف مع الصديق</span><span>الغيرة والمقارنة</span><span>الاستبعاد والتنمر</span></div>
         <div className="intro-points"><span><Headphones size={20} /> تتكلم بطريقتك</span><span><BookOpen size={20} /> تعرف مصدر الإجابة</span><span><HeartHandshake size={20} /> نعرف متى نطلب المساعدة</span></div>
         <div className="start-card">
-          <div className="start-note"><ShieldCheck size={22} /><p><strong>هذه النسخة مخصصة لتجربة لين.</strong><br />استخدم موقفًا خياليًا، ولا تدخل أسماء أو معلومات شخصية.</p></div>
+          <div className="start-note"><ShieldCheck size={22} /><p>استخدم موقفًا خياليًا، ولا تدخل أسماء أو معلومات شخصية.</p></div>
           <label className="consent"><input type="checkbox" checked={adult} onChange={e => setAdult(e.target.checked)} /><span>سأستخدم أمثلة خيالية في هذه التجربة.</span></label>
           <button className="primary start-button" disabled={!adult} onClick={() => { setScreen("chat"); setError(""); }}><Mic size={21} /> نبدأ الحديث</button>
           <span className="start-footnote">ما تحتاج حسابًا · صوت لين مولّد بالذكاء الاصطناعي</span>
